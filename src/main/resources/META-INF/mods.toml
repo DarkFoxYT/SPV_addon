@@ -1,0 +1,12 @@
+[[mods]]
+modId="spv_addon"
+version="1.0"
+displayName="SPV Flashlight Addon"
+description='''Flashlight Battery Integration for spb-revamped'''
+
+[[dependencies.spv_addon]]
+modId="spb-revamped"
+mandatory=true
+versionRange="*"
+ordering="AFTER"
+side="BOTH"

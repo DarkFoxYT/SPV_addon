@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "spv_addon",
+  "version": "1.0",
+  "name": "SPV Flashlight Addon",
+  "description": "Adds battery logic to the SPB-Revamped flashlight without modifying base code",
+  "authors": [
+    "DarkFox"
+  ],
+  "accessWidener": "spv_addon.accesswidener",
+
+  "entrypoints": {
+    "main": [
+      "net.dark.spv_addon.Spv_addon"
+    ]
+
+  },
+  "cardinal-components": {
+    "auto_register": true
+  },
+
+  "mixins": ["spv_addon.mixins.json"],
+  "depends": {
+    "fabricloader": "*",
+    "fabric-api": "*",
+    "cardinal-components-base": "*",
+    "spb-revamped": "*"
+  }
+}

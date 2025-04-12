@@ -1,0 +1,21 @@
+{
+  "enableRealCamera": true,
+  "lookRollMultiplier": 7.0,
+  "strafeRollMultiplier": 7.0,
+  "enableSmoothCamera": true,
+  "cameraSmoothing": 0.7,
+  "showHands": false,
+  "useDefaultGUI": false,
+  "enableVHSAspectRatio": false,
+  "enableVhsEffect": true,
+  "VHSDistortionMultiplier": 1.0,
+  "lightRenderDistance": 100,
+  "enableShadows": true,
+  "enableVolumetricLight": true,
+  "enablePuddles": true,
+  "enableLevel1Fog": true,
+  "renderWaterReflections": true,
+  "renderBlockReflections": true,
+  "motionBlur": true,
+  "motionBlurStrength": 0.5
+}
