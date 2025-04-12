@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "spv_addon:item/battery_texture1"
+  }
+}

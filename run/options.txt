@@ -118,11 +118,10 @@ key_key.hotbar.6:key.keyboard.6
 key_key.hotbar.7:key.keyboard.7
 key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
+key_key.modmenu.open_menu:key.keyboard.unknown
 key_key.spb-revamped.toggle_flashlight:key.keyboard.r
 key_key.spb-revamped.zoom:key.keyboard.z
 key_key.spb-revamped.toggle_event:key.keyboard.semicolon
-key_key.modmenu.open_menu:key.keyboard.unknown
-key_key.veil.editor:key.keyboard.f6
 key_key.push_to_talk:key.keyboard.unknown
 key_key.whisper:key.keyboard.unknown
 key_key.mute_microphone:key.keyboard.m
@@ -133,6 +132,7 @@ key_key.voice_chat_settings:key.keyboard.unknown
 key_key.voice_chat_group:key.keyboard.g
 key_key.voice_chat_toggle_recording:key.keyboard.unknown
 key_key.voice_chat_adjust_volumes:key.keyboard.unknown
+key_key.veil.editor:key.keyboard.f6
 soundCategory_master:0.5016556291390728
 soundCategory_music:0.0
 soundCategory_record:1.0

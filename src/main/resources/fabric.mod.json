@@ -12,6 +12,9 @@
   "entrypoints": {
     "main": [
       "net.dark.spv_addon.Spv_addon"
+    ],
+    "client": [
+      "net.dark.spv_addon.Spv_addonClient"
     ]
 
   },

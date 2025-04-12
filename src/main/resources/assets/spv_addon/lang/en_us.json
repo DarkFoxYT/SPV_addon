@@ -1,3 +1,4 @@
 {
-    "item.spv_addon.battery": "BatteryPack"
+    "item.spv_addon.battery_item": "low energy flashlight batteries",
+    "item.spv_addon.battery_item2": "high energy flashlight batteries"
 }
