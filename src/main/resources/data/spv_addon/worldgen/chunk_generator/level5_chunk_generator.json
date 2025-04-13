@@ -1,0 +1,7 @@
+{
+  "type": "spv_addon:level5_chunk_generator",
+  "biome_source": {
+    "type": "minecraft:fixed",
+    "biome": "minecraft:plains"
+  }
+}

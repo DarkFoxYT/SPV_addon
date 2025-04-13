@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "spv_addon:block/hotel_wall" }
+  }
+}

@@ -2,7 +2,6 @@ package net.dark.spv_addon;
 
 import net.dark.spv_addon.battery.BatteryManager;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
-import net.dark.spv_addon.client.KeyInterceptorClient;
 import net.dark.spv_addon.client.gui.BatteryEmptyHUD;
 import net.dark.spv_addon.client.gui.BatteryHudRenderer;
 import net.dark.spv_addon.client.hud.LowBatteryHud;
@@ -38,7 +37,6 @@ public class Spv_addonClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             flashlightRenderer.tick(client.getTickDelta());
         });
-        new KeyInterceptorClient().onInitializeClient();
         HudRenderCallback.EVENT.register(new BatteryEmptyHUD());
         HudRenderCallback.EVENT.register(new BatteryHudRenderer());
         HudRenderCallback.EVENT.register(new LowBatteryHud());
