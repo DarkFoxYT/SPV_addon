@@ -1,5 +1,6 @@
 package net.dark.spv_addon.client;
 
+import com.mojang.brigadier.Message;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import foundry.veil.api.client.render.VeilRenderSystem;
@@ -7,6 +8,8 @@ import foundry.veil.api.client.render.deferred.light.AreaLight;
 import net.dark.spv_addon.battery.BatteryManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 
@@ -31,19 +34,30 @@ public class ClientFlashlightRendererAddon {
             int battery = BatteryManager.getBattery(uuid);
             boolean lightOn = comp.isFlashLightOn();
 
+
+
             if (lightOn && battery <= 0) {
                 comp.setFlashLightOn(false);
                 removeLights(player);
-                System.out.println("Battery 0%. Flashlight auto-disabled for " + player.getName().getString());
+                System.out.println("Battery 0% for " + player.getName().getString());
                 continue;
             }
 
             if (lightOn && battery > 0) {
                 updateLight(player, tickDelta);
-                System.out.println("Battery " + battery + "% for " + player.getName().getString());
             } else {
                 removeLights(player);
             }
+        }
+    }
+
+    public void updateBattery(PlayerEntity player, int newBatteryValue) {
+        UUID uuid = player.getUuid();
+        int battery = BatteryManager.getBattery(uuid);
+        if (battery != newBatteryValue) {
+            battery = newBatteryValue;
+            System.out.println("Battery at " + battery + "% " + "for player " + player.getName().getString());
+            player.sendMessage(Text.literal("Battery at " + battery + "%"), true);
         }
     }
 
@@ -72,8 +86,6 @@ public class ClientFlashlightRendererAddon {
                     .setPosition(pos.x, pos.y, pos.z)
                     .setOrientation(rot);
 
-            VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(l1);
-            VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(l2);
 
             lightMap.put(uuid, Arrays.asList(l1, l2));
         } else {

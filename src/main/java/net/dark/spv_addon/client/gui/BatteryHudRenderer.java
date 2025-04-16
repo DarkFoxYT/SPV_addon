@@ -5,6 +5,7 @@ package net.dark.spv_addon.client.gui;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -47,11 +48,11 @@ public class BatteryHudRenderer implements HudRenderCallback {
     }
 
     private void drawBatteryWarning(DrawContext context, float alpha) {
-        int width = 48, height = 64;
+        int width = 128, height = 64;
         RenderSystem.enableBlend();
         context.getMatrices().push();
         context.getMatrices().translate((float)(context.getScaledWindowWidth() / 2), (float)(context.getScaledWindowHeight() / 2), 0.0F);
-        context.getMatrices().scale(0.2F, 0.2F, 0.2F);
+        context.getMatrices().scale(0.25F, 0.75F, 0.25F);
 
         context.setShaderColor(1F, 1F, 1F, alpha);
         context.drawTexture(BATTERY_ICONS, width / 2, -height / 2, width, 0, 64, height);
@@ -60,5 +61,11 @@ public class BatteryHudRenderer implements HudRenderCallback {
         context.setShaderColor(1F, 1F, 1F, 1F);
         context.getMatrices().pop();
         RenderSystem.disableBlend();
+
+
+
+
     }
+
+
 }

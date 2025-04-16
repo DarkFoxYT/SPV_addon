@@ -1,7 +1,6 @@
 package net.dark.spv_addon.util;
 
-import com.sp.cca_stuff.InitializeComponents;
-import com.sp.cca_stuff.PlayerComponent;
+import com.sp.render.FlashlightRenderer;
 import net.dark.spv_addon.battery.BatteryManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,19 +14,19 @@ public class FlashlightBatteryEvents {
         final HashMap<UUID, Integer> tickCounter = new HashMap<>();
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
-            server.getPlayerManager().getPlayerList().forEach(player -> {
+            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 UUID id = player.getUuid();
                 int ticks = tickCounter.getOrDefault(id, 0) + 1;
 
-                if (ticks >= 1200) {
-                    if (BatteryManager.isBatteryEnabled()) {
-                        BatteryManager.drainBattery(id, 1);
+                if (ticks >= 1200){
+                        if (BatteryManager.isBatteryEnabled()) {
+                            BatteryManager.drainBattery(id, 1);
+                        }
+                        tickCounter.put(id, 0);
+                    } else {
+                        tickCounter.put(id, ticks);
                     }
-                    tickCounter.put(id, 0);
-                } else {
-                    tickCounter.put(id, ticks);
-                }
-            });
-        });
-    }
+            }
+        })
+    ;}
 }

@@ -1,3 +1,11 @@
 accessWidener v2 named
 
 accessible field com/sp/cca_stuff/PlayerComponent flashLightOn Z
+accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask
+accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask$RenderData
+accessible class net/minecraft/client/render/WorldRenderer$ChunkInfo
+accessible field net/minecraft/client/render/WorldRenderer$ChunkInfo chunk Lnet/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk;
+accessible field net/minecraft/client/render/WorldRenderer chunkInfos Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
+accessible field net/minecraft/client/render/WorldRenderer blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+accessible field net/minecraft/client/render/WorldRenderer bufferBuilders Lnet/minecraft/client/render/BufferBuilderStorage;
+accessible class net/minecraft/client/render/WorldRenderer$RenderableChunks

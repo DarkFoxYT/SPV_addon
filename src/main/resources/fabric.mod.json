@@ -15,12 +15,18 @@
     ],
     "client": [
       "net.dark.spv_addon.Spv_addonClient"
+    ],
+    "cardinal-components": [
+      "net.dark.spv_addon.cca.InitializeComponents"
     ]
+  },
 
-  },
-  "cardinal-components": {
-    "auto_register": true
-  },
+  "custom": {
+  "cardinal-components": [
+    "spv_addon:bellwalker"
+  ]
+
+},
 
   "mixins": ["spv_addon.mixins.json"],
   "depends": {
@@ -29,4 +35,5 @@
     "cardinal-components-base": "*",
     "spb-revamped": "*"
   }
+
 }
