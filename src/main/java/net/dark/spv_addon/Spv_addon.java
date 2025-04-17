@@ -2,6 +2,7 @@ package net.dark.spv_addon;
 
 import com.mojang.serialization.Codec;
 import com.sp.SPBRevamped;
+import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import com.sp.world.generation.Level0ChunkGenerator;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.init.ModBlocks;
@@ -17,6 +18,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.bernie.geckolib.GeckoLib;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Spv_addon implements ModInitializer {
     public static final String MOD_ID = "spv_addon";
@@ -31,6 +34,9 @@ public class Spv_addon implements ModInitializer {
         FlashlightBatteryEvents.register();
         ModBlocks.registerModBlocks();
         ModChunkGenerators.register();
+
+        GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
+        GeckoLib.initialize();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             FlashlightBatteryCommand.register(dispatcher);

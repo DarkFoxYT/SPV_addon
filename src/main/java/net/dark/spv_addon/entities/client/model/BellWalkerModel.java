@@ -1,5 +1,6 @@
 package net.dark.spv_addon.entities.client.model;
 
+import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.cca.BellWalkerComponent;
 import net.dark.spv_addon.cca.InitializeComponents;
@@ -35,6 +36,7 @@ public class BellWalkerModel extends GeoModel<BellWalkerEntity> {
 	public void setCustomAnimations(BellWalkerEntity animatable, long instanceId,
 									AnimationState<BellWalkerEntity> state) {
 		super.setCustomAnimations(animatable, instanceId, state);
+		animatable.tickComponentsClient(animatable, new GeoModelAccessor(this));
 		// Exemple : récupérer votre composant si vous voulez piloter des bones
 		BellWalkerComponent comp = InitializeComponents.BELL_WALKER.get(animatable);
 		// … ajoutez ici vos interactions d’animation personnalisées si nécessaire
