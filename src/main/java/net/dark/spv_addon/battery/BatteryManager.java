@@ -28,4 +28,5 @@ public class BatteryManager {
     public static void setBatteryEnabled(boolean enabled) {
         batteryEnabled = enabled;
     }
+
 }

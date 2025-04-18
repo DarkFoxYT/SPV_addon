@@ -2,7 +2,7 @@ package net.dark.spv_addon;
 
 import net.dark.spv_addon.battery.BatteryManager;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
-import net.dark.spv_addon.client.gui.BatteryHudRenderer;
+import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.ModEntities;
@@ -40,7 +40,8 @@ public class Spv_addonClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             flashlightRenderer.tick(client.getTickDelta());
         });
-        HudRenderCallback.EVENT.register(new BatteryHudRenderer());
+
+        BatteryHud.register();
 
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
 

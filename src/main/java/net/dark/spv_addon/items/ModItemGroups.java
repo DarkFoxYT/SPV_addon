@@ -34,6 +34,6 @@ public class ModItemGroups {
 
 
     public static void registerItemGroups() {
-        SPBRevamped.LOGGER.info("Registering Item Groups");
+        Spv_addon.LOGGER.info("Registering Item Groups");
     }
 }
