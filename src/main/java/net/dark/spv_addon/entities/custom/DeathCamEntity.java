@@ -34,6 +34,7 @@ When "fall" finishes, the walker’s "eat" animation (on its jawBone) plays, opt
 public class DeathCamEntity extends Entity implements GeoAnimatable<DeathCamEntity> {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+
     public static final RawAnimation FALL = RawAnimation.begin().then("fall", LoopType.PLAY_ONCE);
     public static final RawAnimation EAT  = RawAnimation.begin().then("eat",  LoopType.PLAY_ONCE);
 
