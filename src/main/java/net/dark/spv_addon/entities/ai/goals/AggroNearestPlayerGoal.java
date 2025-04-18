@@ -1,6 +1,7 @@
 package net.dark.spv_addon.entities.ai.goals;
 
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
+import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class AggroNearestPlayerGoal extends Goal {
     private final BellWalkerEntity mob;
@@ -22,16 +23,16 @@ public class AggroNearestPlayerGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        List<PlayerEntity> candidates = mob.getWorld().getPlayers().stream()
-                .filter(p -> mob.getSoundPitch() >= 2)
-                .filter(p -> p.squaredDistanceTo(mob) <= maxRange * maxRange)
-                .collect(Collectors.toList());
+        List<UUID> candidates = SpvAddonVoicechatPlugin.justSpoke.stream()
+                .filter(p -> mob.getWorld().getPlayerByUuid(p).squaredDistanceTo(mob) <= maxRange * maxRange)
+                .toList();
         if (candidates.isEmpty()) return false;
 
-        PlayerEntity nearest = candidates.stream()
-                .min(Comparator.comparingDouble(p -> p.squaredDistanceTo(mob)))
+        UUID nearest = candidates.stream()
+                .min(Comparator.comparingDouble(p -> mob.getWorld().getPlayerByUuid(p).squaredDistanceTo(mob)))
                 .get();
-        mob.setTarget(nearest);
+
+        mob.setTarget(mob.getWorld().getPlayerByUuid(nearest));
         return true;
     }
 
@@ -39,7 +40,6 @@ public class AggroNearestPlayerGoal extends Goal {
     public boolean shouldContinue() {
         LivingEntity target = mob.getTarget();
         return target instanceof PlayerEntity
-                && target.isAlive()
-                && mob.getSoundPitch() >= 2;
+                && target.isAlive();
     }
 }
