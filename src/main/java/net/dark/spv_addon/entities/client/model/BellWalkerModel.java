@@ -41,10 +41,7 @@ public class BellWalkerModel extends GeoModel<BellWalkerEntity> {
 	@Override
 	public void setCustomAnimations(BellWalkerEntity animatable, long instanceId, AnimationState<BellWalkerEntity> state) {
 		super.setCustomAnimations(animatable, instanceId, state);
-		// 1) Tick your IK component
 		animatable.tickComponentsClient(animatable, new GeoModelAccessor(this));
-		// 2) (Optional) access your CCA component
 		BellWalkerComponent comp = InitializeComponents.BELL_WALKER.get(animatable);
-		// No manual setAnimation call here—your JSON’s animation_controllers will loop "idle".
 	}
 }
