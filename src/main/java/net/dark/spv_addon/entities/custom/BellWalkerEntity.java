@@ -84,11 +84,10 @@ public class BellWalkerEntity extends PathAwareEntity
 
     @Override
     protected void initGoals() {
-        // garde les 3 premiers vanilla
         this.goalSelector.add(0, new MeleeAttackGoal(this, 1.0, true));
         this.goalSelector.add(1, new WanderAroundGoal(this, 0.5));
         this.goalSelector.add(2, new LookAroundGoal(this));
-        // tes deux goals custom
+            
         this.goalSelector.add(4, new AggroNearestPlayerGoal(this, 20.0));
     }
 
