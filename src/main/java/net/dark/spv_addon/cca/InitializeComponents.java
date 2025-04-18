@@ -19,14 +19,12 @@ import net.minecraft.util.Identifier;
 
 public class InitializeComponents implements EntityComponentInitializer {
 
-    // === Ajout de la clé pour ton BellWalker ===
     public static final ComponentKey<BellWalkerComponent> BELL_WALKER =
-            ComponentRegistry.getOrCreate(Identifier.of(Spv_addon.MOD_ID, "bellwalker"), BellWalkerComponent.class);
+            ComponentRegistry.getOrCreate(Identifier.of(Spv_addon.MOD_ID, "bell_walker"), BellWalkerComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
 
-        // === Enregistrement de ton BellWalkerComponent pour BellWalkerEntity ===
         registry.registerFor(BellWalkerEntity.class, BELL_WALKER, BellWalkerComponent::new);
     }
 

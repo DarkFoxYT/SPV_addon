@@ -7,6 +7,7 @@ import com.sp.world.generation.Level0ChunkGenerator;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModChunkGenerators;
+import net.dark.spv_addon.items.ModItemGroups;
 import net.dark.spv_addon.items.ModItems;
 import net.dark.spv_addon.util.FlashlightBatteryEvents;
 import net.dark.spv_addon.commands.FlashlightBatteryCommand;
@@ -34,13 +35,16 @@ public class Spv_addon implements ModInitializer {
         FlashlightBatteryEvents.register();
         ModBlocks.registerModBlocks();
         ModChunkGenerators.register();
+        ModItemGroups.registerItemGroups();
+
 
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            FlashlightBatteryCommand.register(dispatcher);
-        });
+
+        GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
+        GeckoLib.initialize();
+
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             FlashlightBatteryCommand.register(dispatcher);
             Level5Command.register(dispatcher);
