@@ -7,13 +7,16 @@ import com.sp.world.generation.Level0ChunkGenerator;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModChunkGenerators;
+import net.dark.spv_addon.init.ModSounds;
 import net.dark.spv_addon.items.ModItemGroups;
 import net.dark.spv_addon.items.ModItems;
 import net.dark.spv_addon.util.FlashlightBatteryEvents;
 import net.dark.spv_addon.commands.FlashlightBatteryCommand;
+import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -36,6 +39,7 @@ public class Spv_addon implements ModInitializer {
         ModBlocks.registerModBlocks();
         ModChunkGenerators.register();
         ModItemGroups.registerItemGroups();
+        ModSounds.registerSounds();
 
 
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
@@ -48,6 +52,8 @@ public class Spv_addon implements ModInitializer {
             Level5Command.register(dispatcher);
         });
 
-
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            SpvAddonVoicechatPlugin.justSpoke.clear();
+        });
     }
 }

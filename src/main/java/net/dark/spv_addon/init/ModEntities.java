@@ -2,6 +2,7 @@ package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
+import net.dark.spv_addon.entities.custom.DeathCamEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -20,4 +21,15 @@ public class ModEntities {
                             .dimensions(EntityDimensions.fixed(1.0f, 0.8f))
                             .build()
             );
+    public static final EntityType<DeathCamEntity> DEATH_CAM =
+            Registry.register(
+                    Registries.ENTITY_TYPE,
+                    new Identifier(Spv_addon.MOD_ID, "death_cam"),
+                    FabricEntityTypeBuilder.<DeathCamEntity>create(SpawnGroup.MISC, DeathCamEntity::new)
+                            .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
+                            .trackRangeBlocks(64)
+                            .build()
+            );
+
 }
+

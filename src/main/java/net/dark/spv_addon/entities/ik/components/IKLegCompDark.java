@@ -57,13 +57,11 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
     public static BlockHitResult rayCastToGround(Vec3d pos, Entity entity, RaycastContext.FluidHandling fluid) {
         World world = entity.getWorld();
 
-        // 1) Ray‑cast downwards
         Vec3d startDown = pos.add(0, 3, 0);
         Vec3d endDown   = pos.add(0, -10, 0);
         BlockHitResult hit = world.raycast(
                 new RaycastContext(startDown, endDown, RaycastContext.ShapeType.COLLIDER, fluid, entity));
 
-        // 2) If that block is fire, ray‑cast upwards instead
         if (world.getBlockState(hit.getBlockPos()).isOf(Blocks.FIRE)
                 || world.getBlockState(hit.getBlockPos()).isOf(Blocks.SOUL_FIRE)) {
             Vec3d startUp = pos.add(0, -3, 0);
@@ -72,7 +70,6 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
                     new RaycastContext(startUp, endUp, RaycastContext.ShapeType.COLLIDER, fluid, entity));
         }
 
-        // 3) Otherwise return the original ground hit
         return hit;
     }
 

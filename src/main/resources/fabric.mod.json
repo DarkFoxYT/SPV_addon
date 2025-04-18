@@ -18,6 +18,9 @@
     ],
     "cardinal-components": [
       "net.dark.spv_addon.cca.InitializeComponents"
+    ],
+    "voicechat": [
+      "net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin"
     ]
   },
 
