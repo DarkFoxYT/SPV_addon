@@ -6,8 +6,8 @@ import com.sp.networking.InitializePackets;
 import net.dark.spv_addon.battery.BatteryManager;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.gui.BatteryHud;
+import net.dark.spv_addon.client.gui.CustomDeathScreen;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
-import net.dark.spv_addon.entities.client.renderer.DeathCamRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.render.CutsceneManager;
@@ -51,46 +51,16 @@ public class Spv_addonClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             flashlightRenderer.tick(client.getTickDelta());
         });
-        EntityRendererRegistry.register(
-                ModEntities.DEATH_CAM,
-                ctx -> new DeathCamRenderer(ctx)
-        );
+
+
+        flashlightRenderer.tick(10);
 
         BatteryHud.register();
+        CutsceneManager.init();
 
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
 
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
 
-
-        cutsceneManager = new CutsceneManager();
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            cutsceneManager.tick();
-        });
-
-        // Sync flag from server to client
-        ClientPlayNetworking.registerGlobalReceiver(
-                InitializePackets.CUTSCENE_SYNC,
-                (client, handler, buf, responseSender) -> {
-                    boolean start = buf.readBoolean();
-                    client.execute(() -> {
-                        PlayerComponent pc = InitializeComponents.PLAYER.get(client.player);
-                        pc.setDoingCutscene(start);
-                    });
-                }
-        );
-    }
-
-    /** Expose singleton for mixin */
-    public static CutsceneManager getCutsceneManager() {
-        return cutsceneManager;
-    }
-
-    /** Call server‑side to trigger on this client */
-    public static void sendStartCutsceneToClient(ServerPlayerEntity player, boolean start) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeBoolean(start);
-        ServerPlayNetworking.send(player, InitializePackets.CUTSCENE_SYNC, buf);
     }
 }

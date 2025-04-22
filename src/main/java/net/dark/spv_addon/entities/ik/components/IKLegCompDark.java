@@ -17,6 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -43,31 +44,21 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
         Arrays.stream(limbs).forEach(limb -> this.bases.add(Vec3d.ZERO));
     }
 
-    @SafeVarargs
-    public IKLegCompDark(LegSetting singleSetting, List<ServerLimb> endpoints, C... limbs) {
-        this(Arrays.asList(singleSetting), endpoints, limbs);
-    }
-
     private static boolean hasMovedOverLastTick(PathAwareEntity entity) {
         Vec3d vel = entity.getVelocity();
         float yawDelta = Math.abs(entity.getHeadYaw() - entity.prevHeadYaw);
         return vel.x != 0 || vel.z != 0 || yawDelta >= 0.01F;
     }
 
-    public static BlockHitResult rayCastToGround(Vec3d pos, Entity entity, RaycastContext.FluidHandling fluid) {
+    public static BlockHitResult rayCastToGround(Vec3d rotatedLimbOffset, Entity entity, RaycastContext.FluidHandling fluid) {
         World world = entity.getWorld();
 
-        Vec3d startDown = pos.add(0, 3, 0);
-        Vec3d endDown   = pos.add(0, -10, 0);
         BlockHitResult hit = world.raycast(
-                new RaycastContext(startDown, endDown, RaycastContext.ShapeType.COLLIDER, fluid, entity));
+                new RaycastContext(rotatedLimbOffset.offset(Direction.UP, 3), rotatedLimbOffset.offset(Direction.DOWN, 10), RaycastContext.ShapeType.COLLIDER, fluid, entity));
 
-        if (world.getBlockState(hit.getBlockPos()).isOf(Blocks.FIRE)
-                || world.getBlockState(hit.getBlockPos()).isOf(Blocks.SOUL_FIRE)) {
-            Vec3d startUp = pos.add(0, -3, 0);
-            Vec3d endUp   = pos.add(0, 10, 0);
-            return world.raycast(
-                    new RaycastContext(startUp, endUp, RaycastContext.ShapeType.COLLIDER, fluid, entity));
+        if (world.getBlockState(hit.getBlockPos().add(0,0,0)).isOf(Blocks.FIRE)
+                || world.getBlockState(hit.getBlockPos().add(0,0,0)).isOf(Blocks.SOUL_FIRE)) {
+            return world.raycast(new RaycastContext(rotatedLimbOffset.offset(Direction.UP, 3), rotatedLimbOffset.offset(Direction.UP, 10), RaycastContext.ShapeType.COLLIDER, fluid, entity));
         }
 
         return hit;

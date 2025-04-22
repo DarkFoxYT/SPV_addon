@@ -16,9 +16,9 @@ public class ModBlocks {
     );
 
     public static final Block HOTEL_FLOOR = new Block(
-            AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE)
+            AbstractBlock.Settings.copy(Blocks.RED_WOOL)
                     .strength(1.5f, 3.0f)
-                    .sounds(BlockSoundGroup.STONE)
+                    .sounds(BlockSoundGroup.WOOL)
     );
 
     public static void registerModBlocks() {

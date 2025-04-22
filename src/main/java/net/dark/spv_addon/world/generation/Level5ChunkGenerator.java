@@ -4,10 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevamped;
 import com.sp.init.ModBlocks;
+import com.sp.world.generation.maze_generator.Level0MazeGenerator;
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.world.generation.maze.Level5MazeGenerator;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
@@ -17,6 +18,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
@@ -29,6 +31,7 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
@@ -37,23 +40,23 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class Level5ChunkGenerator extends ChunkGenerator {
+public final class Level5ChunkGenerator extends ChunkGenerator {
     public static final Codec<Level5ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource)
-            ).apply(instance, instance.stable(Level5ChunkGenerator::new)));
+                            BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
+                            ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings)
+                    )
+                    .apply(instance, instance.stable(Level5ChunkGenerator::new))
+    );
 
+    private final RegistryEntry<ChunkGeneratorSettings> settings;
+    Random random = Random.create();
+    PerlinNoiseSampler noiseSampler = new PerlinNoiseSampler(random);
 
-    public Level5ChunkGenerator(BiomeSource biomeSource) {
+    public Level5ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
+        this.settings = settings;
     }
-
-    @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
-        return CODEC;
-    }
-
-
 
     public void generateMaze(StructureWorldAccess world, Chunk chunk) {
         int x = chunk.getPos().getStartX();
@@ -85,7 +88,7 @@ public class Level5ChunkGenerator extends ChunkGenerator {
                 }
                 world.setBlockState(mutable.set(0, 25, 0), ModBlocks.GhostCeilingTile.getDefaultState(), 16);
 
-                roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/mega5room1");
+                roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/megaroom1");
                 structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
                 optional = structureTemplateManager.getTemplate(roomIdentifier);
 
@@ -111,14 +114,14 @@ public class Level5ChunkGenerator extends ChunkGenerator {
                             mutable.set(x, 18, z),
                             structurePlacementData, random, 2);
                 }
-            } else if (((float) chunk.getPos().x) % SPBRevamped.finalMazeSize == 0 && ((float) chunk.getPos().z) % SPBRevamped.finalMazeSize == 0) {
+            } else if (((float) chunk.getPos().x) % Spv_addon.finalMazeSize == 0 && ((float) chunk.getPos().z) % Spv_addon.finalMazeSize == 0) {
 
                 if(!chunk.getPos().getBlockPos(0,20,0).isWithinDistance(new Vec3i(0,20,0), 1000)) {
                     if(megaRooms != 1){
 //                        exit = random.nextBetween(1,1);
 //                        if(exit == 1){
 
-                        roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/exit_1");
+                        roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/stairwell_0");
                         structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
                         optional = structureTemplateManager.getTemplate(roomIdentifier);
 
@@ -139,7 +142,7 @@ public class Level5ChunkGenerator extends ChunkGenerator {
                     if (!isNearMegaRooms(x, z, world)) {
 
                         megaRooms = random.nextBetween(1, 6);
-                        roomIdentifier = new Identifier(SPBRevamped.MOD_ID, "level5/mega5room" + megaRooms);
+                        roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/megaroom" + megaRooms);
                         structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
                         optional = structureTemplateManager.getTemplate(roomIdentifier);
 
@@ -316,7 +319,10 @@ public class Level5ChunkGenerator extends ChunkGenerator {
     }
 
 
-
+    @Override
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
+    }
 
     /* the method that creates non-noise caves (i.e., all the caves we had before the caves and cliffs update) */
     @Override

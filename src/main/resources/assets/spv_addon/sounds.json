@@ -6,15 +6,15 @@
   },
   "entity.bellwalker.carp": {
     "sounds": [
-      { "name": "spv_addon:entity/bellwalker/^carp", "stream": false }
+      { "name": "spv_addon:entity/bellwalker/carp", "stream": false }
     ]
   },
-  "stuff.spv.bell_dong": {
+  "stuff.belldong": {
     "sounds": [
       { "name": "spv_addon:stuff/belldong", "stream": false }
     ]
   },
-  "stuff.spv.elevator": {
+  "stuff.elevator": {
     "sounds": [
       { "name": "spv_addon:stuff/elevator", "stream": false }
     ]

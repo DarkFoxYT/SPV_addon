@@ -3,8 +3,12 @@
   "minVersion": "0.8",
   "package": "net.dark.spv_addon.mixins",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [ MixinMinecraftClient ],
-  "client": [],
+  "mixins": [
+    "MixinMinecraftClient"
+  ],
+  "client": [
+    "MixinMinecraftClient"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

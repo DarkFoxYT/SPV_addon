@@ -24,7 +24,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "spv-addon:battery_item",
+          "name": "spv_addon:battery_item",
           "weight": 5,
           "functions": [
             {
@@ -39,7 +39,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "spv-addon:battery_item",
+          "name": "spv_addon:battery_item2",
           "weight": 1,
           "functions": [
             {
