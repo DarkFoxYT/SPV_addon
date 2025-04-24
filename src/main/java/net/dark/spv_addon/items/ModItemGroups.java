@@ -21,6 +21,9 @@ public class ModItemGroups {
                         // Blocks
                         entries.add(ModBlocks.HOTEL_FLOOR);
                         entries.add(ModBlocks.HOTEL_WALL);
+                        entries.add(ModBlocks.BED1);
+                        entries.add(ModBlocks.BED2);
+                        entries.add(ModBlocks.TABLE);
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);

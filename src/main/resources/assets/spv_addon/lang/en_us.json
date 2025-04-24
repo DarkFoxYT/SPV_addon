@@ -2,5 +2,8 @@
     "item.spv_addon.battery_item": "low energy flashlight batteries",
     "item.spv_addon.battery_item2": "high energy flashlight batteries",
     "block.spv_addon.hotel_wall": "Hotel Wall",
-    "block.spv_addon.hotel_floor": "Hotel Floor"
+    "block.spv_addon.hotel_floor": "Hotel Floor",
+    "block.spv_addon.table": "Wooden table",
+    "block.spv_addon.bed1": "bed",
+    "block.spv_addon.bed2": "bed sideways"
 }
