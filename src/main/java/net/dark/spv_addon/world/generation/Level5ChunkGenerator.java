@@ -3,11 +3,11 @@ package net.dark.spv_addon.world.generation;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevamped;
-import com.sp.init.ModBlocks;
+import com.sp.world.generation.maze_generator.Level1MazeGenerator;
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.world.generation.maze.Level5MazeGenerator;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
@@ -17,6 +17,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
@@ -29,6 +30,7 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
@@ -37,237 +39,152 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class Level5ChunkGenerator extends ChunkGenerator {
+@SuppressWarnings("OptionalIsPresent")
+public final class Level5ChunkGenerator extends ChunkGenerator {
     public static final Codec<Level5ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource)
-            ).apply(instance, instance.stable(Level5ChunkGenerator::new)));
+                            BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
+                            ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings)
+                    )
+                    .apply(instance, instance.stable(Level5ChunkGenerator::new))
+    );
+    private final RegistryEntry<ChunkGeneratorSettings> settings;
+    Random random = Random.create();
+    PerlinNoiseSampler noiseSampler = new PerlinNoiseSampler(random);
 
-
-    public Level5ChunkGenerator(BiomeSource biomeSource) {
+    public Level5ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
+        this.settings = settings;
     }
 
-    @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
-        return CODEC;
-    }
 
 
 
     public void generateMaze(StructureWorldAccess world, Chunk chunk) {
         int x = chunk.getPos().getStartX();
         int z = chunk.getPos().getStartZ();
-        Random random = Random.create();
+        int lights = random.nextBetween(1,6);
+        int exit;
 
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         MinecraftServer server = world.getServer();
 
-        if (server != null) {
-            StructureTemplateManager structureTemplateManager = world.getServer().getStructureTemplateManager();
-            Optional<StructureTemplate> optional;
+        StructureTemplateManager structureTemplateManager = world.getServer().getStructureTemplateManager();
+        Optional<StructureTemplate> optional;
 
-            int megaRooms = random.nextBetween(1, 2);
-
-            Identifier roomIdentifier;
-            StructurePlacementData structurePlacementData = new StructurePlacementData();
-
-            //Spawn Point
-            if((float) chunk.getPos().x == 0 && (float) chunk.getPos().z  == 0){
-                for(int i = 0; i < 16; i++) {
-                    for(int j = 0; j < 16; j++){
-                        if(i == 0 && j == 0){
-                            world.setBlockState(mutable.set(i, 25, j), ModBlocks.GhostCeilingTile.getDefaultState(), 16);
-                        } else {
-                            world.setBlockState(mutable.set(i, 25, j), ModBlocks.CeilingTile.getDefaultState(), 16);
-                        }
-                    }
-                }
-                world.setBlockState(mutable.set(0, 25, 0), ModBlocks.GhostCeilingTile.getDefaultState(), 16);
-
-                roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/mega5room1");
-                structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-                optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-                if (optional.isPresent()) {
-                    optional.get().place(
-                            world,
-                            mutable.set(x - 32, 18, z - 32),
-                            mutable.set(x - 32, 18, z - 32),
-                            structurePlacementData, random, 2);
-                    optional.get().place(
-                            world,
-                            mutable.set(x, 18, z - 32),
-                            mutable.set(x, 18, z - 32),
-                            structurePlacementData, random, 2);
-                    optional.get().place(
-                            world,
-                            mutable.set(x - 32, 18, z),
-                            mutable.set(x - 32, 18, z),
-                            structurePlacementData, random, 2);
-                    optional.get().place(
-                            world,
-                            mutable.set(x, 18, z),
-                            mutable.set(x, 18, z),
-                            structurePlacementData, random, 2);
-                }
-            } else if (((float) chunk.getPos().x) % SPBRevamped.finalMazeSize == 0 && ((float) chunk.getPos().z) % SPBRevamped.finalMazeSize == 0) {
-
-                if(!chunk.getPos().getBlockPos(0,20,0).isWithinDistance(new Vec3i(0,20,0), 1000)) {
-                    if(megaRooms != 1){
-//                        exit = random.nextBetween(1,1);
-//                        if(exit == 1){
-
-                        roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/exit_1");
-                        structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-                        optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-                        if (optional.isPresent()) {
-                            optional.get().place(
-                                    world,
-                                    mutable.set(x + 15,4,z + 15),
-                                    mutable.set(x + 15,4,z + 15),
-                                    structurePlacementData, random, 2
-                            );
-                        }
-
-//                        }
-                    }
-                }
-
-                if (megaRooms == 1) {
-                    if (!isNearMegaRooms(x, z, world)) {
-
-                        megaRooms = random.nextBetween(1, 6);
-                        roomIdentifier = new Identifier(SPBRevamped.MOD_ID, "level5/mega5room" + megaRooms);
-                        structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-                        optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-                        if (optional.isPresent()) {
-                            if (megaRooms == 1 || megaRooms == 2) {
-                                optional.get().place(
-                                        world,
-                                        mutable.set(x - 32, 18, z - 32),
-                                        mutable.set(x - 32, 18, z - 32),
-                                        structurePlacementData, random, 2);
-                                optional.get().place(
-                                        world,
-                                        mutable.set(x, 18, z - 32),
-                                        mutable.set(x, 18, z - 32),
-                                        structurePlacementData, random, 2);
-                                optional.get().place(
-                                        world,
-                                        mutable.set(x - 32, 18, z),
-                                        mutable.set(x - 32, 18, z),
-                                        structurePlacementData, random, 2);
-                                optional.get().place(
-                                        world,
-                                        mutable.set(x, 18, z),
-                                        mutable.set(x, 18, z),
-                                        structurePlacementData, random, 2);
-                            } else {
-                                optional.get().place(
-                                        world,
-                                        mutable.set(x - 16, 18, z - 16),
-                                        mutable.set(x - 16, 18, z - 16),
-                                        structurePlacementData, random, 2);
-                                Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(16, 5, 5, x, z, "level5");
-                                level5MazeGenerator.setup(world);
-                            }
-                        }
-                    } else {
-
-                        Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(16, 5, 5, x, z, "level5");
-                        level5MazeGenerator.setup(world);
-
-                    }
-                } else {
-
-                    Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(16, 5, 5, x, z, "level5");
-                    level5MazeGenerator.setup(world);
-
-                }
+        Identifier roomIdentifier;
+        StructurePlacementData structurePlacementData = new StructurePlacementData();
 
 
+        if((float) chunk.getPos().x == 0 && (float) chunk.getPos().z  == 0){
+            roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/hotel_lobby");
+            structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
+            optional = structureTemplateManager.getTemplate(roomIdentifier);
+
+            if(optional.isPresent()){
+                optional.get().place(
+                        world,
+                        mutable.set(-1,19,-1),
+                        mutable.set(-1,19,-1),
+                        structurePlacementData, random, 2
+                );
             }
 
+            Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(8, 10, 10, x, z, "level5");
+            level5MazeGenerator.setup(world, false);
+        } else if (((float)chunk.getPos().x) % Spv_addon.finalMazeSize == 0 && ((float)chunk.getPos().z) % Spv_addon.finalMazeSize == 0){
+            double noise1 = noiseSampler.sample((x) * 0.002, 0, (z) * 0.002);
+            if (server != null) {
 
-            ////Code for 8 x 8 Roof////
-            for(int i = 0; i < 2; i++) {
-                for(int j = 0; j < 2; j++) {
-                    roomIdentifier = this.getRoof();
-                    structurePlacementData = this.randRotation();
+                if(!chunk.getPos().getBlockPos(0,20,0).isWithinDistance(new Vec3i(0,20,0), 1000)){
+                    if(noise1 <= 0){
+                        exit = random.nextBetween(1,1);
+                        if(exit == 1){
+
+                            roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/stairwell2_1");
+                            structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
+                            optional = structureTemplateManager.getTemplate(roomIdentifier);
+
+                            if (optional.isPresent()) {
+                                optional.get().place(
+                                        world,
+                                        mutable.set(x + 16,11,z + 16),
+                                        mutable.set(x + 16,11,z + 16),
+                                        structurePlacementData, random, 2
+                                );
+                            }
+
+                        }
+                    }
+                }
+
+                if(noise1 > 0){
+                    roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/megaroom1");
+                    structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
                     optional = structureTemplateManager.getTemplate(roomIdentifier);
 
                     if (optional.isPresent()) {
-                        if (world.getBlockState(mutable.set(x + 8 * i, 18, z + 8 * j)) != Blocks.CYAN_WOOL.getDefaultState() && world.getBlockState(mutable.set(x + 8 * i, 25, z + 8 * j)) == Blocks.AIR.getDefaultState() ){
-                            if (structurePlacementData.getRotation() == BlockRotation.CLOCKWISE_90) {
-                                optional.get().place(world, new BlockPos((x + 7) + 8 * i, 25, (z) + 8 * j), mutable.set((x + 7) + 8 * i, 25, (z) + 8 * j), structurePlacementData, random, 16);
-                            } else {
-                                optional.get().place(world, new BlockPos((x) + 8 * i, 25, (z) + 8 * j), mutable.set((x) + 8 * i, 25, (z) + 8 * j), structurePlacementData, random, 16);
-                            }
+                        optional.get().place(
+                                world,
+                                mutable.set(x - 32, 19, z - 32),
+                                mutable.set(x - 32, 19, z - 32),
+                                structurePlacementData, random, 2);
+                        optional.get().place(
+                                world,
+                                mutable.set(x, 19, z - 32),
+                                mutable.set(x, 19, z - 32),
+                                structurePlacementData, random, 2);
+
+                        roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/light" + lights);
+                        structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
+                        optional = structureTemplateManager.getTemplate(roomIdentifier);
+
+                        if (optional.isPresent()){
+                            optional.get().place(
+                                    world,
+                                    mutable.set(x - 32, 19, z - 32),
+                                    mutable.set(x - 32, 19, z - 32),
+                                    structurePlacementData, random, 16);
+                            optional.get().place(
+                                    world,
+                                    mutable.set(x, 19, z - 32),
+                                    mutable.set(x, 19, z - 32),
+                                    structurePlacementData, random, 16);
                         }
+
+
+                    } else {
+                        if(world.getBlockState(mutable.set(x, 19, z)) != Blocks.RED_WOOL.getDefaultState()) {
+                            Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(8, 10, 10, x, z, "level5");
+                            level5MazeGenerator.setup(world, true);
+                        }
+
                     }
-                }
-            }
 
-        }
+                } else{
 
-    }
+                    if(world.getBlockState(mutable.set(x, 19, z)) != Blocks.RED_WOOL.getDefaultState()) {
+                        Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(8, 10, 10, x, z, "level5");
+                        level5MazeGenerator.setup(world, true);
+                    }
 
-    public boolean isNearMegaRooms(int x, int z,StructureWorldAccess world){
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        boolean near = false;
-
-        for(int i = -80; i <= 80; i += 80){
-            for(int j = -80; j <= 80; j += 80){
-                BlockState blockState = world.getBlockState(mutable.set(x + i, 19, z + j));
-                if (blockState == Blocks.RED_WOOL.getDefaultState()){
-                    near = true;
-                    break;
                 }
             }
         }
 
-        return near;
-    }
-
-    public Identifier getRoof(){
-        Random random = Random.create();
-        int roofNumber = random.nextBetween(1,5);
-
-        if (roofNumber == 1){
-            return new Identifier(Spv_addon.MOD_ID, "level5/hotel_roof2");
-        }
-        else {
-            return new Identifier(Spv_addon.MOD_ID, "level5/hotel_roof1");
-        }
-
+//        for (int j = 0; j < 16; j++){
+//            for (int i = 0; i < 16; i++){
+//                world.setBlockState(mutable.set(x + j, 25, z + i), Blocks.AIR.getDefaultState(), 16);
+//            }
+//        }
 
     }
 
-    public StructurePlacementData randRotation(){
-        StructurePlacementData structurePlacementData = new StructurePlacementData();
-        Random random = Random.create();
-        int rot = random.nextBetween(1,2);
-
-        if(rot == 1){
-            structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-        }else{
-            structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.CLOCKWISE_90).setIgnoreEntities(true);
-        }
-        return structurePlacementData;
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
     }
 
-
-
-
-
-
-
-
-
-    /* this method builds the shape of the terrain. it places stone everywhere, which will later be overwritten with grass, terracotta, snow, sand, etc.
+    /* this method builds the shape of the terrain. it places stone everywhere, which will later be overwritten with grass, terracotta, snow, sand, etc
          by the buildSurface method. it also is responsible for putting the water in oceans. it returns a CompletableFuture-- you'll likely want this to be delegated to worker threads. */
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
@@ -324,7 +241,7 @@ public class Level5ChunkGenerator extends ChunkGenerator {
     }
 
     /* the method that places grass, dirt, and other things on top of the world, as well as handling the bedrock and deepslate layers,
-    as well as a few other miscellaneous things. without this method, your world is just a blank stone (or whatever your default block is) canvas (plus any ores, etc.) */
+    as well as a few other miscellaneous things. without this method, your world is just a blank stone (or whatever your default block is) canvas (plus any ores, etc) */
     @Override
     public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
 
@@ -335,4 +252,8 @@ public class Level5ChunkGenerator extends ChunkGenerator {
     public void populateEntities(ChunkRegion region) {
 
     }
+
+
+
 }
+

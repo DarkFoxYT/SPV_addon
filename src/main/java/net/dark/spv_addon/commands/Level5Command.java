@@ -30,19 +30,19 @@ public class Level5Command {
                     }
                 }));
 
-        dispatcher.register(CommandManager.literal("regenlevel5")
+        dispatcher.register(CommandManager.literal("RUN")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
-                    World level5 = player.getServer().getWorld(BackroomsLevels.LEVEL5_WORLD_KEY);
-                    BlockPos spawn = BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVEL5_WORLD_KEY);
+                    ServerWorld run = player.getServer().getWorld(BackroomsLevels.LEVELRUN_WORLD_KEY);
+                    BlockPos spawn = BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVELRUN_WORLD_KEY);
 
-                    if (level5 != null && spawn != null) {
-                        level5.getChunk(spawn.getX() >> 4, spawn.getZ() >> 4).setNeedsSaving(true);
-                        player.sendMessage(Text.of("§bLevel 5 lobby chunk marked for regeneration."), false);
+                    if (run != null && spawn != null) {
+                        player.teleport(run, spawn.getX(), spawn.getY(), spawn.getZ(), 0, 0);
+                        player.sendMessage(Text.of("§eTeleported to Level RUN! "), false);
                         return 1;
                     } else {
-                        player.sendMessage(Text.of("§cFailed to access Level 5 for regeneration."), false);
+                        player.sendMessage(Text.of("§cLevel RUN! dimension or spawn point missing."), false);
                         return 0;
                     }
                 }));

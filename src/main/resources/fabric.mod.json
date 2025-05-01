@@ -3,7 +3,7 @@
   "id": "spv_addon",
   "version": "1.0",
   "name": "SPV Flashlight Addon",
-  "description": "Adds battery logic to the SPB-Revamped flashlight without modifying base code",
+  "description": "Adds stuff like a lot of stuff to space potatoes found footage mod",
   "authors": [
     "DarkFox"
   ],
@@ -23,20 +23,24 @@
       "net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin"
     ]
   },
-
   "custom": {
-  "cardinal-components": [
-    "spv_addon:bell_walker"
-  ]
+    "cardinal-components": [
+      "spv_addon:bell_walker",
+      "spv_addon:kitty",
+      "spv_addon:thirst",
+      "spv_addon:sanity"
+    ]
+  },
 
-},
 
-  "mixins": ["spv_addon.mixins.json"],
+  "mixins": [
+    "spv_addon.mixins.json"
+  ],
+
   "depends": {
     "fabricloader": "*",
     "fabric-api": "*",
     "cardinal-components-base": "*",
     "spb-revamped": "*"
   }
-
 }
