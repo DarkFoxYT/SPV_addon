@@ -1,4 +1,4 @@
-package net.dark.spv_addon.util;
+package net.dark.spv_addon.Additions.battery;
 
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;

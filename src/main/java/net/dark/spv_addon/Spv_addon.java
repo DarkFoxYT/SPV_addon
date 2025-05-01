@@ -4,14 +4,15 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import com.sp.networking.InitializePackets;
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.dark.spv_addon.commands.Level5Command;
-import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.init.ModBlocks;
-import net.dark.spv_addon.init.ModChunkGenerators;
-import net.dark.spv_addon.init.ModSounds;
-import net.dark.spv_addon.items.ModItemGroups;
-import net.dark.spv_addon.items.ModItems;
-import net.dark.spv_addon.util.FlashlightBatteryEvents;
+import net.dark.spv_addon.commands.ThirstCommand;
+import net.dark.spv_addon.compat.modmenu.ConfigStuff;
+import net.dark.spv_addon.init.*;
+import net.dark.spv_addon.init.ModItemGroups;
+import net.dark.spv_addon.init.ModItems;
+import net.dark.spv_addon.Additions.thirst.ThirstManager;
+import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
@@ -50,13 +51,21 @@ public class Spv_addon implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ModKeybinds.registerKeybinds();
+
+
+        ThirstManager.register();
+        net.dark.spv_addon.sanity.SanityManager.register();
+        ThirstManager.register();
+
         ModItems.registerItems();
         FlashlightBatteryEvents.register();
         ModBlocks.registerModBlocks();
         ModChunkGenerators.register();
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
-
+        ThirstManager.register();
+        MidnightConfig.init(MOD_ID, ConfigStuff.class);
 
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
@@ -66,6 +75,7 @@ public class Spv_addon implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             FlashlightBatteryCommand.register(dispatcher);
             Level5Command.register(dispatcher);
+            ThirstCommand.register(dispatcher);
         });
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
@@ -132,20 +142,13 @@ public class Spv_addon implements ModInitializer {
                     // how far into the chunk?
                     double localX = player.getX() - (cpos.x * 16.0);
                     // once they pass halfway (8 blocks)…
-                    if (localX > 8.0) {
+                    if (localX > 0) {
                         // teleport them to your next level
                         var destKey = BackroomsLevels.LEVEL5_WORLD_KEY; // change to whatever
                         ServerWorld target = server.getWorld(destKey);
                         if (target != null) {
                             BlockPos spawn = target.getSpawnPos();
-                            player.teleport(
-                                    target,
-                                    spawn.getX() + 0.5,
-                                    spawn.getY() + 1,
-                                    spawn.getZ() + 0.5,
-                                    player.getYaw(),
-                                    player.getPitch()
-                            );
+                            player.teleport(target, spawn.getX(), spawn.getY(), spawn.getZ(), player.getYaw(), player.getPitch());
                         }
                     }
                 }

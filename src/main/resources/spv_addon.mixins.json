@@ -1,18 +1,20 @@
 {
   "required": true,
-  "minVersion": "0.8",
   "package": "net.dark.spv_addon.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ChunkStatusMixin",
     "MixinMinecraftClient",
-    "ChunkStatusMixin"
+    "levelsgen.Level0ChunkGeneratorMixin",
+    "levelsgen.Level0MazeGeneratorMixin"
   ],
-  "client": [
-    "MixinMinecraftClient"
-  ],
-  "server": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "ChunkStatusMixin",
+    "MixinMinecraftClient"
+  ]
+
 
 }

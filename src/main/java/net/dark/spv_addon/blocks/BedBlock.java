@@ -12,28 +12,26 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 
 @SuppressWarnings("deprecation")
-public class bed extends HorizontalFacingBlock {
+public class BedBlock extends HorizontalFacingBlock {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final IntProperty SIDES = IntProperty.of("sides", 1, 4);
 
-
-    public bed(Settings settings) {
+    public BedBlock(Settings settings) {
         super(settings);
+        setDefaultState(this.stateManager.getDefaultState().with(FACING, net.minecraft.util.math.Direction.NORTH).with(SIDES, 1));
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = ctx.getWorld().getBlockState(ctx.getBlockPos());
-        if (blockState.isOf(this)) {
-            return blockState.with(SIDES, Math.min(4, blockState.get(SIDES) + 1)).with(FACING, blockState.get(FACING));
-        } else {
-            return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-        }
+        return this.getDefaultState()
+                .with(FACING, ctx.getPlayerLookDirection().getOpposite()) // Always opposite of player
+                .with(SIDES, 1); // Always start at 1 side
     }
 
     @Override
-    public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        return !context.shouldCancelInteraction() && context.getStack().isOf(this.asItem()) && state.get(SIDES) < 4 || super.canReplace(state, context);
+    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
+        return !ctx.shouldCancelInteraction() && ctx.getStack().isOf(this.asItem()) && state.get(SIDES) < 4;
     }
 
     @Override
@@ -48,8 +46,6 @@ public class bed extends HorizontalFacingBlock {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-        builder.add(SIDES);
+        builder.add(FACING, SIDES);
     }
-
 }

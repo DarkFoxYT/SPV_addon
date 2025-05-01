@@ -2,10 +2,8 @@ package net.dark.spv_addon.client.gui;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.dark.spv_addon.render.CutsceneManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

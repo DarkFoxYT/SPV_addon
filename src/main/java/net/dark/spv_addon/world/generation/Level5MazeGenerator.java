@@ -1,8 +1,8 @@
 package net.dark.spv_addon.world.generation;
 
-import com.sp.SPBRevamped;
 import com.sp.init.ModBlocks;
 import net.dark.spv_addon.Spv_addon;
+import net.dark.spv_addon.world.generation.extras.HighVarCell;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.structure.StructurePlacementData;

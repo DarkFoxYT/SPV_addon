@@ -1,7 +1,6 @@
 package net.dark.spv_addon.mixins;
 
 import net.dark.spv_addon.client.gui.CustomDeathScreen;
-import net.dark.spv_addon.render.CutsceneManager;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.MinecraftClient;

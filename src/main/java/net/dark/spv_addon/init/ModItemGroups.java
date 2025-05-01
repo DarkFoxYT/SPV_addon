@@ -1,7 +1,6 @@
-package net.dark.spv_addon.items;
+package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.init.ModBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -27,6 +26,8 @@ public class ModItemGroups {
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);
+                        entries.add(ModItems.ALMOND_BOTTLE);
+                        entries.add(ModItems.CANTEEN);
                     })
                     .build()
     );
