@@ -49,7 +49,7 @@ public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEn
                 new Segment.Builder().length(1.2).build(),
                 new Segment.Builder().length(0.8).build()
         );
-        this.legComponent = new IKLegCompKitty<>("base_leg", legSettings, legs, legChain, legChain);
+        this.legComponent = new IKLegCompKitty<>("leg", legSettings, legs, legChain, legChain);
 
         List<ServerLimb> arms = List.of(
                 new ServerLimb(0.8, 1.5, 0),
@@ -67,7 +67,7 @@ public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEn
                 new Segment.Builder().length(0.5).build(),
                 new Segment.Builder().length(0.5).build()
         );
-        this.armComponent = new IKLegCompKitty<>("arm_base", armSettings, arms, armChain, armChain);
+        this.armComponent = new IKLegCompKitty<>("arm", armSettings, arms, armChain, armChain);
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {

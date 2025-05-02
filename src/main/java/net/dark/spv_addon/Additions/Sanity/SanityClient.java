@@ -4,7 +4,7 @@ import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.client.gui.SanityHud;
 import net.dark.spv_addon.entities.client.model.SaniModel;
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.dark.spv_addon.init.ModEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

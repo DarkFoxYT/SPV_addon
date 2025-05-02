@@ -30,7 +30,6 @@ public class KittyRenderer extends DynamicGeoEntityRenderer<KittyEntity> {
         ent.getModelPositions(ent, new GeoModelAccessor(this.model));
     }
 
-
     @Override
     public void renderRecursively(MatrixStack poseStack, KittyEntity animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone == null) return;
