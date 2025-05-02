@@ -3,18 +3,12 @@ package net.dark.spv_addon.Additions.Sanity;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.client.gui.SanityHud;
-import net.dark.spv_addon.entities.client.model.SaniModel;
 import net.dark.spv_addon.entities.custom.Sani_ty;
 import net.dark.spv_addon.init.ModEntities;
-import net.dark.spv_addon.sanity.SanityManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.entity.PhantomEntityRenderer;
-import net.minecraft.util.math.Box;
 
 public class SanityClient implements ClientModInitializer {
     @Override

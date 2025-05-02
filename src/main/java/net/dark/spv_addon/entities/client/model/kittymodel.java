@@ -2,8 +2,6 @@ package net.dark.spv_addon.entities.client.model;
 
 import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.cca.InitializeComponents;
-import net.dark.spv_addon.cca.KittyComponent;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -36,6 +34,5 @@ public class kittymodel extends GeoModel<KittyEntity> {
 	public void setCustomAnimations(KittyEntity animatable, long instanceId, AnimationState<KittyEntity> state) {
 		super.setCustomAnimations(animatable, instanceId, state);
 		animatable.tickComponentsClient(animatable, new GeoModelAccessor(this));
-		KittyComponent comp = InitializeComponents.KITTY.get(animatable);
 	}
 }

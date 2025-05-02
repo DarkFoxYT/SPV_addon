@@ -1,6 +1,7 @@
 package net.dark.spv_addon.entities.ai.goals;
 
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
+import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -9,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * AggroNearestPlayerGoal: targets the nearest speaking player

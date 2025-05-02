@@ -5,15 +5,14 @@ import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import com.sp.networking.InitializePackets;
 import eu.midnightdust.lib.config.MidnightConfig;
+import net.dark.spv_addon.Additions.Sanity.SanityManager;
+import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
+import net.dark.spv_addon.Additions.thirst.ThirstManager;
+import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.commands.ThirstCommand;
 import net.dark.spv_addon.compat.modmenu.ConfigStuff;
 import net.dark.spv_addon.init.*;
-import net.dark.spv_addon.init.ModItemGroups;
-import net.dark.spv_addon.init.ModItems;
-import net.dark.spv_addon.Additions.thirst.ThirstManager;
-import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
-import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
 import net.fabricmc.api.ModInitializer;
@@ -54,8 +53,7 @@ public class Spv_addon implements ModInitializer {
         ModKeybinds.registerKeybinds();
 
 
-        ThirstManager.register();
-        net.dark.spv_addon.sanity.SanityManager.register();
+        SanityManager.register();
         ThirstManager.register();
 
         ModItems.registerItems();
