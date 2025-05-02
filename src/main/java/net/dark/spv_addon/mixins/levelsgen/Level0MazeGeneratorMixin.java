@@ -1,7 +1,9 @@
 package net.dark.spv_addon.mixins.levelsgen;
 
+import com.sp.world.generation.Level0ChunkGenerator;
 import com.sp.world.generation.maze_generator.Level0MazeGenerator;
 import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.chunk.Chunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -9,15 +11,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Field;
 
-@Mixin(Level0MazeGenerator.class)
+@Mixin(Level0ChunkGenerator.class)
 public class Level0MazeGeneratorMixin {
 
     /**
      * Patch to safely handle missing starting cell in Level0MazeGenerator.setup()
      * Prevents crashes when no valid maze cell is found.
      */
-    @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lcom/sp/world/generation/maze_generator/LowVarCell;setVisited(Z)V"), cancellable = true)
-    private void spv_addon$preventCrashIfNoCurrentCell(StructureWorldAccess world, CallbackInfo ci) {
+    @Inject(method = "generate", at = @At("TAIL"))
+    private void spv_addon$preventCrashIfNoCurrentCell(StructureWorldAccess world, Chunk chunk, CallbackInfo ci) {
         Level0MazeGenerator self = (Level0MazeGenerator) (Object) this;
 
         try {

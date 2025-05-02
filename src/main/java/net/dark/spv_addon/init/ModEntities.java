@@ -3,7 +3,7 @@ package net.dark.spv_addon.init;
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -23,10 +23,10 @@ public class ModEntities {
                             .build()
             );
 
-    public static final EntityType<Sani_ty> SANI_TY =
+    public static final EntityType<SanityStalkerEntity> SANI_TY =
             Registry.register(Registries.ENTITY_TYPE,
                     new Identifier(Spv_addon.MOD_ID, "sani-ty"),
-                    FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, Sani_ty::new)
+                    FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, SanityStalkerEntity::new)
                             .dimensions(EntityDimensions.fixed(1.0f, 0.8f))
                             .build()
             );
