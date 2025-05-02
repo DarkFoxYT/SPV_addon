@@ -16,8 +16,9 @@ public class IKLegCompKitty<C extends IKChain, E extends PathAwareEntity & IKAni
 
     private final String prefix;
 
-    public IKLegCompKitty(String prefix, List<LegSetting> settings, List<?> endpoints, C... limbs) {
-        super(settings, (List<ServerLimb>) endpoints, limbs);
+    @SafeVarargs
+    public IKLegCompKitty(String prefix, List<LegSetting> settings, List<ServerLimb> endpoints, C... limbs) {
+        super(settings, endpoints, limbs);
         this.prefix = prefix;
     }
 
@@ -29,8 +30,8 @@ public class IKLegCompKitty<C extends IKChain, E extends PathAwareEntity & IKAni
             var baseBone = model.getBone(prefix + (i + 1));
             if (baseBone.isEmpty()) continue;
 
-            var basePos = baseBone.get().getPosition();
-            var chain = setLimb(i, basePos, entity);
+            Vec3d basePos = baseBone.get().getPosition();
+            C chain = setLimb(i, basePos, entity);
 
             for (int j = 0; j < chain.getJoints().size() - 1; j++) {
                 var segBone = model.getBone("seg" + (j + 1) + "_" + prefix + (i + 1));
@@ -46,16 +47,12 @@ public class IKLegCompKitty<C extends IKChain, E extends PathAwareEntity & IKAni
     @Override
     public void getModelPositions(E animatable, ModelAccessor model) {
         for (int i = 0; i < limbs.size(); i++) {
-            var bone = model.getBone(prefix + (i + 1));
-            if (bone.isEmpty()) continue;
+            var baseBone = model.getBone(prefix + (i + 1));
+            if (baseBone.isEmpty()) continue;
 
-            setLimb(i, bone.get().getPosition(), animatable);
+            Vec3d basePos = baseBone.get().getPosition();
+            setLimb(i, basePos, animatable);
         }
-    }
-
-    @Override
-    public void tickServer(E animatable) {
-        super.tickServer(animatable); // let parent handle limb stepping logic
     }
 
     public void setArmTarget(double x, double y, double z) {

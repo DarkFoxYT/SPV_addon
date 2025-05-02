@@ -1,6 +1,6 @@
 package net.dark.spv_addon.entities.ai.goals;
 
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.minecraft.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
@@ -10,9 +10,9 @@ import java.util.EnumSet;
  * constant positive Y motion and disabling gravity.
  */
 public class LevitationGoal extends Goal {
-    private final Sani_ty mob;
+    private final SanityStalkerEntity mob;
 
-    public LevitationGoal(Sani_ty mob) {
+    public LevitationGoal(SanityStalkerEntity mob) {
         this.mob = mob;
         this.setControls(EnumSet.of(Control.MOVE));
     }

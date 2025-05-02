@@ -2,11 +2,11 @@ package net.dark.spv_addon.entities.client.model;
 
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.model.GeoModel;
 
-public class SaniModel extends GeoModel<Sani_ty> {
+public class SaniModel extends GeoModel<SanityStalkerEntity> {
 	private static final Identifier MODEL = new Identifier(Spv_addon.MOD_ID,
 			"geo/entity/sanity.geo.json");
 	private static final Identifier TEXTURE = new Identifier(Spv_addon.MOD_ID,
@@ -15,17 +15,17 @@ public class SaniModel extends GeoModel<Sani_ty> {
 			"animation/sani-ty.animation.json");
 
 	@Override
-	public Identifier getModelResource(Sani_ty object) {
+	public Identifier getModelResource(SanityStalkerEntity object) {
 		return MODEL;
 	}
 
 	@Override
-	public Identifier getTextureResource(Sani_ty object) {
+	public Identifier getTextureResource(SanityStalkerEntity object) {
 		return TEXTURE;
 	}
 
 	@Override
-	public Identifier getAnimationResource(Sani_ty animatable) {
+	public Identifier getAnimationResource(SanityStalkerEntity animatable) {
 		return ANIMATION;
 	}
 

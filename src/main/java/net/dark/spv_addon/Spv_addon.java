@@ -55,7 +55,7 @@ public class Spv_addon implements ModInitializer {
 
 
         ThirstManager.register();
-        net.dark.spv_addon.sanity.SanityManager.register();
+        net.dark.spv_addon.Additions.Sanity.SanityManager.register();
         ThirstManager.register();
 
         ModItems.registerItems();

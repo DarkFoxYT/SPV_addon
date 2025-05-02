@@ -40,12 +40,12 @@ public class BellWalkerEntity extends PathAwareEntity
         this.navigation = new SlightlyBetterMobNavigation(this, world);
 
         List<ServerLimb> endpoints = List.of(
-                new ServerLimb( 1.5, 0.0,  2),
-                new ServerLimb(-1.5, 0.0,  2),
-                new ServerLimb( 1.8, 0.0,  0),
-                new ServerLimb(-1.8, 0.0,  0),
-                new ServerLimb( 1.5, 0.0, -2),
-                new ServerLimb(-1.5, 0.0, -2)
+                new ServerLimb( 1, 0.0,  1.5),
+                new ServerLimb(-1, 0.0,  1.5),
+                new ServerLimb( 1.2, 0.0,  0),
+                new ServerLimb(-1.2, 0.0,  0),
+                new ServerLimb( 1, 0.0, -1.5),
+                new ServerLimb(-1, 0.0, -1.5)
         );
         IKLegCompDark.LegSetting setting = new IKLegCompDark.LegSetting.Builder()
                 .maxDistance(1.5)
@@ -57,10 +57,10 @@ public class BellWalkerEntity extends PathAwareEntity
         List<IKLegCompDark.LegSetting> settings = endpoints.stream()
                 .map(e -> setting).collect(Collectors.toList());
         TargetReachingIKChain chain = new TargetReachingIKChain(
-                new Segment.Builder().length(0.65).build(),
+                new Segment.Builder().length(0.40).build(),
+                new Segment.Builder().length(0.80).build(),
                 new Segment.Builder().length(1.00).build(),
-                new Segment.Builder().length(1.30).build(),
-                new Segment.Builder().length(0.85).build()
+                new Segment.Builder().length(0.60).build()
         );
         this.legComponent = new IKLegCompDark<>(
                 settings, endpoints,

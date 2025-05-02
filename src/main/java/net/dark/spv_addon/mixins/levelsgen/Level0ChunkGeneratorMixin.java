@@ -16,7 +16,7 @@ public class Level0ChunkGeneratorMixin {
     /**
      * Injects extra generation at the end of generateMaze().
      */
-    @Inject(method = "generateMaze", at = @At("TAIL"))
+    @Inject(method = "generate", at = @At("TAIL"))
     private void afterGenerateMaze(StructureWorldAccess world, Chunk chunk, CallbackInfo ci) {
         AddonLevel0MazeGenerator addonMaze = new AddonLevel0MazeGenerator(world, "level0");
 

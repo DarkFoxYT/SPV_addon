@@ -1,13 +1,11 @@
 package net.dark.spv_addon;
 
-import com.sp.cca_stuff.InitializeComponents;
-import com.sp.cca_stuff.WorldEvents;
 import com.sp.compat.modmenu.ConfigDefinitions;
+import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.shader.definition.ShaderPreDefinitions;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.Sanity.SanityClient;
-import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.client.gui.ThirstHud;
@@ -16,8 +14,9 @@ import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
 import net.dark.spv_addon.entities.client.renderer.SaniRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -29,12 +28,8 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
-
-import static net.dark.spv_addon.compat.modmenu.ConfigDefinitions.definitions;
 
 
 @Environment(EnvType.CLIENT)
@@ -57,14 +52,14 @@ public class Spv_addonClient implements ClientModInitializer {
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
 
-        FabricDefaultAttributeRegistry.register(ModEntities.SANI_TY, Sani_ty.createAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.SANI_TY, SanityStalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SANI_TY, SaniRenderer::new);
 
         FabricDefaultAttributeRegistry.register(ModEntities.KITTY, KittyEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.KITTY, KittyRenderer::new);
 
 
-        new SanityClient().onInitializeClient(); // or just rely on Fabric’s automatic discovery
+        new SanityClient().onInitializeClient();
         BatteryHud.register();
         ThirstHud.register();
 
@@ -74,8 +69,6 @@ public class Spv_addonClient implements ClientModInitializer {
             ShaderPreDefinitions defs = VeilRenderSystem.renderer().getShaderDefinitions();
 
 
-
-            // 2) Apply all of your config flags:
             ConfigDefinitions.definitions.forEach((key, supplier) -> {
                 if (supplier.get()) {
                     defs.define(key);
@@ -84,7 +77,7 @@ public class Spv_addonClient implements ClientModInitializer {
                 }
             });
 
-            // 3) Apply all of your per‐world flags:
+
             BackroomsLevels.definitions.forEach((key, worldKey) -> {
                 if (client.world != null && client.world.getRegistryKey() == worldKey) {
                     defs.define(key);
@@ -93,5 +86,14 @@ public class Spv_addonClient implements ClientModInitializer {
                 }
             });
         });
+
+
+
+
+
+        PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(true, 0.2f, 1f, 1024));
+        PbrRegistry.registerPBR(ModBlocks.HOTEL_FLOOR, new PbrRegistry.PbrMaterial(false, 0.1f, 0.9f, 1024));
+
+
     }
 }

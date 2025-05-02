@@ -4,9 +4,8 @@ import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.client.gui.SanityHud;
 import net.dark.spv_addon.entities.client.model.SaniModel;
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.dark.spv_addon.init.ModEntities;
-import net.dark.spv_addon.sanity.SanityManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -30,11 +29,11 @@ public class SanityClient implements ClientModInitializer {
             SanityComponent sc = InitializeComponents.SANITY.get(p);
             if (sc.getSanity() == 0) {
                 boolean hasGhost = !client.world
-                        .getNonSpectatingEntities(Sani_ty.class,
+                        .getNonSpectatingEntities(SanityStalkerEntity.class,
                                 p.getBoundingBox().expand(3))
                         .isEmpty();
                 if (!hasGhost) {
-                    Sani_ty ghost = new Sani_ty(ModEntities.SANI_TY, client.world);
+                    SanityStalkerEntity ghost = new SanityStalkerEntity(ModEntities.SANI_TY, client.world);
                     ghost.updatePosition(p.getX() + 1.5, p.getY(), p.getZ() + 1.5);
                     client.world.addEntity(-1, ghost);
                 }

@@ -1,6 +1,6 @@
 package net.dark.spv_addon.entities.ai.goals;
 
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * and plays a stop sound whose frequency increases as it closes in.
  */
 public class AggroPlayer extends Goal {
-    private final Sani_ty mob;
+    private final SanityStalkerEntity mob;
     private final double maxRange;
     private final double aggroSpeed;
     private double originalSpeed;
@@ -27,14 +27,14 @@ public class AggroPlayer extends Goal {
     private static final int MIN_SOUND_DELAY = 5;   // fastest (close)
     private static final int MAX_SOUND_DELAY = 40;  // slowest (far)
 
-    public AggroPlayer(Sani_ty mob, double maxRange, double aggroSpeed) {
+    public AggroPlayer(SanityStalkerEntity mob, double maxRange, double aggroSpeed) {
         this.mob = mob;
         this.maxRange = maxRange;
         this.aggroSpeed = aggroSpeed;
         this.setControls(EnumSet.of(Control.TARGET));
     }
 
-    public AggroPlayer(Sani_ty mob, double maxRange) {
+    public AggroPlayer(SanityStalkerEntity mob, double maxRange) {
         this(mob, maxRange, 0.6);
     }
 

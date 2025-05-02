@@ -2,7 +2,7 @@ package net.dark.spv_addon.entities.client.renderer;
 
 import com.sp.entity.ik.model.GeckoLib.MowzieGeoBone;
 import net.dark.spv_addon.entities.client.model.SaniModel;
-import net.dark.spv_addon.entities.custom.Sani_ty;
+import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.util.Identifier;
@@ -18,14 +18,14 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import software.bernie.geckolib.util.RenderUtils;
 
-public class SaniRenderer extends DynamicGeoEntityRenderer<Sani_ty> {
+public class SaniRenderer extends DynamicGeoEntityRenderer<SanityStalkerEntity> {
 
     public SaniRenderer(EntityRendererFactory.Context context) {
         super(context, new SaniModel());
     }
 
     @Override
-    public void render(Sani_ty entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void render(SanityStalkerEntity entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 
         entity.getModelPositions(entity, new GeoModelAccessor(this.model));
@@ -34,7 +34,7 @@ public class SaniRenderer extends DynamicGeoEntityRenderer<Sani_ty> {
 
 
     @Override
-    public void renderRecursively(MatrixStack poseStack, Sani_ty animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(MatrixStack poseStack, SanityStalkerEntity animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone == null) return;
         poseStack.push();
         if (bone instanceof MowzieGeoBone mowzieGeoBone && mowzieGeoBone.isForceMatrixTransform() && animatable != null) {
