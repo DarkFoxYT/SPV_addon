@@ -6,9 +6,6 @@ import com.sp.entity.ik.model.ModelAccessor;
 import com.sp.entity.ik.parts.Segment;
 import com.sp.entity.ik.parts.ik_chains.TargetReachingIKChain;
 import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
-import net.dark.spv_addon.cca.InitializeComponents;
-import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.entities.ai.goals.AggroLowSanityPlayerGoal;
 import net.dark.spv_addon.entities.ik.components.IKLegCompSanity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -67,7 +64,6 @@ public class SanityStalkerEntity extends PathAwareEntity implements IKAnimatable
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(0, new AggroLowSanityPlayerGoal(this, 32.0));
     }
 
     @Override

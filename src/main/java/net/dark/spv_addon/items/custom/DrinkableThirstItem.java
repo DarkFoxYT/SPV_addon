@@ -41,7 +41,6 @@ public class DrinkableThirstItem extends PotionItem {
             ThirstComponent thirst = InitializeComponents.THIRST.get(serverPlayer);
             SanityComponent sanity = InitializeComponents.SANITY.get(serverPlayer);
             thirst.addThirst(world.getRandom().nextBetween(10, 25));
-            sanity.addSanity(world.getRandom().nextBetween(5, 25));
         }
 
         ItemStack result = super.finishUsing(stack, world, entity);

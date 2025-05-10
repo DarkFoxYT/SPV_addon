@@ -2,17 +2,9 @@ package net.dark.spv_addon.entities.client.model;
 
 import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.cca.BellWalkerComponent;
-import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.animation.Animation.LoopType;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class BellWalkerModel extends GeoModel<BellWalkerEntity> {
@@ -42,6 +34,5 @@ public class BellWalkerModel extends GeoModel<BellWalkerEntity> {
 	public void setCustomAnimations(BellWalkerEntity animatable, long instanceId, AnimationState<BellWalkerEntity> state) {
 		super.setCustomAnimations(animatable, instanceId, state);
 		animatable.tickComponentsClient(animatable, new GeoModelAccessor(this));
-		BellWalkerComponent comp = InitializeComponents.BELL_WALKER.get(animatable);
 	}
 }

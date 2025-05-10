@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ChunkStatusMixin",
+    "LightRendererMixin",
     "MixinMinecraftClient",
     "levelsgen.Level0ChunkGeneratorMixin",
     "levelsgen.Level0MazeGeneratorMixin"
@@ -13,6 +14,7 @@
   },
   "client": [
     "ChunkStatusMixin",
+    "LightRendererMixin",
     "MixinMinecraftClient"
   ]
 

@@ -11,7 +11,7 @@ import net.minecraft.block.Blocks;
 
 
 public class ModBlocks {
-    public static final Block HOTEL_WALL = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.STONE).nonOpaque());
+    public static final Block HOTEL_WALL = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.STONE));
     public static final Block HOTEL_FLOOR = new Block(FabricBlockSettings.copyOf(Blocks.RED_WOOL).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
 
     public static final Block TABLE = new BedBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));

@@ -18,7 +18,7 @@ public class Level5Command {
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
                     ServerWorld level5 = player.getServer().getWorld(BackroomsLevels.LEVEL5_WORLD_KEY);
-                    BlockPos spawn = BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVEL5_WORLD_KEY);
+                    BlockPos spawn = BlockPos.ofFloored(BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVEL5_WORLD_KEY));
 
                     if (level5 != null && spawn != null) {
                         player.teleport(level5, spawn.getX(), spawn.getY(), spawn.getZ(), 0, 0);
@@ -35,7 +35,7 @@ public class Level5Command {
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
                     ServerWorld run = player.getServer().getWorld(BackroomsLevels.LEVELRUN_WORLD_KEY);
-                    BlockPos spawn = BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVELRUN_WORLD_KEY);
+                    BlockPos spawn = BlockPos.ofFloored(BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVELRUN_WORLD_KEY));
 
                     if (run != null && spawn != null) {
                         player.teleport(run, spawn.getX(), spawn.getY(), spawn.getZ(), 0, 0);

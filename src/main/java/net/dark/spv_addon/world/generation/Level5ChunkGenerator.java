@@ -111,6 +111,7 @@ public final class Level5ChunkGenerator extends ChunkGenerator {
                                         mutable.set(x + 16,11,z + 16),
                                         mutable.set(x + 16,11,z + 16),
                                         structurePlacementData, random, 2
+
                                 );
                             }
 
@@ -179,6 +180,7 @@ public final class Level5ChunkGenerator extends ChunkGenerator {
 //        }
 
     }
+
 
     protected Codec<? extends ChunkGenerator> getCodec() {
         return CODEC;

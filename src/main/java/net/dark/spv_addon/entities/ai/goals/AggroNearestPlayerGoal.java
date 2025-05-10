@@ -1,7 +1,6 @@
 package net.dark.spv_addon.entities.ai.goals;
 
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
-import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -11,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * AggroNearestPlayerGoal: targets the nearest speaking player
@@ -40,22 +39,16 @@ public class AggroNearestPlayerGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        List<UUID> candidates = SpvAddonVoicechatPlugin.justSpoke.stream()
-                .filter(uuid -> {
-                    PlayerEntity player = mob.getWorld().getPlayerByUuid(uuid);
-                    return player != null && player.squaredDistanceTo(mob) <= maxRange * maxRange;
-                })
-                .toList();
+        List<PlayerEntity> candidates = mob.getWorld().getPlayers().stream()
+                .filter(p -> mob.getSoundPitch() >= 2)
+                .filter(p -> p.squaredDistanceTo(mob) <= maxRange * maxRange)
+                .collect(Collectors.toList());
         if (candidates.isEmpty()) return false;
 
-        UUID nearestUuid = candidates.stream()
-                .min(Comparator.comparingDouble(uuid -> {
-                    PlayerEntity p = mob.getWorld().getPlayerByUuid(uuid);
-                    return p.squaredDistanceTo(mob);
-                }))
+        PlayerEntity nearest = candidates.stream()
+                .min(Comparator.comparingDouble(p -> p.squaredDistanceTo(mob)))
                 .get();
-
-        mob.setTarget(mob.getWorld().getPlayerByUuid(nearestUuid));
+        mob.setTarget(nearest);
         return true;
     }
 
@@ -90,14 +83,8 @@ public class AggroNearestPlayerGoal extends Goal {
     @Override
     public boolean shouldContinue() {
         LivingEntity target = mob.getTarget();
-        return target instanceof PlayerEntity && target.isAlive();
-    }
-
-    @Override
-    public void stop() {
-        // restore original speed
-        mob.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)
-                .setBaseValue(originalSpeed);
-        mob.setTarget(null);
+        return target instanceof PlayerEntity
+                && target.isAlive()
+                && mob.getSoundPitch() >= 2;
     }
 }

@@ -25,11 +25,10 @@ public class KittyRenderer extends DynamicGeoEntityRenderer<KittyEntity> {
     @Override
     public void render(KittyEntity ent, float yaw, float pt, MatrixStack ms,
                        VertexConsumerProvider vb, int light) {
-        // Before drawing, solve IK:
-        ent.applyModelPose(new GeoModelAccessor(this.model));
         super.render(ent, yaw, pt, ms, vb, light);
-    }
 
+        ent.getModelPositions(ent, new GeoModelAccessor(this.model));
+    }
 
     @Override
     public void renderRecursively(MatrixStack poseStack, KittyEntity animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {

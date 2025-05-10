@@ -1,3 +1,4 @@
+// File: net/dark/spv_addon/mixins/levelsgen/Level0ChunkGeneratorMixin.java
 package net.dark.spv_addon.mixins.levelsgen;
 
 import com.sp.world.generation.Level0ChunkGenerator;
@@ -13,20 +14,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Level0ChunkGenerator.class)
 public class Level0ChunkGeneratorMixin {
 
-    /**
-     * Injects extra generation at the end of generateMaze().
-     */
     @Inject(method = "generate", at = @At("TAIL"))
-    private void afterGenerateMaze(StructureWorldAccess world, Chunk chunk, CallbackInfo ci) {
-        AddonLevel0MazeGenerator addonMaze = new AddonLevel0MazeGenerator(world, "level0");
-
+    private void spv_addon$injectCustomRooms(StructureWorldAccess world, Chunk chunk, CallbackInfo ci) {
         int startX = chunk.getPos().x * 16;
         int startZ = chunk.getPos().z * 16;
-        int sizeX = 8; // 8*5 = 40 blocks width
-        int sizeZ = 8; // 8*5 = 40 blocks depth
 
-        addonMaze.generate(startX, startZ, sizeX, sizeZ);
+        // 1. Custom Addon Maze (Level0)
+        AddonLevel0MazeGenerator customMaze = new AddonLevel0MazeGenerator(world, "level0");
+        customMaze.generate(startX, startZ, 8, 8);
 
+        // 2. Custom MegaRoom
         Mega5RoomGenerator.placeMega5Room(world, chunk.getPos().x, chunk.getPos().z);
     }
 }
