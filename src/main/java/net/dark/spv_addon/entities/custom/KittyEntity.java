@@ -3,9 +3,12 @@ package net.dark.spv_addon.entities.custom;
 import com.sp.entity.ik.components.IKAnimatable;
 import com.sp.entity.ik.components.IKModelComponent;
 import com.sp.entity.ik.parts.Segment;
+import com.sp.entity.ik.parts.ik_chains.EntityLeg;
+import com.sp.entity.ik.parts.ik_chains.StretchingIKChain;
 import com.sp.entity.ik.parts.ik_chains.TargetReachingIKChain;
 import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
 import com.sp.entity.ik.model.ModelAccessor;
+import com.sp.entity.ik.util.MathUtil;
 import net.dark.spv_addon.entities.ik.components.IKLegCompKitty;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -14,6 +17,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -26,15 +30,15 @@ import java.util.stream.Collectors;
 public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEntity>, GeoAnimatable {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final IKLegCompKitty<TargetReachingIKChain, KittyEntity> legComponent;
-    private final IKLegCompKitty<TargetReachingIKChain, KittyEntity> armComponent;
+    private final IKLegCompKitty<StretchingIKChain, KittyEntity> legComponent;
+    private final IKLegCompKitty<StretchingIKChain, KittyEntity> armComponent;
 
     public KittyEntity(EntityType<? extends KittyEntity> type, World world) {
         super(type, world);
 
         List<ServerLimb> legs = List.of(
-                new ServerLimb(1.5, 0.0, 2),
-                new ServerLimb(-1.5, 0.0, 2)
+                new ServerLimb(-0.125, 0.0, 0),
+                new ServerLimb(0.125, 0.0, 0)
         );
         var legSettings = legs.stream().map(e -> new IKLegCompKitty.LegSetting.Builder()
                 .maxDistance(1.5)
@@ -43,17 +47,19 @@ public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEn
                 .maxStandingStillDistance(0.1)
                 .standStillCounter(20)
                 .build()).collect(Collectors.toList());
-        TargetReachingIKChain legChain = new TargetReachingIKChain(
-                new Segment.Builder().length(0.6).build(),
-                new Segment.Builder().length(0.8).build(),
-                new Segment.Builder().length(1.2).build(),
-                new Segment.Builder().length(0.8).build()
+        // 16 Blockbench units is 1 block
+
+        StretchingIKChain legChain = new EntityLeg(
+                new Segment.Builder().length(0.3).angleSize(180).build(),
+                new Segment.Builder().length(0.6).angleSize(180).build(),
+                new Segment.Builder().length(.8).angleSize(180).build(),
+                new Segment.Builder().length(0.4).angleSize(180).build()
         );
         this.legComponent = new IKLegCompKitty<>("leg", legSettings, legs, legChain, legChain);
 
         List<ServerLimb> arms = List.of(
-                new ServerLimb(0.8, 1.5, 0),
-                new ServerLimb(-0.8, 1.5, 0)
+                new ServerLimb(-0.8, 1.5, 0),
+                new ServerLimb(0.8, 1.5, 0)
         );
         var armSettings = arms.stream().map(e -> new IKLegCompKitty.LegSetting.Builder()
                 .maxDistance(2.0)
