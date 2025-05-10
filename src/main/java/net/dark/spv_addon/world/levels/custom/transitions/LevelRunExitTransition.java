@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.Levels.custom.transitions;
+package net.dark.spv_addon.world.levels.custom.transitions;
 
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.levels.BackroomsLevel;
@@ -23,11 +23,12 @@ public class LevelRunExitTransition implements BackroomsLevel.LevelTransition {
             teleports.add(new CrossDimensionTeleport(
                     world,
                     playerComponent,
-                    BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVELRUN_WORLD_KEY),
+                    com.sp.init.BackroomsLevels.getCurrentLevelsOrigin(BackroomsLevels.LEVELRUN_WORLD_KEY),
                     from,
                     BackroomsLevels.LEVELRUN_BACKROOMS_LEVEL // <-- you'll need to declare this in BackroomsLevels
             ));
         }
+
         return teleports;
     }
 }

@@ -79,7 +79,7 @@ public class Spv_addonClient implements ClientModInitializer {
             });
 
 
-            BackroomsLevels.definitions.forEach((key, worldKey) -> {
+            com.sp.init.BackroomsLevels.definitions.forEach((key, worldKey) -> {
                 if (client.world != null && client.world.getRegistryKey() == worldKey) {
                     defs.define(key);
                 } else {

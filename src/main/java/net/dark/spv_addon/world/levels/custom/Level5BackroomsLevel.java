@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.Levels.custom;
+package net.dark.spv_addon.world.levels.custom;
 
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
@@ -7,12 +7,9 @@ import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +40,7 @@ public class Level5BackroomsLevel extends BackroomsLevel {
                     transitions.add(new CrossDimensionTeleport(
                             p.getServerWorld(),
                             pc,
-                            new Vec3d(0.5, 21.0, 8.5),
+                            com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.getSpawnPos(),
                             this,
                             com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL // or whichever level you want
                     ));
@@ -51,7 +48,7 @@ public class Level5BackroomsLevel extends BackroomsLevel {
             }
 
             return transitions;
-        }, "level5 → levelRUN");
+        }, "level5 → level2");
     }
 
     @Override

@@ -59,7 +59,6 @@ public class Spv_addon implements ModInitializer {
         ThirstManager.register();
         ClientSanityDrain.tick();
 
-
         ThirstManager.register();
 
         ModItems.registerItems();

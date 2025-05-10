@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.Levels.custom;
+package net.dark.spv_addon.world.levels.custom;
 
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
