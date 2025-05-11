@@ -32,7 +32,8 @@ public class InitializeComponents implements EntityComponentInitializer {
         registry.registerFor(BellWalkerEntity.class, BELL_WALKER, BellWalkerComponent::new);
         registry.registerFor(KittyEntity.class, KITTY, KittyComponent::new);
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
-        registry.registerFor(PlayerEntity.class, SANITY, player -> new SanityComponent());
+        registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);
+
 
     }
 

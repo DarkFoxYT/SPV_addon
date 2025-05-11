@@ -20,6 +20,7 @@ public class ModItemGroups {
                         // Blocks
                         entries.add(ModBlocks.HOTEL_FLOOR);
                         entries.add(ModBlocks.HOTEL_WALL);
+                        entries.add(ModBlocks.TESTS);
                         entries.add(ModBlocks.BED1);
                         entries.add(ModBlocks.BED2);
                         entries.add(ModBlocks.TABLE);

@@ -5,7 +5,6 @@ import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import com.sp.networking.InitializePackets;
 import eu.midnightdust.lib.config.MidnightConfig;
-import net.dark.spv_addon.client.ClientSanityDrain;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.commands.SanityCommand;
 import net.dark.spv_addon.commands.ThirstCommand;
@@ -53,11 +52,9 @@ public class Spv_addon implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ModKeybinds.registerKeybinds();
 
 
         ThirstManager.register();
-        ClientSanityDrain.tick();
 
         ThirstManager.register();
 

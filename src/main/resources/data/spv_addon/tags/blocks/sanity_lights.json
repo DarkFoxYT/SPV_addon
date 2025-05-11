@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "spb-revamped:ceiling_light",
+    "spb-revamped:emergency_light",
+    "spb-revamped:fluorescent_light"
+  ]
+}

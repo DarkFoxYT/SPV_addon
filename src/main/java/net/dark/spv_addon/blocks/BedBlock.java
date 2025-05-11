@@ -1,51 +1,64 @@
 package net.dark.spv_addon.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.*;
+import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.*;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("deprecation")
-public class BedBlock extends HorizontalFacingBlock {
+public class BedBlock extends Block {
+    public static final DirectionProperty FACING;
+    public static final EnumProperty<WallMountLocation> FACE;
 
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final IntProperty SIDES = IntProperty.of("sides", 1, 4);
-
-    public BedBlock(Settings settings) {
+    public BedBlock(AbstractBlock.Settings settings) {
         super(settings);
-        setDefaultState(this.stateManager.getDefaultState().with(FACING, net.minecraft.util.math.Direction.NORTH).with(SIDES, 1));
     }
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState()
-                .with(FACING, ctx.getPlayerLookDirection().getOpposite()) // Always opposite of player
-                .with(SIDES, 1); // Always start at 1 side
+    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+        for (Direction direction : ctx.getPlacementDirections()) {
+            BlockState blockState;
+            if (direction.getAxis() == Direction.Axis.Y) {
+                blockState = (BlockState) ((BlockState) this.getDefaultState().with(FACE, direction == Direction.UP ? WallMountLocation.CEILING : WallMountLocation.FLOOR)).with(FACING, ctx.getHorizontalPlayerFacing());
+            } else {
+                blockState = (BlockState) ((BlockState) this.getDefaultState().with(FACE, WallMountLocation.WALL)).with(FACING, direction.getOpposite());
+            }
+
+            if (blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos())) {
+                return blockState;
+            }
+        }
+
+        return null;
     }
 
-    @Override
-    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
-        return !ctx.shouldCancelInteraction() && ctx.getStack().isOf(this.asItem()) && state.get(SIDES) < 4;
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
-
-    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+        return (BlockState) state.with(FACING, rotation.rotate((Direction) state.get(FACING)));
     }
 
-    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation((Direction) state.get(FACING)));
+    }
+
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, SIDES);
+        builder.add(new Property[]{FACE, FACING});
+    }
+
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+        return 1.0F;
+    }
+
+    static {
+        FACING = Properties.HORIZONTAL_FACING;
+        FACE = Properties.WALL_MOUNT_LOCATION;
     }
 }

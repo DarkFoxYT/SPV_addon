@@ -5,6 +5,7 @@ import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.shader.definition.ShaderPreDefinitions;
 import foundry.veil.platform.VeilEventPlatform;
+import net.dark.spv_addon.Additions.Sanity.SanityLightDebugRenderer;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.client.gui.SanityBar;
@@ -19,6 +20,7 @@ import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
+import net.dark.spv_addon.init.ModKeybinds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,6 +31,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 
 import java.util.Random;
 
@@ -49,6 +52,7 @@ public class Spv_addonClient implements ClientModInitializer {
         BatteryHud.register();
         ThirstHud.register();
         ThirstManager.register();
+        SanityLightDebugRenderer.init();
 
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
@@ -63,6 +67,9 @@ public class Spv_addonClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new SanityBar());
         BatteryHud.register();
         ThirstHud.register();
+
+
+
 
         VeilEventPlatform.INSTANCE.preVeilPostProcessing((name, pipeline, context) -> {
             MinecraftClient client = MinecraftClient.getInstance();
