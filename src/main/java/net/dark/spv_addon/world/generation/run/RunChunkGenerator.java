@@ -77,6 +77,20 @@ public final class RunChunkGenerator extends ChunkGenerator {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/entrance");
         } else if (cx < exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway1");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway2");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway3");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway4");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway5");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway6");
+        }else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway7");
         } else if (cx == exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/exit");
         } else {
