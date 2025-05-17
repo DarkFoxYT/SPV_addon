@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "name": "spv_addon:battery_item",
-          "weight": 5,
+          "weight": 2,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,6 +39,34 @@
         },
         {
           "type": "minecraft:item",
+          "name": "spv_addon:almond_dirty",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Poisoned:1b}"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spv_addon:almond_water",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 0,
+                "max": 3
+              },
+              "add": true
+            }
+          ]
+        },
+
+
+        {
+          "type": "minecraft:item",
           "name": "spv_addon:battery_item2",
           "weight": 1,
           "functions": [
@@ -49,6 +77,22 @@
                 "max": 1
               },
               "add": true
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spv_addon:canteen",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 0,
+                "max": 1,
+                "tag": "{Poisoned:1b}",
+                "add": true
+              }
             }
           ]
         },

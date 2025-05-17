@@ -1,6 +1,8 @@
 package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.blocks.BedBlock;
+import net.dark.spv_addon.blocks.Ikea_Exit_Block;
+import net.dark.spv_addon.blocks.Level_Transfer_Block;
 import net.dark.spv_addon.blocks.lightblocktest;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -10,15 +12,27 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.block.Blocks;
 
+import static software.bernie.example.registry.BlockRegistry.registerBlock;
+
 
 public class ModBlocks {
-    public static final Block HOTEL_WALL = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.STONE));
-    public static final Block HOTEL_FLOOR = new Block(FabricBlockSettings.copyOf(Blocks.RED_WOOL).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
-    public static final Block TESTS = new lightblocktest(FabricBlockSettings.copyOf(Blocks.RED_WOOL).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
+    public static final Block HOTEL_WALL = new Block(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.STONE));
+    public static final Block HOTEL_FLOOR = new Block(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
+    public static final Block TESTS = new lightblocktest(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
+    public static final Block IKEA_EXIT = new Ikea_Exit_Block(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.ConcreteBlock1).hardness(-1f).noBlockBreakParticles().collidable(false).sounds(BlockSoundGroup.WOOL));
 
     public static final Block TABLE = new BedBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
     public static final Block BED1 = new BedBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
     public static final Block BED2 = new BedBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
+
+
+    public static final Block LEVELTRANSFERBLOCK = registerBlock("leveltransferblock",
+            new Level_Transfer_Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS)
+                    .hardness(-1f)
+                    .solid()
+                    .noBlockBreakParticles()
+                    .collidable(false)));
+
 
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);

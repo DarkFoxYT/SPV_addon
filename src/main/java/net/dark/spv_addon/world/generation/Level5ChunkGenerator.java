@@ -76,16 +76,17 @@ public final class Level5ChunkGenerator extends ChunkGenerator {
         StructurePlacementData structurePlacementData = new StructurePlacementData();
 
 
-        if((float) chunk.getPos().x == 0 && (float) chunk.getPos().z  == 0){
+        if (chunk.getPos().x == 0 && chunk.getPos().z == 0) {
             roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/hotel_lobby");
             structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
             optional = structureTemplateManager.getTemplate(roomIdentifier);
 
-            if(optional.isPresent()){
+            if (optional.isPresent()) {
+                // Place le lobby centré sur 0,0
                 optional.get().place(
                         world,
-                        mutable.set(-1,19,-1),
-                        mutable.set(-1,19,-1),
+                        mutable.set(-16, 19, -16), // centre le lobby
+                        mutable.set(-16, 19, -16),
                         structurePlacementData, random, 2
                 );
             }

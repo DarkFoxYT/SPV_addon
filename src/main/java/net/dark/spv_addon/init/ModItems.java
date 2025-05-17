@@ -2,7 +2,6 @@ package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.items.custom.BatteryItem;
 import net.dark.spv_addon.items.custom.BatteryItem2;
-import net.dark.spv_addon.items.custom.DrinkableThirstItem;
 import net.dark.spv_addon.items.custom.SanityRestoringItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
@@ -20,15 +19,18 @@ public class ModItems {
     public static final Item BED1 = register("bed1", new BlockItem(ModBlocks.BED1, new FabricItemSettings()));
     public static final Item BED2 = register("bed2", new BlockItem(ModBlocks.BED2, new FabricItemSettings()));
     public static final Item TABLE = register("table", new BlockItem(ModBlocks.TABLE, new FabricItemSettings()));
+    public static final Item LEVELTRANSFERBLOCK = register("leveltransferblock", new BlockItem(ModBlocks.LEVELTRANSFERBLOCK, new FabricItemSettings()));
 
-    public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 100);
-    public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25);
+    public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 100, 50);
+    public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10);
+    public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 5, -15);
 
 
     public static void registerItems() {
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item"), BATTERY_ITEM);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item2"), BATTERY_ITEM2);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "canteen"), CANTEEN);
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_dirty"), ALMOND_DIRTY);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_water"), ALMOND_BOTTLE);
     }
     private static Item register(String name, Item item) {

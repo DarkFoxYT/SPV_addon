@@ -12,10 +12,8 @@ import net.dark.spv_addon.client.gui.SanityBar;
 import net.dark.spv_addon.client.gui.ThirstHud;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
-import net.dark.spv_addon.entities.client.renderer.SaniRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
-import net.dark.spv_addon.entities.custom.SanityStalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
@@ -56,9 +54,6 @@ public class Spv_addonClient implements ClientModInitializer {
 
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
-
-        FabricDefaultAttributeRegistry.register(ModEntities.SANI_TY, SanityStalkerEntity.createAttributes());
-        EntityRendererRegistry.register(ModEntities.SANI_TY, SaniRenderer::new);
 
         FabricDefaultAttributeRegistry.register(ModEntities.KITTY, KittyEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.KITTY, KittyRenderer::new);

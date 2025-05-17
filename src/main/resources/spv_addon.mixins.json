@@ -7,9 +7,7 @@
     "MixinMinecraftClient",
     "PlayerTickMixin",
     "blocks.CeilingLightMixin",
-    "blocks.EmergencyLightBlockMixin",
-    "levelsgen.Level0ChunkGeneratorMixin",
-    "levelsgen.Level0MazeGeneratorMixin"
+    "blocks.EmergencyLightBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

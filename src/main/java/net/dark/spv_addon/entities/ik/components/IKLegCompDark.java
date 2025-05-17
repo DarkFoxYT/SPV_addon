@@ -74,18 +74,6 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
                         entity
                 )
         );
-        if (world.getBlockState(hit.getBlockPos()).isOf(Blocks.FIRE)
-                || world.getBlockState(hit.getBlockPos()).isOf(Blocks.SOUL_FIRE)) {
-            return world.raycast(
-                    new RaycastContext(
-                            rotatedLimbOffset.offset(Direction.UP, 3),
-                            rotatedLimbOffset.offset(Direction.UP, 10),
-                            RaycastContext.ShapeType.COLLIDER,
-                            fluid,
-                            entity
-                    )
-            );
-        }
         return hit;
     }
 
@@ -106,25 +94,7 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
                 if (segBone.isEmpty()) return;
                 BoneAccessor segAcc = segBone.get();
                 segAcc.moveTo(start, end, entity);
-                // foot
-                if (limbChain instanceof EntityLegWithFoot footChain) {
-                    var footBone = model.getBone("foot_leg" + (i + 1));
-                    if (footBone.isEmpty()) return;
-                    BoneAccessor footAcc = footBone.get();
-                    Vec3d shortened = end.add(
-                            end.subtract(limbChain.endJoint)
-                                    .normalize()
-                                    .multiply(limbChain.getLast().length * 0.8)
-                    );
-                    double yOffset = shortened.subtract(limbChain.endJoint).y;
-                    footAcc.moveTo(
-                            PrAnCommonClass.shouldRenderDebugLegs
-                                    ? shortened.subtract(0, 200, 0)
-                                    : shortened,
-                            footChain.getFootPosition().add(0, yOffset, 0),
-                            entity
-                    );
-                }
+
             }
         }
         // 2) arms pointing if target set

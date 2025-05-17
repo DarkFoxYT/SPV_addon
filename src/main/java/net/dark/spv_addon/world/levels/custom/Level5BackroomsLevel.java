@@ -20,7 +20,7 @@ public class Level5BackroomsLevel extends BackroomsLevel {
     private static final double EXIT_RADIUS = 2.5;
 
     public Level5BackroomsLevel() {
-        super("level5", Level5ChunkGenerator.CODEC, new Vec3d(13.5, 20.0, 15.5), BackroomsLevels.LEVEL5_WORLD_KEY, "spv_addon");
+        super("level5", Level5ChunkGenerator.CODEC, new Vec3d(0, 20.0, 0), BackroomsLevels.LEVEL5_WORLD_KEY, "spv_addon");
     }
 
     @Override
