@@ -1,0 +1,12 @@
+{
+  "priority": 1000,
+  "stages": [
+    {
+      "shader": "spv_addon:camera_zoom_blur",
+      "uniforms": [
+        {"name": "Zoom", "type": "float"},
+        {"name": "Focus", "type": "float"}
+      ]
+    }
+  ]
+}

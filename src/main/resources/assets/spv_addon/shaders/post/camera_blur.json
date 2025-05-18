@@ -1,0 +1,10 @@
+{
+  "passes": [
+    {
+      "shader": "spv_addon:camera_blur",
+      "inputs": [
+        "veil:color"
+      ]
+    }
+  ]
+}
