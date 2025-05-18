@@ -10,6 +10,6 @@ public class TargetModLightBlockMixin implements SanityLightEmitter {
 
     @Override
     public int sPV_addon$getSanityRadius(World world, BlockPos pos) {
-        return 10; // or dynamic logic based on block state
+        return 15; // or dynamic logic based on block state
     }
 }

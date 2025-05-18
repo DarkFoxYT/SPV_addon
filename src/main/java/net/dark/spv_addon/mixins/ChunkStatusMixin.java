@@ -29,7 +29,6 @@ public class ChunkStatusMixin {
 
         if (generator instanceof Level5ChunkGenerator l5cg) {
             ChunkRegion chunkRegion = new ChunkRegion(world, chunks, targetStatus, 5);
-            l5cg.generateMaze(chunkRegion, chunk);
         }
 
     }

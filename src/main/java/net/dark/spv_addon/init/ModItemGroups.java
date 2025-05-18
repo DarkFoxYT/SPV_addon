@@ -24,10 +24,16 @@ public class ModItemGroups {
                         entries.add(ModBlocks.BED1);
                         entries.add(ModBlocks.BED2);
                         entries.add(ModBlocks.TABLE);
+                        entries.add(ModBlocks.LEVELTRANSFERBLOCK);
+                        entries.add(ModBlocks.IKEA_EXIT);
+                        entries.add(ModBlocks.IKEA_SHELF);
+                        entries.add(ModBlocks.IKEA_SHELF1);
+                        entries.add(ModBlocks.IKEA_SHELF2);
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);
                         entries.add(ModItems.ALMOND_BOTTLE);
+                        entries.add(ModItems.ALMOND_DIRTY);
                         entries.add(ModItems.CANTEEN);
                     })
                     .build()

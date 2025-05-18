@@ -4,6 +4,7 @@ import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.events.AbstractEvent;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
 import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,17 +15,12 @@ import java.util.List;
 
 public class LevelIKEA extends BackroomsLevel {
     public LevelIKEA() {
-        super(
-                "level_ikea",
-                LevelIKEAChunkGenerator.CODEC,
-                new Vec3d(8.5, 36.5, 8.5), // spawn point au centre d’une salle d’entrée
-                BackroomsLevels.LEVEL_IKEA_WORLD_KEY
-        );
+
+        super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(0, 20.0, 0), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
     }
 
     @Override
     public void register() {
-        super.register();
         // Ajoute des events custom ici si besoin
     }
 

@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "spv_addon:block/table" }
+    "facing=north": { "model": "spv_addon:block/table", "y": 180 },
+    "facing=east":  { "model": "spv_addon:block/table", "y": 270 },
+    "facing=south": { "model": "spv_addon:block/table", "y": 0 },
+    "facing=west":  { "model": "spv_addon:block/table", "y": 90 }
   }
 }

@@ -34,24 +34,30 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public final class RunChunkGenerator extends ChunkGenerator {
-    public static final Codec<RunChunkGenerator> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(g -> g.biomeSource),
-                    ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(g -> g.settings)
-            ).apply(inst, inst.stable(RunChunkGenerator::new))
+    public static final Codec<RunChunkGenerator> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
+                    ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(gen -> gen.settings)
+            ).apply(instance, RunChunkGenerator::new)
     );
+
+
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final Random random = Random.create();
     private final int corridorLength;
 
 
+    @Override
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
+    }
 
     public RunChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
-        SPBRevampedClient.setInBackrooms(true);
         this.settings = settings;
-        this.corridorLength = random.nextBetween(100, 500);
+        SPBRevampedClient.setInBackrooms(true);
+        this.corridorLength = random.nextBetween(200, 500);
     }
     public int getCorridorLength() {
         return corridorLength;
@@ -75,24 +81,12 @@ public final class RunChunkGenerator extends ChunkGenerator {
         Identifier roomId;
         if (cx == 0) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/entrance");
-        } else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway1");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway2");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway3");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway4");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway5");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway6");
-        }else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway7");
         } else if (cx == exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/exit");
+        } else if (cx > 0 && cx < exitChunk) {
+            int variant = random.nextBetween(0, 4);
+            String variantName = variant == 0 ? "hallway" : "hallway" + variant;
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/" + variantName);
         } else {
             return;
         }
@@ -137,7 +131,6 @@ public final class RunChunkGenerator extends ChunkGenerator {
         }
     }
 
-    @Override protected Codec<? extends ChunkGenerator> getCodec() { return CODEC; }
 
     @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
                                                             NoiseConfig noiseConfig,

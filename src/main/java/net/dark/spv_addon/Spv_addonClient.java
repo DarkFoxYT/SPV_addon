@@ -1,7 +1,6 @@
 package net.dark.spv_addon;
 
 import com.sp.compat.modmenu.ConfigDefinitions;
-import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.shader.definition.ShaderPreDefinitions;
 import foundry.veil.platform.VeilEventPlatform;
@@ -14,11 +13,8 @@ import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
-import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
-import net.dark.spv_addon.init.ModKeybinds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,8 +25,9 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
+import java.util.HashMap;
 import java.util.Random;
 
 
@@ -39,6 +36,7 @@ public class Spv_addonClient implements ClientModInitializer {
     public static Framebuffer runShadowFbo;
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     private static final Random RANDOM = new Random();
+
 
     @Override
     public void onInitializeClient() {
@@ -89,14 +87,7 @@ public class Spv_addonClient implements ClientModInitializer {
                 }
             });
         });
-
-
-
-
-
-        PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(false, 0.1f, 0.9f, 1024));
-        PbrRegistry.registerPBR(ModBlocks.HOTEL_FLOOR, new PbrRegistry.PbrMaterial(false, 0.1f, 0.9f, 1024));
-
-
     }
+
+
 }

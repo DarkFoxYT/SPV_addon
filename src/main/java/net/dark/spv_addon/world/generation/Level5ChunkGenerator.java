@@ -2,10 +2,7 @@ package net.dark.spv_addon.world.generation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sp.SPBRevamped;
-import com.sp.world.generation.maze_generator.Level1MazeGenerator;
 import net.dark.spv_addon.Spv_addon;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
@@ -16,8 +13,6 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
@@ -34,229 +29,199 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@SuppressWarnings("OptionalIsPresent")
-public final class Level5ChunkGenerator extends ChunkGenerator {
+public class Level5ChunkGenerator extends ChunkGenerator {
     public static final Codec<Level5ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                            BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
-                            ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings)
-                    )
-                    .apply(instance, instance.stable(Level5ChunkGenerator::new))
+                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
+                    ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(gen -> gen.settings)
+            ).apply(instance, Level5ChunkGenerator::new)
     );
+
     private final RegistryEntry<ChunkGeneratorSettings> settings;
-    Random random = Random.create();
-    PerlinNoiseSampler noiseSampler = new PerlinNoiseSampler(random);
+    private final BiomeSource biomeSource;
 
     public Level5ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
+        this.biomeSource = biomeSource;
         this.settings = settings;
     }
 
-
-
-
-    public void generateMaze(StructureWorldAccess world, Chunk chunk) {
-        int x = chunk.getPos().getStartX();
-        int z = chunk.getPos().getStartZ();
-        int lights = random.nextBetween(1,6);
-        int exit;
-
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        MinecraftServer server = world.getServer();
-
-        StructureTemplateManager structureTemplateManager = world.getServer().getStructureTemplateManager();
-        Optional<StructureTemplate> optional;
-
-        Identifier roomIdentifier;
-        StructurePlacementData structurePlacementData = new StructurePlacementData();
-
-
-        if (chunk.getPos().x == 0 && chunk.getPos().z == 0) {
-            roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/hotel_lobby");
-            structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-            optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-            if (optional.isPresent()) {
-                // Place le lobby centré sur 0,0
-                optional.get().place(
-                        world,
-                        mutable.set(-16, 19, -16), // centre le lobby
-                        mutable.set(-16, 19, -16),
-                        structurePlacementData, random, 2
-                );
-            }
-
-            Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(8, 10, 10, x, z, "level5");
-            level5MazeGenerator.setup(world, false);
-        } else if (((float)chunk.getPos().x) % Spv_addon.finalMazeSize == 0 && ((float)chunk.getPos().z) % Spv_addon.finalMazeSize == 0){
-            double noise1 = noiseSampler.sample((x) * 0.002, 0, (z) * 0.002);
-            if (server != null) {
-
-                if(!chunk.getPos().getBlockPos(0,20,0).isWithinDistance(new Vec3i(0,20,0), 1000)){
-                    if(noise1 <= 0){
-                        exit = random.nextBetween(1,1);
-                        if(exit == 1){
-
-                            roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/stairwell2_1");
-                            structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-                            optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-                            if (optional.isPresent()) {
-                                optional.get().place(
-                                        world,
-                                        mutable.set(x + 16,11,z + 16),
-                                        mutable.set(x + 16,11,z + 16),
-                                        structurePlacementData, random, 2
-
-                                );
-                            }
-
-                        }
-                    }
-                }
-
-                if(noise1 > 0){
-                    roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/megaroom1");
-                    structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-                    optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-                    if (optional.isPresent()) {
-                        optional.get().place(
-                                world,
-                                mutable.set(x - 32, 19, z - 32),
-                                mutable.set(x - 32, 19, z - 32),
-                                structurePlacementData, random, 2);
-                        optional.get().place(
-                                world,
-                                mutable.set(x, 19, z - 32),
-                                mutable.set(x, 19, z - 32),
-                                structurePlacementData, random, 2);
-
-                        roomIdentifier = new Identifier(Spv_addon.MOD_ID, "level5/light" + lights);
-                        structurePlacementData.setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-                        optional = structureTemplateManager.getTemplate(roomIdentifier);
-
-                        if (optional.isPresent()){
-                            optional.get().place(
-                                    world,
-                                    mutable.set(x - 32, 19, z - 32),
-                                    mutable.set(x - 32, 19, z - 32),
-                                    structurePlacementData, random, 16);
-                            optional.get().place(
-                                    world,
-                                    mutable.set(x, 19, z - 32),
-                                    mutable.set(x, 19, z - 32),
-                                    structurePlacementData, random, 16);
-                        }
-
-
-                    } else {
-                        if(world.getBlockState(mutable.set(x, 19, z)) != Blocks.RED_WOOL.getDefaultState()) {
-                            Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(8, 10, 10, x, z, "level5");
-                            level5MazeGenerator.setup(world, true);
-                        }
-
-                    }
-
-                } else{
-
-                    if(world.getBlockState(mutable.set(x, 19, z)) != Blocks.RED_WOOL.getDefaultState()) {
-                        Level5MazeGenerator level5MazeGenerator = new Level5MazeGenerator(8, 10, 10, x, z, "level5");
-                        level5MazeGenerator.setup(world, true);
-                    }
-
-                }
-            }
-        }
-
-//        for (int j = 0; j < 16; j++){
-//            for (int i = 0; i < 16; i++){
-//                world.setBlockState(mutable.set(x + j, 25, z + i), Blocks.AIR.getDefaultState(), 16);
-//            }
-//        }
-
-    }
-
-
+    @Override
     protected Codec<? extends ChunkGenerator> getCodec() {
         return CODEC;
     }
 
-    /* this method builds the shape of the terrain. it places stone everywhere, which will later be overwritten with grass, terracotta, snow, sand, etc
-         by the buildSurface method. it also is responsible for putting the water in oceans. it returns a CompletableFuture-- you'll likely want this to be delegated to worker threads. */
     @Override
-    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
-        return CompletableFuture.completedFuture(chunk);
+    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
+
     }
 
+    @Override
+    public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
+
+    }
+
+    @Override
+    public void populateEntities(ChunkRegion region) {
+
+    }
+
+    @Override
+    public int getWorldHeight() {
+        return 0;
+    }
+
+    @Override
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+        return null;
+    }
 
     @Override
     public int getSeaLevel() {
         return 0;
     }
 
-    /* the lowest value that blocks can be placed in the world. in a vanilla world, this is -64. */
     @Override
     public int getMinimumY() {
         return 0;
     }
 
-    /* this method returns the height of the terrain at a given coordinate. it's used for structure generation */
     @Override
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
-        return this.getWorldHeight();
+        return 0;
     }
 
-    /* this method returns a "core sample" of the world at a given coordinate. it's used for structure generation */
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        BlockState[] states = new BlockState[world.getHeight()];
-
-        for (int i = 0; i < states.length; i++) {
-            states[i] = Blocks.AIR.getDefaultState();
-        }
-
-        return new VerticalBlockSample(0, states);
+        return null;
     }
 
-    /* this method adds text to the f3 menu. for NoiseChunkGenerator, it's the NoiseRouter line */
     @Override
     public void getDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {
-    }
-
-    /* the distance between the highest and lowest points in the world. in vanilla, this is 384 (64+325) */
-    @Override
-    public int getWorldHeight() {
-        return 384;
-    }
-
-
-
-
-    /* the method that creates non-noise caves (i.e., all the caves we had before the caves and cliffs update) */
-    @Override
-    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
-    }
-
-    /* the method that places grass, dirt, and other things on top of the world, as well as handling the bedrock and deepslate layers,
-    as well as a few other miscellaneous things. without this method, your world is just a blank stone (or whatever your default block is) canvas (plus any ores, etc) */
-    @Override
-    public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
 
     }
 
-    /* this method spawns entities in the world */
-    @Override
-    public void populateEntities(ChunkRegion region) {
+    public void generate(StructureWorldAccess world, Chunk chunk) {
+        int baseX = chunk.getPos().getStartX();
+        int baseZ = chunk.getPos().getStartZ();
+        Random random = Random.create();
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
+        StructureTemplateManager templateManager = server.getStructureTemplateManager();
 
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+
+        // On veut scatter 3x3, mais en tenant compte des tailles variables
+        int gridSize = 3;
+        int spacing = 20; // Espace entre rooms, à ajuster si tu veux des gaps/espaces vides
+        int[][] occupied = new int[64][64]; // Grille "utilisée" simple
+
+        for (int gx = 0; gx < gridSize; gx++) {
+            for (int gz = 0; gz < gridSize; gz++) {
+                // Random room type : guest, mega, hallway, junction, etc.
+                Level5RoomRegistry.RoomType type = switch (random.nextInt(5)) {
+                    case 0 -> Level5RoomRegistry.RoomType.GUESTROOM;
+                    case 1 -> Level5RoomRegistry.RoomType.MEGAROOM;
+                    case 2 -> Level5RoomRegistry.RoomType.HALLWAY;
+                    case 3 -> Level5RoomRegistry.RoomType.LOBBY;
+                    default -> Level5RoomRegistry.RoomType.JUNCTION;
+                };
+
+                var room = Level5RoomRegistry.getRandomRoom(type, random);
+                if (room == null) continue;
+
+                int px = baseX + gx * spacing;
+                int pz = baseZ + gz * spacing;
+
+                // (Facultatif) Vérifie qu'on ne "chevauche" pas une autre salle déjà placée
+                boolean overlap = false;
+                for (int x = px; x < px + room.sizeX(); x++)
+                    for (int z = pz; z < pz + room.sizeZ(); z++)
+                        if (occupied[x % 64][z % 64] == 1) overlap = true;
+                if (overlap) continue;
+
+                // Marque comme "occupé"
+                for (int x = px; x < px + room.sizeX(); x++)
+                    for (int z = pz; z < pz + room.sizeZ(); z++)
+                        occupied[x % 64][z % 64] = 1;
+
+                var opt = templateManager.getTemplate(room.id());
+                if (opt.isPresent()) {
+                    opt.get().place(world, mutable.set(px, 18, pz), mutable.set(px, 18, pz), randomRotation(), random, 2);
+                }
+            }
+        }
+
+        // Place quelques toits random par-dessus (tu peux améliorer la logique)
+        for (int rx = 0; rx < gridSize; rx++) {
+            for (int rz = 0; rz < gridSize; rz++) {
+                var roof = Level5RoomRegistry.getRandomRoom(Level5RoomRegistry.RoomType.ROOF, random);
+                if (roof == null) continue;
+                int px = baseX + rx * spacing;
+                int pz = baseZ + rz * spacing;
+                var opt = templateManager.getTemplate(roof.id());
+                if (opt.isPresent()) {
+                    opt.get().place(world, mutable.set(px, 32, pz), mutable.set(px, 32, pz), randomRotation(), random, 16);
+                }
+            }
+        }
+
+        // Tu peux faire pareil pour lights, traps, storage, etc.
     }
 
 
 
+    // Génère des toits comme dans Level0
+    private void placeRoofs(StructureWorldAccess world, int x, int z, Random random, StructureTemplateManager manager, BlockPos.Mutable pos) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                Identifier id = new Identifier(Spv_addon.MOD_ID, "level5/roof1");
+                StructurePlacementData data = randomRotation();
+                Optional<StructureTemplate> template = manager.getTemplate(id);
+                int px = x + 8 * i;
+                int pz = z + 8 * j;
+
+                if (world.getBlockState(pos.set(px, 32, pz)) == Blocks.AIR.getDefaultState()) {
+                    template.ifPresent(struct -> struct.place(world, new BlockPos(px, 32, pz), pos, data, random, 16));
+                }
+            }
+        }
+    }
+
+    public class Level5RoomRegistry {
+        public enum RoomType { GUESTROOM, HALLWAY, JUNCTION, LOBBY, MEGAROOM, ROOF, STAIRS, STORAGE, TRAP }
+
+        public static record RoomEntry(RoomType type, Identifier id, int sizeX, int sizeZ) {}
+
+        private static final List<RoomEntry> registeredRooms = new ArrayList<>();
+
+        public static void register(RoomType type, Identifier id, int sizeX, int sizeZ) {
+            registeredRooms.add(new RoomEntry(type, id, sizeX, sizeZ));
+        }
+
+        public static List<RoomEntry> getRooms(RoomType type) {
+            return registeredRooms.stream().filter(e -> e.type == type).toList();
+        }
+
+        public static RoomEntry getRandomRoom(RoomType type, Random random) {
+            List<RoomEntry> list = getRooms(type);
+            return list.isEmpty() ? null : list.get(random.nextInt(list.size()));
+        }
+    }
+
+    private StructurePlacementData defaultPlacement() {
+        return new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
+    }
+
+    private StructurePlacementData randomRotation() {
+        StructurePlacementData data = new StructurePlacementData().setMirror(BlockMirror.NONE).setIgnoreEntities(true);
+        data.setRotation(Random.create().nextBetween(1, 2) == 1 ? BlockRotation.NONE : BlockRotation.CLOCKWISE_90);
+        return data;
+    }
 }
-

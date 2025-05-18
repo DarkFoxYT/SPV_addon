@@ -11,6 +11,8 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
+import java.util.Map;
+
 public class BackroomsLevels {
     // === SPV DIMENSIONS ===
     public static final RegistryKey<World> LEVEL5_WORLD_KEY =

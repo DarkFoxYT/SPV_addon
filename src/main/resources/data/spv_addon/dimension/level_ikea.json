@@ -1,7 +1,7 @@
 {
   "type": "spb-revamped:level0_type",
   "generator": {
-    "type": "spv_addon:LevelIKEAChunkGenerator",
+    "type": "spv_addon:level_ikea",
     "settings": "spb-revamped:level0",
     "biome_source": {
       "type": "minecraft:fixed",

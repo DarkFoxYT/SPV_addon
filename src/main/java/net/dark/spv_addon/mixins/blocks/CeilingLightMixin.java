@@ -12,6 +12,6 @@ public class CeilingLightMixin implements SanityLightEmitter {
 
     @Override
     public int sPV_addon$getSanityRadius(World world, BlockPos pos) {
-        return 10;
+        return 15;
     }
 }

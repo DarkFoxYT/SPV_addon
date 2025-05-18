@@ -1,5 +1,6 @@
 package net.dark.spv_addon;
 
+import com.sp.SPBRevampedClient;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
@@ -18,6 +19,7 @@ import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -26,10 +28,13 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import org.slf4j.Logger;
@@ -46,7 +51,6 @@ import static com.sp.SPBRevamped.sendBlackScreenPacket;
 public class Spv_addon implements ModInitializer {
     public static final String MOD_ID = "spv_addon";
     public static final Logger LOGGER = LoggerFactory.getLogger("spv_addon");
-    public static final int finalMazeSize = 5;
 
 
 
@@ -55,23 +59,26 @@ public class Spv_addon implements ModInitializer {
 
 
         ThirstManager.register();
-
-        ThirstManager.register();
-
-        ModItems.registerItems();
         FlashlightBatteryEvents.register();
+
+
+        BackroomsLevels.init();
+        ModItems.registerItems();
         ModBlocks.registerModBlocks();
         ModChunkGenerators.register();
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
-        ThirstManager.register();
+
         MidnightConfig.init(MOD_ID, ConfigStuff.class);
 
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
 
-
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            // Force the flag off every tick so the effect can never trigger
+            SPBRevampedClient.youCantEscape = false;
+        });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             FlashlightBatteryCommand.register(dispatcher);
             SanityCommand.register(dispatcher);
@@ -103,7 +110,6 @@ public class Spv_addon implements ModInitializer {
                 newPlayer.getAbilities().invulnerable = true;
                 playerComponent.setShouldRender(false);
                 playerComponent.sync();
-                newPlayer.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(ModSounds.DONG), SoundCategory.AMBIENT, newPlayer.getPos().getX(), newPlayer.getPos().getY(), newPlayer.getPos().getZ(), 100.0f, 1.0f, newPlayer.getRandom().nextLong()));
 
                 //After YOU CAN'T ESCAPE is over
                 executorService.schedule(() -> {
@@ -126,34 +132,5 @@ public class Spv_addon implements ModInitializer {
 
 
 
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            for (ServerWorld world : server.getWorlds()) {
-                // only run in your “run” dimension
-                if (world.getRegistryKey() != BackroomsLevels.LEVELRUN_WORLD_KEY) continue;
-
-                // grab the chunk generator and cast
-                if (!(world.getChunkManager().getChunkGenerator() instanceof RunChunkGenerator runGen)) continue;
-                int exitChunkX = runGen.getExitChunkIndex();
-
-                for (ServerPlayerEntity player : world.getPlayers()) {
-                    ChunkPos cpos = player.getChunkPos();
-                    // exit room is always at cz == 0, cx == exitChunkX
-                    if (cpos.x != exitChunkX || cpos.z != 0) continue;
-
-                    // how far into the chunk?
-                    double localX = player.getX() - (cpos.x * 16.0);
-                    // once they pass halfway (8 blocks)…
-                    if (localX > 0) {
-                        // teleport them to your next level
-                        var destKey = BackroomsLevels.LEVEL5_WORLD_KEY; // change to whatever
-                        ServerWorld target = server.getWorld(destKey);
-                        if (target != null) {
-                            BlockPos spawn = target.getSpawnPos();
-                            player.teleport(target, spawn.getX(), spawn.getY(), spawn.getZ(), player.getYaw(), player.getPitch());
-                        }
-                    }
-                }
-            }
-        });
     }
 }

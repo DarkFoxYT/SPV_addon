@@ -20,10 +20,14 @@ public class ModItems {
     public static final Item BED2 = register("bed2", new BlockItem(ModBlocks.BED2, new FabricItemSettings()));
     public static final Item TABLE = register("table", new BlockItem(ModBlocks.TABLE, new FabricItemSettings()));
     public static final Item LEVELTRANSFERBLOCK = register("leveltransferblock", new BlockItem(ModBlocks.LEVELTRANSFERBLOCK, new FabricItemSettings()));
+    public static final Item IKEA_EXIT = register("ikea_exit", new BlockItem(ModBlocks.IKEA_EXIT, new FabricItemSettings()));
+    public static final Item IKEA_SHELF = register("ikea_shelf", new BlockItem(ModBlocks.IKEA_SHELF, new FabricItemSettings()));
+    public static final Item IKEA_SHELF1 = register("ikea_shelf1", new BlockItem(ModBlocks.IKEA_SHELF1, new FabricItemSettings()));
+    public static final Item IKEA_SHELF2 = register("ikea_shelf2", new BlockItem(ModBlocks.IKEA_SHELF2, new FabricItemSettings()));
 
     public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 100, 50);
     public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10);
-    public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 5, -15);
+    public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 5, 2);
 
 
     public static void registerItems() {

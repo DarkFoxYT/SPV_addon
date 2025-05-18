@@ -50,11 +50,20 @@ public class LevelIKEAChunkGenerator extends ChunkGenerator {
         this.settings = settings;
     }
 
+
+
+    @Override
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
+    }
+
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
         // Rien à faire ici, le terrain reste plat/air
         return CompletableFuture.completedFuture(chunk);
     }
+
+
 
     @Override
     public int getSeaLevel() { return 0; }
@@ -79,10 +88,6 @@ public class LevelIKEAChunkGenerator extends ChunkGenerator {
     @Override
     public int getWorldHeight() { return 128; }
 
-    @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
-        return CODEC;
-    }
 
     @Override
     public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) { }
@@ -127,7 +132,7 @@ public class LevelIKEAChunkGenerator extends ChunkGenerator {
         }
 
         // Placer un exit rare (1 sur 100 chunks)
-        if (random.nextBetween(1, 100) == 1) {
+        if (random.nextBetween(1, 300) == 1) {
             Identifier exitRoom = new Identifier(Spv_addon.MOD_ID, "ikea/exit");
             Optional<StructureTemplate> template = manager.getTemplate(exitRoom);
             template.ifPresent(struct -> struct.place(world, pos.set(x, 20, z), pos, defaultPlacement(), random, 2));

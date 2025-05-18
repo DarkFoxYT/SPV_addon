@@ -6,5 +6,12 @@
     "block.spv_addon.tests": "test block",
     "block.spv_addon.table": "Wooden table",
     "block.spv_addon.bed1": "bed",
-    "block.spv_addon.bed2": "bed sideways"
+    "block.spv_addon.bed2": "bed sideways",
+    "block.spv_addon.ikea_exit": "IKEA EXIT Block",
+    "block.spv_addon.ikea_shelf": "IKEA Shelf Block",
+    "block.spv_addon.ikea_shelf1": "IKEA Shelf (/w books) Block",
+    "block.spv_addon.leveltransferblock": "EXIT Block",
+
+
+    "itemGroup.spv_addon":"Found Footage Addon"
 }

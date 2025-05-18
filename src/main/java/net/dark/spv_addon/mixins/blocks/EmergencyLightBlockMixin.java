@@ -11,6 +11,6 @@ public class EmergencyLightBlockMixin implements SanityLightEmitter {
 
     @Override
     public int sPV_addon$getSanityRadius(World world, BlockPos pos) {
-        return 8; // or dynamic logic based on block state
+        return 10; // or dynamic logic based on block state
     }
 }
