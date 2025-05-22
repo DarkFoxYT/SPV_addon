@@ -61,6 +61,8 @@ public class Spv_addon implements ModInitializer {
         ThirstManager.register();
         FlashlightBatteryEvents.register();
 
+        InitializeComponents.register();
+        NoclipEventHandler.register();
 
         BackroomsLevels.init();
         ModItems.registerItems();
