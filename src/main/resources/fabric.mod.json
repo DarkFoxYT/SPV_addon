@@ -28,7 +28,9 @@
       "spv_addon:bell_walker",
       "spv_addon:kitty",
       "spv_addon:thirst",
-      "spv_addon:sanity"
+      "spv_addon:sanity",
+      "spv_addon:noclip"
+      
     ]
   },
 
