@@ -24,6 +24,8 @@ public class InitializeComponents implements EntityComponentInitializer {
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "thirst"), ThirstComponent.class);
     public static final ComponentKey<SanityComponent> SANITY =
             ComponentRegistry.getOrCreate(new Identifier("spv_addon", "sanity"), SanityComponent.class);
+    public static final ComponentKey<PlayerNoclipComponent> NOCLIP = 
+            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier("spv_addon", "noclip"), PlayerNoclipComponent.class);
 
 
     @Override
@@ -33,6 +35,7 @@ public class InitializeComponents implements EntityComponentInitializer {
         registry.registerFor(KittyEntity.class, KITTY, KittyComponent::new);
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
         registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);
+CardinalComponentsEntity.EVENT_PLAYER.register(NOCLIP, PlayerNoclipComponent::new);
 
 
     }
