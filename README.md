@@ -1,4 +1,8 @@
-# Space Potatoes Volatile Addon for Space Potatoes Backrooms Revamped
+[](https://github.com/user-attachments/assets/db037d6c-a70b-4b4f-a177-b218b3c11d55)
+
+
+# Space Potatoes Volatile Addon for Space Potatoes Backrooms Revamped!
+
 
 SPV Addon is a powerful content expansion for [Space Potatoes Backrooms Mod](https://modrinth.com/mod/minecraft-found-footage) Revamped mod that pushes the horror and immersion of the Backrooms even further. This addon is designed for both players seeking new challenges and modders looking to create their own Backrooms content.
 
