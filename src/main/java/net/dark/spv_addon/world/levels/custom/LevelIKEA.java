@@ -32,7 +32,7 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return 1200; // Change si tu veux des events
+        return 100000; // Change si tu veux des events
     }
 
     @Override

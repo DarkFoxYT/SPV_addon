@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 public class Level5Command {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 
-        dispatcher.register(CommandManager.literal("level5")
+        dispatcher.register(CommandManager.literal("TEST")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
@@ -30,7 +30,7 @@ public class Level5Command {
                     }
                 }));
 
-        dispatcher.register(CommandManager.literal("levelikea")
+        dispatcher.register(CommandManager.literal("IKEA")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
@@ -48,7 +48,7 @@ public class Level5Command {
                     }
                 }));
 
-        dispatcher.register(CommandManager.literal("run")
+        dispatcher.register(CommandManager.literal("RUN")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
@@ -62,6 +62,23 @@ public class Level5Command {
                         return 1;
                     } else {
                         player.sendMessage(Text.literal("§cLevel RUN! dimension or spawn point missing."), false);
+                        return 0;
+                    }
+                }));
+        dispatcher.register(CommandManager.literal("KITTY")
+                .requires(source -> source.hasPermissionLevel(2))
+                .executes(context -> {
+                    ServerPlayerEntity player = context.getSource().getPlayer();
+                    ServerWorld run = player.getServer().getWorld(BackroomsLevels.LEVEL_KITTY_WORLD_KEY);
+                    BlockPos spawn = getSpawnSafe(run, BackroomsLevels.LEVEL_KITTY_WORLD_KEY);
+
+                    if (run != null && spawn != null) {
+                        player.moveToWorld(run);
+                        player.teleport(run, spawn.getX(), spawn.getY(), spawn.getZ(), player.getYaw(), player.getPitch());
+                        player.sendMessage(Text.literal("§eTeleported to Level KITTY."), false);
+                        return 1;
+                    } else {
+                        player.sendMessage(Text.literal("§cLevel KITT.! dimension or spawn point missing."), false);
                         return 0;
                     }
                 }));

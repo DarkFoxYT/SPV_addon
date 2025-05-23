@@ -5,7 +5,9 @@ package net.dark.spv_addon.init;
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
 import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
+import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
+import net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -27,6 +29,11 @@ public class ModChunkGenerators {
                 Registries.CHUNK_GENERATOR,
                 new Identifier(Spv_addon.MOD_ID, "level_ikea"), // all lowercase
                 LevelIKEAChunkGenerator.CODEC
+        );
+        Registry.register(
+                Registries.CHUNK_GENERATOR,
+                new Identifier(Spv_addon.MOD_ID, "level_kitty"), // all lowercase
+                KittyChunkGenerator.CODEC
         );
     }
 }

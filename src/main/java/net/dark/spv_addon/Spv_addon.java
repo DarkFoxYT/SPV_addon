@@ -5,7 +5,9 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import com.sp.networking.InitializePackets;
+import com.sp.render.pbr.PbrRegistry;
 import eu.midnightdust.lib.config.MidnightConfig;
+import net.dark.spv_addon.client.NoclipEventHandler;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.commands.SanityCommand;
 import net.dark.spv_addon.commands.ThirstCommand;
@@ -26,6 +28,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.Registries;
@@ -61,6 +64,7 @@ public class Spv_addon implements ModInitializer {
         ThirstManager.register();
         FlashlightBatteryEvents.register();
 
+        NoclipEventHandler.register();
 
         BackroomsLevels.init();
         ModItems.registerItems();
@@ -75,16 +79,26 @@ public class Spv_addon implements ModInitializer {
         GeckoLib.initialize();
 
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            // Force the flag off every tick so the effect can never trigger
-            SPBRevampedClient.youCantEscape = false;
-        });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             FlashlightBatteryCommand.register(dispatcher);
             SanityCommand.register(dispatcher);
             Level5Command.register(dispatcher);
             ThirstCommand.register(dispatcher);
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                new Identifier("spv_addon", "prone_toggle"),
+                (server, player, handler, buf, responseSender) -> {
+                    server.execute(() -> {
+                        if (player.getPose() != EntityPose.SWIMMING) {
+                            player.setPose(EntityPose.SWIMMING);
+                            // Rends le joueur lent, etc, si tu veux
+                        } else {
+                            player.setPose(EntityPose.STANDING);
+                        }
+                    });
+                }
+        );
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             SpvAddonVoicechatPlugin.justSpoke.clear();
@@ -129,7 +143,6 @@ public class Spv_addon implements ModInitializer {
                 LOGGER.error("Error in AFTER_RESPAWN event: {}", String.valueOf(e));
             }
         }));
-
 
 
     }

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "spv_addon:block/kitty_bottom_block"
+    }
+  }
+}

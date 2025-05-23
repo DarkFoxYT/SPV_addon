@@ -1,0 +1,87 @@
+package net.dark.spv_addon.client;
+
+import net.dark.spv_addon.cca.PlayerNoclipComponent;
+import net.dark.spv_addon.cca.InitializeComponents;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class NoclipEventHandler {
+    // Track last known positions
+    private static final Map<ServerPlayerEntity, BlockPos> LAST_POSITIONS = new HashMap<>();
+
+    public static void register() {
+        // On player tick: Track movement and handle noclip
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                if (!player.getWorld().getRegistryKey().getValue().toString().equals("minecraft:overworld")) {
+                    // Only trigger in Overworld; reset if they leave
+                    InitializeComponents.NOCLIP.get(player).reset();
+                    LAST_POSITIONS.remove(player);
+                    continue;
+                }
+
+                PlayerNoclipComponent comp = InitializeComponents.NOCLIP.get(player);
+                BlockPos lastPos = LAST_POSITIONS.get(player);
+                BlockPos currPos = player.getBlockPos();
+
+                if (lastPos != null && !lastPos.equals(currPos)) {
+                    int dist = Math.abs(currPos.getX() - lastPos.getX()) + Math.abs(currPos.getZ() - lastPos.getZ());
+                    if (dist > 0) comp.addDistance(dist);
+                }
+                LAST_POSITIONS.put(player, currPos);
+
+                if (comp.shouldNoclip()) {
+                    triggerNoclipCutscene(player);
+                    comp.reset();
+                }
+            }
+        });
+
+        // Reset distance on death or respawn
+        ServerPlayerEvents.AFTER_RESPAWN.register(((oldPlayer, newPlayer, alive) -> {
+            InitializeComponents.NOCLIP.get(newPlayer).reset();
+            LAST_POSITIONS.remove(newPlayer);
+        }));
+    }
+
+    // --- Cutscene & teleport ---
+    private static void triggerNoclipCutscene(ServerPlayerEntity player) {
+        // Black screen/cutscene logic goes here:
+        // You may want to use custom packets or your mod’s cutscene API here
+
+        // Example: Send black screen, play suffocation sound
+
+        // Custom packet to show black screen (replace with your system)
+        // sendBlackScreenPacket(player, 80, true, true);
+
+        // Schedule teleport after ~2 seconds (40 ticks)
+        player.server.execute(() -> {
+            try {
+                Thread.sleep(1800);
+            } catch (InterruptedException ignored) {}
+            teleportToBackrooms(player);
+        });
+    }
+
+    private static void teleportToBackrooms(ServerPlayerEntity player) {
+        // Find your Backrooms dimension type!
+        // For example, replace with your actual dimension key:
+        var backroomsDim = net.minecraft.registry.RegistryKey.of(
+                net.minecraft.registry.RegistryKeys.WORLD,
+                new Identifier("spv_addon", "backrooms")
+        );
+        var overworld = player.server.getWorld(backroomsDim);
+        if (overworld == null) return;
+
+        // Teleport to a default spawn point in the Backrooms
+        player.teleport(overworld, 8.5, 120, 8.5, player.getYaw(), player.getPitch());
+    }
+}

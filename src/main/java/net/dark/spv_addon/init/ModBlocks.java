@@ -1,8 +1,14 @@
 package net.dark.spv_addon.init;
 
+import com.sp.block.SprintBlockSoundGroup;
+import com.sp.block.custom.CeilingLight;
+import com.sp.block.custom.FluorescentLightBlock;
+import com.sp.init.BackroomsLevels;
 import net.dark.spv_addon.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import com.sp.block.custom.CarpetBlock;
+import com.sp.block.custom.WallBlock;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -13,17 +19,21 @@ import static software.bernie.example.registry.BlockRegistry.registerBlock;
 
 
 public class ModBlocks {
-    public static final Block HOTEL_WALL = new Block(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.STONE));
-    public static final Block HOTEL_FLOOR = new Block(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
-    public static final Block TESTS = new lightblocktest(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOL));
-    public static final Block IKEA_SHELF = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
-    public static final Block IKEA_SHELF1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
-    public static final Block IKEA_SHELF2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
+    public static final Block HOTEL_WALL = new WallBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
+    public static final Block KITTY_WALL = new WallBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
+    public static final Block KITTY_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block HOTEL_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block TESTS = new lightblocktest(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block IKEA_SHELF = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
+    public static final Block IKEA_SHELF1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
+    public static final Block IKEA_SHELF2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
+    public static final Block KITTY_PLUSHIE = new TableBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block EXIT_SIGN = new CeilingLight(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).collidable(false).hardness(-1f).noBlockBreakParticles().nonOpaque());
 
 
-    public static final Block TABLE = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
-    public static final Block BED1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
-    public static final Block BED2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().solidBlock((state, world, pos) -> true).nonOpaque().suffocates((state, world, pos) -> true).blockVision((state, world, pos) -> true));
+    public static final Block TABLE = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
+    public static final Block BED1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
+    public static final Block BED2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
 
 
     public static final Block IKEA_EXIT = new Ikea_Exit_Block(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.ConcreteBlock1)
@@ -31,11 +41,8 @@ public class ModBlocks {
             .noBlockBreakParticles()
             .collidable(false)
             .sounds(BlockSoundGroup.WOOL)
-            .solidBlock((state, world, pos) -> false)
-            .nonOpaque()
-            .suffocates((state, world, pos) -> false)
-            .blockVision((state, world, pos) -> false),
-            BackroomsLevels.LEVEL_IKEA_WORLD_KEY,
+            .nonOpaque().air(),
+            BackroomsLevels.OVERWORLD_REPRESENTING_BACKROOMS_LEVEL.getWorldKey(),
             com.sp.init.BackroomsLevels.LEVEL0_WORLD_KEY);
 
 
@@ -49,6 +56,10 @@ public class ModBlocks {
 
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie"), KITTY_PLUSHIE);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "exit_sign"), EXIT_SIGN);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_wall"), KITTY_WALL);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_floor"), KITTY_FLOOR);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "ikea_exit"), IKEA_EXIT);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "ikea_shelf"), IKEA_SHELF);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "ikea_shelf1"), IKEA_SHELF1);

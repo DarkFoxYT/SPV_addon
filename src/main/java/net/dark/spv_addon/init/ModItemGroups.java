@@ -29,6 +29,10 @@ public class ModItemGroups {
                         entries.add(ModBlocks.IKEA_SHELF);
                         entries.add(ModBlocks.IKEA_SHELF1);
                         entries.add(ModBlocks.IKEA_SHELF2);
+                        entries.add(ModBlocks.KITTY_WALL);
+                        entries.add(ModBlocks.KITTY_FLOOR);
+                        entries.add(ModBlocks.KITTY_PLUSHIE);
+                        entries.add(ModBlocks.EXIT_SIGN);
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);

@@ -14,15 +14,12 @@ import net.minecraft.util.Util;
 import static net.dark.spv_addon.Spv_addon.MOD_ID;
 
 public class BatteryHud implements HudRenderCallback {
-    private static final Identifier TEX_FULL = new Identifier(MOD_ID, "textures/gui/battery_100.png");
-    private static final Identifier TEX_75   = new Identifier(MOD_ID, "textures/gui/battery_75.png");
-    private static final Identifier TEX_50   = new Identifier(MOD_ID, "textures/gui/battery_50.png");
-    private static final Identifier TEX_25   = new Identifier(MOD_ID, "textures/gui/battery_25.png");
-    private static final Identifier TEX_0    = new Identifier(MOD_ID, "textures/gui/battery_0.png");
-
-    private static final int ICON_W = 88, ICON_H = 64;
-    private static final float SCALE = 0.25f;
-    private static final int MARGIN = 5;
+    private static final Identifier BATTERY_1 = new Identifier(MOD_ID, "textures/gui/battery1.png");
+    private static final Identifier BATTERY_2 = new Identifier(MOD_ID, "textures/gui/battery2.png");
+    // ATTENTION : texture attendue 22x16 (barre vide à gauche, barre pleine à droite)
+    private static final int BAR_W = 44, BAR_H = 44;
+    private static final float SCALE = 1f;
+    private static final int X_MARGIN = 6, Y_MARGIN = 40; // top right, sous la mini-carte ou autre HUD
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -31,56 +28,54 @@ public class BatteryHud implements HudRenderCallback {
         if (player == null) return;
 
         int level = BatteryManager.getBattery(player.getUuid());
-        PlayerComponent comp = InitializeComponents.PLAYER.get(player);
+        PlayerComponent comp = InitializeComponents.PLAYER.getNullable(player);
 
-        // Show if battery==0 (even flashlight off), otherwise only if flashlight is on:
+        // Affiche seulement si lampe torche allumée OU batterie à 0
         if (level != 0 && (comp == null || !comp.isFlashLightOn())) return;
 
-        Identifier tex = (level == 0)   ? TEX_0
-                : (level <= 25) ? TEX_25
-                : (level <= 50) ? TEX_50
-                : (level <= 75) ? TEX_75
-                : TEX_FULL;
 
-        // pulsing alpha at low battery or zero
-        float alpha = 1f;
-        if (level <= 25) {
-            double t    = Util.getMeasuringTimeMs() / 500.0;
-            double sway = (Math.sin(t) + 1.0) / 2.0;
-            alpha = 0.25f + (float)(sway * 0.75f);
-        }
+        float norm = Math.max(0, Math.min(level, 100)) / 100f;
+        int filledHeight = Math.round(norm * BAR_H);
+
+        float alpha = (level <= 15) ? getPulseAlpha() : 1f;
 
         int sw = client.getWindow().getScaledWidth();
-        int x  = sw - (int)(ICON_W * SCALE) - MARGIN;
-        int y  = MARGIN;
+        int x = sw - (int)(BAR_W * SCALE) - X_MARGIN;
+        int y = Y_MARGIN;
 
-        // draw the full 88×64 texture scaled down by SCALE
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);
-        dc.getMatrices().scale(SCALE, SCALE, 1f);
+        dc.getMatrices().scale(0.75f, 0.75f, 0.75f);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
-        dc.drawTexture(tex, 0, 0, 0, 0, ICON_W, ICON_H, ICON_W, ICON_H);
+
+        // Dessine la barre vide (background)
+        dc.drawTexture(BATTERY_1, 0, -1, 0, 0, BAR_W, BAR_H, 44, 44);
+
+        // Dessine la barre pleine (remplissage horizontal)
+        if (filledHeight > 0) {
+            dc.drawTexture(BATTERY_2, 0, BAR_H - filledHeight, BAR_W, BAR_H - filledHeight, BAR_W, filledHeight, 44, 44);
+        }
+
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
-
         dc.getMatrices().pop();
 
-        // draw percentage under the icon
+        // Affiche le pourcentage juste sous la barre
         String txt = level + "%";
         int tw = client.textRenderer.getWidth(txt);
-        int tx = x + (int)(ICON_W * SCALE - tw);
-        int ty = y + (int)(ICON_H * SCALE) + 1;
-
-        dc.getMatrices().push();
-        RenderSystem.enableBlend();
+        int tx = x + (int)(BAR_W * 1f) / 2 - tw / 2;
+        int ty = y + (int)(BAR_H * 1f) / 2;
         dc.drawText(client.textRenderer, txt, tx, ty, 0xFFFFFF, true);
-        RenderSystem.disableBlend();
-        dc.getMatrices().pop();
     }
 
-    /** Call once in your ClientModInitializer **/
+    private float getPulseAlpha() {
+        double t = Util.getMeasuringTimeMs() / 600.0;
+        double sway = (Math.sin(t) + 1.0) / 2.0;
+        return 0.3f + (float)(sway * 0.7f);
+    }
+
     public static void register() {
         HudRenderCallback.EVENT.register(new BatteryHud());
     }

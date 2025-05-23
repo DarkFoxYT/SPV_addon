@@ -50,7 +50,7 @@ public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEn
         // 16 Blockbench units is 1 block
 
         StretchingIKChain legChain = new EntityLeg(
-                new Segment.Builder().length(0.3).angleSize(180).build(),
+                new Segment.Builder().length(0.1).angleSize(180).build(),
                 new Segment.Builder().length(0.6).angleSize(180).build(),
                 new Segment.Builder().length(.8).angleSize(180).build(),
                 new Segment.Builder().length(0.4).angleSize(180).build()

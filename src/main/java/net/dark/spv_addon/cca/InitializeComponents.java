@@ -6,6 +6,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistryV3;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
+import dev.onyxstudios.cca.internal.entity.CardinalComponentsEntity;
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
@@ -18,12 +19,16 @@ public class InitializeComponents implements EntityComponentInitializer {
 
     public static final ComponentKey<BellWalkerComponent> BELL_WALKER =
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "bell_walker"), BellWalkerComponent.class);
+    public static final ComponentKey<FlashlightBatteryComponent> FLASHLIGHT_BATTERY =
+            ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "flashlight_battery"), FlashlightBatteryComponent.class);
     public static final ComponentKey<KittyComponent> KITTY =
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "kitty"), KittyComponent.class);
     public static final ComponentKey<ThirstComponent> THIRST =
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "thirst"), ThirstComponent.class);
     public static final ComponentKey<SanityComponent> SANITY =
             ComponentRegistry.getOrCreate(new Identifier("spv_addon", "sanity"), SanityComponent.class);
+    public static final ComponentKey<PlayerNoclipComponent> NOCLIP =
+            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier("spv_addon", "noclip"), PlayerNoclipComponent.class);
 
 
     @Override
@@ -33,6 +38,8 @@ public class InitializeComponents implements EntityComponentInitializer {
         registry.registerFor(KittyEntity.class, KITTY, KittyComponent::new);
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
         registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);
+        registry.registerFor(PlayerEntity.class, NOCLIP, PlayerNoclipComponent::new);
+
 
 
     }

@@ -24,6 +24,10 @@ public class ModItems {
     public static final Item IKEA_SHELF = register("ikea_shelf", new BlockItem(ModBlocks.IKEA_SHELF, new FabricItemSettings()));
     public static final Item IKEA_SHELF1 = register("ikea_shelf1", new BlockItem(ModBlocks.IKEA_SHELF1, new FabricItemSettings()));
     public static final Item IKEA_SHELF2 = register("ikea_shelf2", new BlockItem(ModBlocks.IKEA_SHELF2, new FabricItemSettings()));
+    public static final Item KITTY_1 = register("kitty_floor", new BlockItem(ModBlocks.KITTY_FLOOR, new FabricItemSettings()));
+    public static final Item KITTY_2 = register("kitty_wall", new BlockItem(ModBlocks.KITTY_WALL, new FabricItemSettings()));
+    public static final Item KITTY_PLUSH = register("kitty_plushie", new BlockItem(ModBlocks.KITTY_PLUSHIE, new FabricItemSettings()));
+    public static final Item EXIT_SIGN = register("exit_sign", new BlockItem(ModBlocks.EXIT_SIGN, new FabricItemSettings()));
 
     public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 100, 50);
     public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10);

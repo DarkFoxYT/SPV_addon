@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "bottom_wall=true": {
+      "model": "spv_addon:block/kitty_bottom_block"
+    },
+    "bottom_wall=false": {
+      "model": "spv_addon:block/kitty_wall"
+    }
+  }
+}

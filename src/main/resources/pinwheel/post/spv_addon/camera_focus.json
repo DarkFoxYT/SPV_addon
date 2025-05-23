@@ -1,0 +1,16 @@
+{
+  "shaders": [
+    {
+      "id": "spv_addon:camera_focus",
+      "samplers": {
+        "DiffuseSampler": "pinwheel:color",
+        "DepthSampler": "pinwheel:depth"
+      },
+      "uniforms": {
+        "FocusDistance": 10.0,
+        "FocusRange": 4.0,
+        "BlurStrength": 8.0
+      }
+    }
+  ]
+}

@@ -1,6 +1,12 @@
 {
     "item.spv_addon.battery_item": "1/4 full battery",
     "item.spv_addon.battery_item2": "full battery",
+    "item.spv_addon.canteen": "Canteen With Drinkable Water",
+    "item.spv_addon.almond_dirty": "Dirty Almond Water",
+    "item.spv_addon.almond_water": "Almond Water",
+
+
+
     "block.spv_addon.hotel_wall": "Hotel Wall",
     "block.spv_addon.hotel_floor": "Hotel Floor",
     "block.spv_addon.tests": "test block",
@@ -10,6 +16,11 @@
     "block.spv_addon.ikea_exit": "IKEA EXIT Block",
     "block.spv_addon.ikea_shelf": "IKEA Shelf Block",
     "block.spv_addon.ikea_shelf1": "IKEA Shelf (/w books) Block",
+    "block.spv_addon.ikea_shelf2": "Rusted IKEA Shelf Block",
+    "block.spv_addon.exit_sign": "EXIT Sign Block",
+    "block.spv_addon.kitty_floor": "Kitty Floor Block",
+    "block.spv_addon.kitty_wall": "Kity Wall Block",
+    "block.spv_addon.kitty_plushie": "Kitty Plushie Block",
     "block.spv_addon.leveltransferblock": "EXIT Block",
 
 

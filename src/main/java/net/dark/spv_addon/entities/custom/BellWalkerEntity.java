@@ -170,7 +170,7 @@ public class BellWalkerEntity extends PathAwareEntity
             } else {
                 if (mob.getNavigation().isIdle()) {
                     // movement finished: play your custom stop sound
-                    mob.playSound(ModSounds.DONG, 1.0f, 1.0f);
+                    mob.playSound(ModSounds.BELLWALKER_BELL, 0.5f, 0.5f);
 
                     idlePhase = true;
                     resetIdle();

@@ -2,6 +2,7 @@ package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
+import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -29,6 +30,14 @@ public class ModEntities {
                     new Identifier(Spv_addon.MOD_ID, "kitty"),
                     FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, KittyEntity::new)
                             .dimensions(EntityDimensions.fixed(1.0f, 0.8f))
+                            .build()
+            );
+
+    public static final EntityType<IkeaWalkerEntity> IKEA_WALKER =
+            Registry.register(Registries.ENTITY_TYPE,
+                    new Identifier(Spv_addon.MOD_ID, "ikea_walker"),
+                    FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, IkeaWalkerEntity::new)
+                            .dimensions(EntityDimensions.fixed(0.7f, 1.95f))
                             .build()
             );
 

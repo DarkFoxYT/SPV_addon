@@ -27,7 +27,7 @@ public class Level5BackroomsLevel extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return this.random.nextBetween(1200, 2400);
+        return this.random.nextBetween(100000, 100000);
     }
 
     @Override
