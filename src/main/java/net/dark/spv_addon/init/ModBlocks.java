@@ -27,7 +27,7 @@ public class ModBlocks {
     public static final Block IKEA_SHELF = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
     public static final Block IKEA_SHELF1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
     public static final Block IKEA_SHELF2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
-    public static final Block KITTY_PLUSHIE = new TableBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block KITTY_PLUSHIE = new PlushieBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block EXIT_SIGN = new CeilingLight(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).collidable(false).hardness(-1f).noBlockBreakParticles().nonOpaque());
 
 
