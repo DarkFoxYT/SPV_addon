@@ -1,0 +1,39 @@
+package net.dark.spv_addon.blocks;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+
+public class PlushieBlock extends Block {
+
+    private static final VoxelShape COLLISION = VoxelShapes.union(
+        Block.createCuboidShape(3.975, 4.06727, 6, 11.975, 12.06727, 14),
+        Block.createCuboidShape(3.775, 3.86727, 5.8, 12.175, 12.26727, 14.2),
+        Block.createCuboidShape(5.375, 0.26727, 7.4, 10.575, 4.46727, 12.6),
+        Block.createCuboidShape(5.175, 0.26727, 7.2, 10.775, 4.26727, 12.8),
+        Block.createCuboidShape(4.975, -0.13273, 3.4, 6.975, 1.86727, 8.4),
+        Block.createCuboidShape(8.975, -0.13273, 3.4, 10.975, 1.86727, 8.4),
+        Block.createCuboidShape(9.975, -0.13273, 9, 11.975, 4.86727, 11),
+        Block.createCuboidShape(9.895, -0.45273, 8.92, 12.095, 5.34727, 11.12),
+        Block.createCuboidShape(4.17901, -0.40526, 8.92, 6.37901, 5.39474, 11.12),
+        Block.createCuboidShape(4.25901, -0.08526, 9, 6.25901, 4.91474, 11)
+    );
+
+    public PlushieBlock() {
+        super(Settings.of(Material.WOOL).strength(0.5f).nonOpaque());
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.entity.EntityContext context) {
+        return COLLISION;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.entity.EntityContext context) {
+        return COLLISION;
+    }
+}
