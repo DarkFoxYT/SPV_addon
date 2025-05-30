@@ -5,16 +5,13 @@ import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
- * AggroNearestPlayerGoal: targets the nearest speaking player
- * and plays a stop sound whose frequency increases as it closes in.
+ * AggroNearestPlayerGoal: cible le joueur qui parle le plus près et joue un son selon la distance.
  */
 public class AggroNearestPlayerGoal extends Goal {
     private final BellWalkerEntity mob;
@@ -22,9 +19,10 @@ public class AggroNearestPlayerGoal extends Goal {
     private final double aggroSpeed;
     private double originalSpeed;
     private int soundCooldown;
+    private PlayerEntity lastTarget;
 
-    private static final int MIN_SOUND_DELAY = 5;   // fastest (close)
-    private static final int MAX_SOUND_DELAY = 40;  // slowest (far)
+    private static final int MIN_SOUND_DELAY = 5;   // délai min (proche)
+    private static final int MAX_SOUND_DELAY = 40;  // délai max (loin)
 
     public AggroNearestPlayerGoal(BellWalkerEntity mob, double maxRange, double aggroSpeed) {
         this.mob = mob;
@@ -39,27 +37,32 @@ public class AggroNearestPlayerGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        List<PlayerEntity> candidates = mob.getWorld().getPlayers().stream()
+        List<? extends PlayerEntity> candidates = mob.getWorld().getPlayers().stream()
                 .filter(p -> mob.getSoundPitch() >= 2)
                 .filter(p -> p.squaredDistanceTo(mob) <= maxRange * maxRange)
-                .collect(Collectors.toList());
-        if (candidates.isEmpty()) return false;
-
+                .toList();
+        if (candidates.isEmpty()) {
+            return false;
+        }
+        // Select nearest
         PlayerEntity nearest = candidates.stream()
                 .min(Comparator.comparingDouble(p -> p.squaredDistanceTo(mob)))
-                .get();
+                .orElse(null);
         mob.setTarget(nearest);
-        return true;
+        lastTarget = nearest;
+        return nearest != null;
     }
 
     @Override
     public void start() {
-        // boost movement speed
-        originalSpeed = mob.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        mob.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)
-                .setBaseValue(aggroSpeed);
-        // init sound cooldown based on current distance
-        double distSq = mob.getTarget().squaredDistanceTo(mob);
+        if (lastTarget == null) return;
+        // Boost la vitesse
+        EntityAttributeInstance attr = mob.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        if (attr != null) {
+            originalSpeed = attr.getBaseValue();
+            attr.setBaseValue(aggroSpeed);
+        }
+        double distSq = lastTarget.squaredDistanceTo(mob);
         soundCooldown = calculateSoundDelay(distSq);
     }
 
@@ -69,7 +72,7 @@ public class AggroNearestPlayerGoal extends Goal {
         if (target instanceof PlayerEntity) {
             if (--soundCooldown <= 0) {
                 mob.playSound(ModSounds.BELLWALKER_BELL, 1.0f, 1.0f);
-                soundCooldown = calculateSoundDelay(mob.getTarget().squaredDistanceTo(mob));
+                soundCooldown = calculateSoundDelay(target.squaredDistanceTo(mob));
             }
         }
     }
@@ -86,5 +89,15 @@ public class AggroNearestPlayerGoal extends Goal {
         return target instanceof PlayerEntity
                 && target.isAlive()
                 && mob.getSoundPitch() >= 2;
+    }
+
+    @Override
+    public void stop() {
+        // Restore speed when finished
+        EntityAttributeInstance attr = mob.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        if (attr != null) {
+            attr.setBaseValue(originalSpeed);
+        }
+        lastTarget = null;
     }
 }

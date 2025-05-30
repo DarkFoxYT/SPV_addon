@@ -1,11 +1,8 @@
 package net.dark.spv_addon;
 
-import com.sp.SPBRevampedClient;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
-import com.sp.networking.InitializePackets;
-import com.sp.render.pbr.PbrRegistry;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.commands.SanityCommand;
@@ -18,30 +15,15 @@ import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
-import net.dark.spv_addon.world.events.LevelRunTicker;
-import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
@@ -89,9 +71,8 @@ public class Spv_addon implements ModInitializer {
             ThirstCommand.register(dispatcher);
         });
 
-
         ServerTickEvents.START_SERVER_TICK.register(server -> {
-            SpvAddonVoicechatPlugin.justSpoke.clear();
+            SpvAddonVoicechatPlugin.justMadeNoise.clear();
         });
 
         ServerPlayerEvents.AFTER_RESPAWN.register(((oldPlayer, newPlayer, alive) -> {
