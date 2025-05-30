@@ -4,8 +4,8 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
+import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,17 +19,20 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
     public LevelRUNBackroomsLevel() {
-        super("run", RunChunkGenerator.CODEC, new Vec3d(7, 1, 7), BackroomsLevels.LEVELRUN_WORLD_KEY, "spv_addon");
+        super("run", RunChunkGenerator.CODEC, new Vec3d(7.5, 1, 7.5), BackroomsLevels.LEVELRUN_WORLD_KEY, "spv_addon");
     }
 
     @Override
     public void register() {
 
+        // Ajoute des events custom ici si besoin
+        events.add(HaHvavCustomEvent::new);
+
     }
 
     @Override
     public int nextEventDelay() {
-        return this.random.nextBetween(100000, 100000);
+        return this.random.nextBetween(2000, 3000);
     }
 
     @Override

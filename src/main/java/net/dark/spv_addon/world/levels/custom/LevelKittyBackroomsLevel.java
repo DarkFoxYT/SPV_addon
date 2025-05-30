@@ -3,6 +3,7 @@ package net.dark.spv_addon.world.levels.custom;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
+import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -17,6 +18,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     @Override
     public void register() {
 
+        events.add(HaHvavCustomEvent::new);
     }
 
     @Override

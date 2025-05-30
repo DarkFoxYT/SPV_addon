@@ -1,0 +1,8 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "spv_addon:textures/particle/window_drip.png"
+    }
+  ]
+}

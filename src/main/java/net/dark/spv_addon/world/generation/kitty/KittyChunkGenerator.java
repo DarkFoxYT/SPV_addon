@@ -3,6 +3,7 @@ package net.dark.spv_addon.world.generation.kitty;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevampedClient;
+import com.sp.world.generation.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -31,7 +32,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class KittyChunkGenerator extends ChunkGenerator {
+public final class KittyChunkGenerator extends BackroomsChunkGenerator {
     public static final Codec<KittyChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -48,9 +49,15 @@ public final class KittyChunkGenerator extends ChunkGenerator {
     }
 
     public KittyChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
-        super(biomeSource);
+        super(biomeSource); // PAS de placementRadius ici, change si tu veux
         this.settings = settings;
         SPBRevampedClient.setInBackrooms(true);
+    }
+
+    // Nouvelle méthode 'generate' attendue par BackroomsChunkGenerator
+    @Override
+    public void generate(StructureWorldAccess world, Chunk chunk) {
+        this.generateFeatures(world, chunk, null);
     }
 
     @Override
@@ -58,7 +65,7 @@ public final class KittyChunkGenerator extends ChunkGenerator {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
 
-        // Only top-left chunk of each 2x2 room
+        // Seulement en haut-gauche de chaque pièce 2x2 chunks
         if (cx % 2 == 0 && cz % 2 == 0) {
             int rx = cx / 2;
             int rz = cz / 2;
@@ -67,7 +74,10 @@ public final class KittyChunkGenerator extends ChunkGenerator {
             if (rx == 0 && rz == 0) {
                 roomId = new Identifier(Spv_addon.MOD_ID, "kitty/entrance");
             } else {
-                int variant = random.nextBetween(1, 20);
+                int minRoom = 1, maxRoom = 20;
+                int bound = maxRoom - minRoom + 1;
+                int variant = minRoom;
+                if (bound > 0) variant = minRoom + random.nextInt(bound);
                 roomId = new Identifier(Spv_addon.MOD_ID, "kitty/room" + variant);
             }
 
@@ -90,36 +100,33 @@ public final class KittyChunkGenerator extends ChunkGenerator {
             optTpl.get().place(world, basePos, basePos, placeData, random, 2);
         }
 
-        // ==== GENERATION SÛRE DU TOIT ====
-        // 8x8 roof, always in current chunk, at y=6.
-        {
-            MinecraftServer server = world.getServer();
-            if (server == null) return;
-            StructureTemplateManager mgr = server.getStructureTemplateManager();
-            // Variant random for every chunk
-            String roofName = random.nextBoolean() ? "kitty/roof1" : "kitty/roof2";
-            Identifier roofId = new Identifier(Spv_addon.MOD_ID, roofName);
-            Optional<StructureTemplate> optRoof = mgr.getTemplate(roofId);
-            if (optRoof.isEmpty()) return;
+        // ======== ROOF 16x16 FULL COVER ========
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
+        StructureTemplateManager mgr = server.getStructureTemplateManager();
 
-            // Pick a random offset within chunk so the roof is always inside (0-8 max for 8x8 structure in 16x16 chunk)
-            int bx = chunk.getPos().getStartX();
-            int bz = chunk.getPos().getStartZ();
-            int maxOffset = 8; // 16 - 8
-            int rx = random.nextInt(maxOffset + 1);
-            int rz = random.nextInt(maxOffset + 1);
-            int px = bx + rx;
-            int pz = bz + rz;
+        // 4 roofs per chunk (each 8x8), tiled at Y=6
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                String roofName = random.nextBoolean() ? "kitty/roof1" : "kitty/roof2";
+                Identifier roofId = new Identifier(Spv_addon.MOD_ID, roofName);
+                Optional<StructureTemplate> optRoof = mgr.getTemplate(roofId);
+                if (optRoof.isEmpty()) continue;
 
-            BlockPos.Mutable roofPos = new BlockPos.Mutable(px, 6, pz);
+                int bx = chunk.getPos().getStartX();
+                int bz = chunk.getPos().getStartZ();
+                int px = bx + 8 * i;
+                int pz = bz + 8 * j;
 
-            StructurePlacementData placeData = new StructurePlacementData()
-                    .setMirror(BlockMirror.NONE)
-                    .setRotation(BlockRotation.NONE)
-                    .setIgnoreEntities(true);
+                BlockPos roofPos = new BlockPos(px, 5, pz);
 
-            // Place one roof per chunk, Y=6, never out of chunk bounds
-            optRoof.get().place(world, roofPos, roofPos, placeData, random, 2);
+                StructurePlacementData roofData = new StructurePlacementData()
+                        .setMirror(BlockMirror.NONE)
+                        .setRotation(BlockRotation.NONE)
+                        .setIgnoreEntities(true);
+
+                optRoof.get().place(world, roofPos, roofPos, roofData, random, 16);
+            }
         }
     }
 

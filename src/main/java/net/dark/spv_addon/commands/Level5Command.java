@@ -12,25 +12,9 @@ import net.minecraft.util.math.BlockPos;
 public class Level5Command {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 
-        dispatcher.register(CommandManager.literal("TEST")
-                .requires(source -> source.hasPermissionLevel(2))
-                .executes(context -> {
-                    ServerPlayerEntity player = context.getSource().getPlayer();
-                    ServerWorld level5 = player.getServer().getWorld(BackroomsLevels.LEVEL5_WORLD_KEY);
-                    BlockPos spawn = getSpawnSafe(level5, BackroomsLevels.LEVEL5_WORLD_KEY);
 
-                    if (level5 != null && spawn != null) {
-                        player.moveToWorld(level5);
-                        player.teleport(level5, spawn.getX(), spawn.getY(), spawn.getZ(), player.getYaw(), player.getPitch());
-                        player.sendMessage(Text.literal("§eTeleported to Level 5 lobby."), false);
-                        return 1;
-                    } else {
-                        player.sendMessage(Text.literal("§cLevel 5 dimension or spawn point missing."), false);
-                        return 0;
-                    }
-                }));
 
-        dispatcher.register(CommandManager.literal("IKEA")
+        dispatcher.register(CommandManager.literal("ikea")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
@@ -48,7 +32,7 @@ public class Level5Command {
                     }
                 }));
 
-        dispatcher.register(CommandManager.literal("RUN")
+        dispatcher.register(CommandManager.literal("run")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
@@ -65,7 +49,7 @@ public class Level5Command {
                         return 0;
                     }
                 }));
-        dispatcher.register(CommandManager.literal("KITTY")
+        dispatcher.register(CommandManager.literal("kitty")
                 .requires(source -> source.hasPermissionLevel(2))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();

@@ -16,10 +16,10 @@ import static net.dark.spv_addon.Spv_addon.MOD_ID;
 public class BatteryHud implements HudRenderCallback {
     private static final Identifier BATTERY_1 = new Identifier(MOD_ID, "textures/gui/battery1.png");
     private static final Identifier BATTERY_2 = new Identifier(MOD_ID, "textures/gui/battery2.png");
-    // ATTENTION : texture attendue 22x16 (barre vide à gauche, barre pleine à droite)
+    // Les textures sont 66x44 px (batterie vide et pleine)
     private static final int BAR_W = 44, BAR_H = 44;
-    private static final float SCALE = 1f;
-    private static final int X_MARGIN = 6, Y_MARGIN = 40; // top right, sous la mini-carte ou autre HUD
+    private static final float SCALE = 1.0f; // Tu peux ajuster à 0.75f pour le style
+    private static final int X_MARGIN = 16, Y_MARGIN = 40; // Ajuste pour aligner avec Sanity
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -30,9 +30,7 @@ public class BatteryHud implements HudRenderCallback {
         int level = BatteryManager.getBattery(player.getUuid());
         PlayerComponent comp = InitializeComponents.PLAYER.getNullable(player);
 
-        // Affiche seulement si lampe torche allumée OU batterie à 0
         if (level != 0 && (comp == null || !comp.isFlashLightOn())) return;
-
 
         float norm = Math.max(0, Math.min(level, 100)) / 100f;
         int filledHeight = Math.round(norm * BAR_H);
@@ -40,22 +38,20 @@ public class BatteryHud implements HudRenderCallback {
         float alpha = (level <= 15) ? getPulseAlpha() : 1f;
 
         int sw = client.getWindow().getScaledWidth();
-        int x = sw - (int)(BAR_W * SCALE) - X_MARGIN;
-        int y = Y_MARGIN;
+        int x = sw - (int)(BAR_W * SCALE) - 16; // 16px depuis le bord droit
+        int y = 16; // 16px depuis le haut
 
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);
-        dc.getMatrices().scale(0.75f, 0.75f, 0.75f);
+        dc.getMatrices().scale(SCALE, SCALE, SCALE);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
 
-        // Dessine la barre vide (background)
-        dc.drawTexture(BATTERY_1, 0, -1, 0, 0, BAR_W, BAR_H, 44, 44);
+        dc.drawTexture(BATTERY_1, 0, 0, 0, 0, BAR_W, BAR_H, 44, 44);
 
-        // Dessine la barre pleine (remplissage horizontal)
         if (filledHeight > 0) {
-            dc.drawTexture(BATTERY_2, 0, BAR_H - filledHeight, BAR_W, BAR_H - filledHeight, BAR_W, filledHeight, 44, 44);
+            dc.drawTexture(BATTERY_2, 0, BAR_H - filledHeight, 0, BAR_H - filledHeight, BAR_W, filledHeight, 44, 44);
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -65,8 +61,8 @@ public class BatteryHud implements HudRenderCallback {
         // Affiche le pourcentage juste sous la barre
         String txt = level + "%";
         int tw = client.textRenderer.getWidth(txt);
-        int tx = x + (int)(BAR_W * 1f) / 2 - tw / 2;
-        int ty = y + (int)(BAR_H * 1f) / 2;
+        int tx = x + (int)(BAR_W * SCALE) / 2 - tw / 2;
+        int ty = y + (int)(BAR_H * SCALE) + 2;
         dc.drawText(client.textRenderer, txt, tx, ty, 0xFFFFFF, true);
     }
 

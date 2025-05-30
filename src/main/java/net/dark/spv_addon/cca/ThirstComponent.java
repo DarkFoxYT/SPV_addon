@@ -1,11 +1,18 @@
 package net.dark.spv_addon.cca;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 public class ThirstComponent implements ComponentV3, AutoSyncedComponent {
+    public static final ComponentKey<ThirstComponent> KEY2 =
+            ComponentRegistry.getOrCreate(new Identifier("spv_addon", "thirst"), ThirstComponent.class);
+
+
     private static final int MAX_THIRST = 100;
     private int thirst = MAX_THIRST;
     private final PlayerEntity player;

@@ -19,8 +19,7 @@ import static net.minecraft.server.command.CommandManager.literal;
  */
 public class ThirstCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        CommandRegistrationCallback.EVENT.register((disp, _access, _env) -> {
-            disp.register(literal("thirst")
+            dispatcher.register(literal("thirst")
                     .then(literal("set")
                             .then(argument("amount", IntegerArgumentType.integer(0, 100))
                                     .executes(ctx -> {
@@ -46,6 +45,5 @@ public class ThirstCommand {
                             )
                     )
             ));
-        });
+        }
     }
-}

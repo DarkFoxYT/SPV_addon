@@ -4,8 +4,8 @@ import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.events.AbstractEvent;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
 import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
+import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -22,6 +22,8 @@ public class LevelIKEA extends BackroomsLevel {
     @Override
     public void register() {
         // Ajoute des events custom ici si besoin
+        events.add(HaHvavCustomEvent::new);
+
     }
 
     @Override
@@ -32,7 +34,7 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return 100000; // Change si tu veux des events
+        return 999999999; // Change si tu veux des events
     }
 
     @Override

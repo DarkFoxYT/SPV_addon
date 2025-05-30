@@ -1,8 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "spv_addon:block/hotel_wall_color",
-    "normal": "spv_addon:block/pbr/hotel_wall/hotel_wall_normal",
-    "height": "spv_addon:block/pbr/hotel_wall/hotel_wall_height"
+    "all": "spv_addon:block/hotel_wall_color"
   }
 }

@@ -11,11 +11,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class ThirstHud implements HudRenderCallback {
-    private static final Identifier THIRST_ICONS = new Identifier("spv_addon", "textures/gui/thirst_icon.png");
-    // Texture : 32x32px, barre vide gauche (0,0), barre pleine droite (32,0)
-    private static final int ICON_W = 44, ICON_H = 64;
-    private static final float SCALE = 0.5f;
-    private static final int Y_OFFSET = 55; // Distance du bas de l'écran
+    private static final Identifier THIRST_EMPTY = new Identifier("spv_addon", "textures/gui/thirst_0.png");
+    private static final Identifier THIRST_FULL  = new Identifier("spv_addon", "textures/gui/thirst_icon.png");
+    // Les textures doivent faire 44x64px (fond et remplissage)
+    private static final int ICON_W = 64, ICON_H = 44;
+    private static final float SCALE = 0.75f; // Ajuste pour la taille finale affichée
+    private static final int X_MARGIN = 70, Y_MARGIN = 40; // Position à caler selon ta GUI
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -26,7 +27,7 @@ public class ThirstHud implements HudRenderCallback {
         ThirstComponent thirst = InitializeComponents.THIRST.getNullable(player);
         if (thirst == null) return;
 
-        int level = thirst.getThirst(); // 0–100
+        int level = thirst.getThirst();
         float norm = Math.max(0, Math.min(level, 100)) / 100f;
         int filledHeight = Math.round(norm * ICON_H);
 
@@ -34,8 +35,9 @@ public class ThirstHud implements HudRenderCallback {
 
         int sw = client.getWindow().getScaledWidth();
         int sh = client.getWindow().getScaledHeight();
-        int x = (sw - (int)(ICON_W * SCALE)) / 2;
-        int y = sh - Y_OFFSET;
+
+        int x = 16; // 16px depuis le bord gauche
+        int y = sh - (int)(ICON_H * SCALE) - 16; // 16px depuis le bas
 
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);
@@ -44,12 +46,16 @@ public class ThirstHud implements HudRenderCallback {
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
 
-        // Barre vide (background)
-        dc.drawTexture(THIRST_ICONS, 0, 0, 0, 0, ICON_W, ICON_H, 88, 64);
+        dc.drawTexture(THIRST_EMPTY, 0, 0, 0, 0, ICON_W, ICON_H, ICON_W, ICON_H);
 
-        // Barre pleine (remplissage vertical)
         if (filledHeight > 0) {
-            dc.drawTexture(THIRST_ICONS, 0, ICON_H - filledHeight, ICON_W, ICON_H - filledHeight, ICON_W, filledHeight, 88, 64);
+            dc.drawTexture(
+                    THIRST_FULL,
+                    0, ICON_H - filledHeight,
+                    0, ICON_H - filledHeight,
+                    ICON_W, filledHeight,
+                    ICON_W, ICON_H
+            );
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -61,6 +67,7 @@ public class ThirstHud implements HudRenderCallback {
         int tw = client.textRenderer.getWidth(txt);
         dc.drawText(client.textRenderer, txt, x + (int)(ICON_W * SCALE) / 2 - tw / 2, y + (int)(ICON_H * SCALE) + 2, 0xFFFFFF, true);
     }
+
 
     private float getPulseAlpha() {
         double t = Util.getMeasuringTimeMs() / 600.0;

@@ -9,6 +9,7 @@ import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.StructureTemplateManager;
@@ -40,6 +41,8 @@ public final class RunChunkGenerator extends ChunkGenerator {
                     ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(gen -> gen.settings)
             ).apply(instance, RunChunkGenerator::new)
     );
+    public static BlockPos EXIT_ROOM_CENTER = null; // Sera set dynamiquement à la génération
+    public static final int EXIT_ROOM_RADIUS = 8; // à ajuster selon ta room
 
 
 
@@ -94,41 +97,25 @@ public final class RunChunkGenerator extends ChunkGenerator {
         MinecraftServer server = world.getServer();
         if (server == null) return;
         StructureTemplateManager mgr = server.getStructureTemplateManager();
-        Optional<StructureTemplate> optTpl = mgr.getTemplate(roomId);
-        if (optTpl.isEmpty()) return;
+
+        // Random roof between run_roof1 and run_roof2
+        String roofName = random.nextBoolean() ? "run/run_roof1" : "run/run_roof2";
+        Identifier roofId = new Identifier(Spv_addon.MOD_ID, roofName);
+        Optional<StructureTemplate> optRoof = mgr.getTemplate(roofId);
+        if (optRoof.isEmpty()) return;
 
         int bx = chunk.getPos().getStartX();
         int bz = chunk.getPos().getStartZ();
-        BlockPos.Mutable basePos = new BlockPos.Mutable(bx, 0, bz);
 
-        StructurePlacementData placeData = new StructurePlacementData()
-                .setMirror(BlockMirror.NONE)
-                .setRotation(BlockRotation.CLOCKWISE_90)
-                .setIgnoreEntities(true);
-
-        boolean placed = optTpl.get().place(world, basePos, basePos, placeData, random, 2);
-        if (!placed) return;
-
-        Identifier roofId = new Identifier(Spv_addon.MOD_ID, "run/run_roof1");
-        Optional<StructureTemplate> roofTpl = mgr.getTemplate(roofId);
-        if (roofTpl.isEmpty()) return;
+        // Place roof so that it covers the entire chunk at y=6
+        BlockPos.Mutable roofPos = new BlockPos.Mutable(bx, 6, bz);
 
         StructurePlacementData roofData = new StructurePlacementData()
                 .setMirror(BlockMirror.NONE)
                 .setRotation(BlockRotation.CLOCKWISE_90)
                 .setIgnoreEntities(true);
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                int px = bx + 8 * i;
-                int pz = bz + 8 * j;
-                BlockPos roofPos = new BlockPos(px, 5, pz);
-
-                if (world.getBlockState(roofPos) == Blocks.AIR.getDefaultState()) {
-                    roofTpl.get().place(world, roofPos, roofPos, roofData, random, 16);
-                }
-            }
-        }
+        optRoof.get().place(world, roofPos, roofPos, roofData, random, 2);
     }
 
 
@@ -165,7 +152,14 @@ public final class RunChunkGenerator extends ChunkGenerator {
                                 NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
                                 StructureAccessor structAcc, Chunk chunk,
                                 GenerationStep.Carver carverStep) {}
-
+    public static boolean isPlayerInExit(ServerPlayerEntity player) {
+        if (EXIT_ROOM_CENTER == null) return false;
+        BlockPos p = player.getBlockPos();
+        // Test sur une sphère/cube
+        return Math.abs(p.getX() - EXIT_ROOM_CENTER.getX()) <= EXIT_ROOM_RADIUS &&
+                Math.abs(p.getZ() - EXIT_ROOM_CENTER.getZ()) <= EXIT_ROOM_RADIUS &&
+                (p.getY() >= EXIT_ROOM_CENTER.getY() && p.getY() <= EXIT_ROOM_CENTER.getY() + 6); // hauteur à adapter
+    }
     @Override public void buildSurface(ChunkRegion region,
                                        StructureAccessor structAcc,
                                        NoiseConfig noiseConfig,

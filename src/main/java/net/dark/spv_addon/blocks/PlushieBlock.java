@@ -2,6 +2,7 @@ package net.dark.spv_addon.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.EntityShapeContext;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -20,16 +21,16 @@ public class PlushieBlock extends HorizontalFacingBlock {
 
     // Combine all cuboids from your Blockbench JSON
     private static final VoxelShape SHAPE = VoxelShapes.union(
-        Block.createCuboidShape(3.975, 4.06727, 6, 11.975, 12.06727, 14),
-        Block.createCuboidShape(3.775, 3.86727, 5.8, 12.175, 12.26727, 14.2),
-        Block.createCuboidShape(5.375, 0.26727, 7.4, 10.575, 4.46727, 12.6),
-        Block.createCuboidShape(5.175, 0.26727, 7.2, 10.775, 4.26727, 12.8),
-        Block.createCuboidShape(4.975, -0.13273, 3.4, 6.975, 1.86727, 8.4),
-        Block.createCuboidShape(8.975, -0.13273, 3.4, 10.975, 1.86727, 8.4),
-        Block.createCuboidShape(9.975, -0.13273, 9, 11.975, 4.86727, 11),
-        Block.createCuboidShape(9.895, -0.45273, 8.92, 12.095, 5.34727, 11.12),
-        Block.createCuboidShape(4.17901, -0.40526, 8.92, 6.37901, 5.39474, 11.12),
-        Block.createCuboidShape(4.25901, -0.08526, 9, 6.25901, 4.91474, 11)
+            Block.createCuboidShape(3.975, 4.06727, 6, 11.975, 12.06727, 14),
+            Block.createCuboidShape(3.775, 3.86727, 5.8, 12.175, 12.26727, 14.2),
+            Block.createCuboidShape(5.375, 0.26727, 7.4, 10.575, 4.46727, 12.6),
+            Block.createCuboidShape(5.175, 0.26727, 7.2, 10.775, 4.26727, 12.8),
+            Block.createCuboidShape(4.975, -0.13273, 3.4, 6.975, 1.86727, 8.4),
+            Block.createCuboidShape(8.975, -0.13273, 3.4, 10.975, 1.86727, 8.4),
+            Block.createCuboidShape(9.975, -0.13273, 9, 11.975, 4.86727, 11),
+            Block.createCuboidShape(9.895, -0.45273, 8.92, 12.095, 5.34727, 11.12),
+            Block.createCuboidShape(4.17901, -0.40526, 8.92, 6.37901, 5.39474, 11.12),
+            Block.createCuboidShape(4.25901, -0.08526, 9, 6.25901, 4.91474, 11)
     );
 
     public PlushieBlock(Settings settings) {
@@ -58,13 +59,11 @@ public class PlushieBlock extends HorizontalFacingBlock {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.entity.EntityContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityShapeContext context) {
         return getRotatedShape(state);
     }
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.entity.EntityContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, EntityShapeContext context) {
         return getRotatedShape(state);
     }
 
@@ -92,8 +91,8 @@ public class PlushieBlock extends HorizontalFacingBlock {
             VoxelShape temp = VoxelShapes.empty();
             for (var box : rotated.getBoundingBoxes()) {
                 temp = VoxelShapes.union(temp, Block.createCuboidShape(
-                    16 - box.minZ, box.minY, box.minX,
-                    16 - box.maxZ, box.maxY, box.maxX
+                        16 - box.minZ, box.minY, box.minX,
+                        16 - box.maxZ, box.maxY, box.maxX
                 ));
             }
             rotated = temp;

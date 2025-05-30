@@ -1,64 +1,73 @@
 package net.dark.spv_addon.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
+@Environment(EnvType.CLIENT)
 public class SanityBar implements HudRenderCallback {
-    private static final Identifier SANITY_ICONS = new Identifier("spv_addon", "textures/gui/sanity_icon.png");
-    // Texture : 88x64px = barre vide à gauche (0,0), barre pleine à droite (88,0)
-    private static final int ICON_W = 32, ICON_H = 32;
-    private static final float SCALE = 1f;
-    private static final int MARGIN_X = 6, MARGIN_Y = 6;
+    private static final Identifier SANITY_EMPTY = new Identifier("spv_addon", "textures/gui/sanity_0.png");
+    private static final Identifier SANITY_FULL  = new Identifier("spv_addon", "textures/gui/sanity_icon.png");
+    private static final int ICON_W = 32, ICON_H = 32; // Taille de la texture
+    private static final float SCALE = 1.0f; // Pour garder même rendu que les autres
+    private static final int X_MARGIN = 16 + (int)(44 * 0.75f) + 12; // Décale à droite de la ThirstHud (qui fait ~33px avec scale)
+    private static final int Y_MARGIN = 16; // Même base en bas de l'écran
 
     @Override
-    public void onHudRender(DrawContext context, float tickDelta) {
+    public void onHudRender(DrawContext dc, float tickDelta) {
         MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+        PlayerEntity player = client.player;
         if (player == null) return;
 
-        SanityComponent sanity = InitializeComponents.SANITY.getNullable(player);
-        if (sanity == null) return;
+        var compOpt = SanityComponent.KEY1.maybeGet(player);
+        if (compOpt.isEmpty()) return;
+        int sanity = Math.max(0, Math.min(100, compOpt.get().getSanityLevel()));
 
-        int level = sanity.getSanityLevel(); // 0 à 100
-        float norm = Math.max(0, Math.min(level, 100)) / 100f;
-        int filledHeight = Math.round(norm * ICON_H);
+        float norm = sanity / 100f;
+        int fillWidth = Math.round(norm * ICON_W);
 
-        // Fade-out & pulse alpha si sanity critique
-        float alpha = (level <= 15) ? getPulseAlpha() : 1f;
+        float alpha = (sanity <= 15) ? getPulseAlpha() : 1f;
 
-        int x = MARGIN_X;
-        int y = MARGIN_Y;
+        int sh = client.getWindow().getScaledHeight();
+        int x = X_MARGIN; // Juste à droite de la ThirstHud
+        int y = sh - (int)(ICON_H * SCALE) - 16; // Même base que la soif
 
-        context.getMatrices().push();
-        context.getMatrices().translate(x, y, 0);
-        context.getMatrices().scale(SCALE, SCALE, SCALE);
+        dc.getMatrices().push();
+        dc.getMatrices().translate(x, y, 0);
+        dc.getMatrices().scale(SCALE, SCALE, SCALE);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
 
-        // Barre vide (background)
-        context.drawTexture(SANITY_ICONS, 0, 0, 0, 0, ICON_W, ICON_H, 64, 32);
-        // Barre pleine (remplissage vertical)
-        if (filledHeight > 0) {
-            context.drawTexture(SANITY_ICONS, 0, ICON_H - filledHeight, ICON_W, ICON_H - filledHeight, ICON_W, filledHeight, 64, 32);
+        // Fond vide
+        dc.drawTexture(SANITY_EMPTY, 0, 0, 0, 0, ICON_W, ICON_H, ICON_W, ICON_H);
+
+        // Remplissage horizontal
+        if (fillWidth > 0) {
+            dc.drawTexture(
+                    SANITY_FULL,
+                    0, 0,
+                    0, 0,
+                    fillWidth, ICON_H,
+                    ICON_W, ICON_H
+            );
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
-        context.getMatrices().pop();
+        dc.getMatrices().pop();
 
-        // Texte %
-        String txt = level + "%";
+        // % texte sous la barre
+        String txt = sanity + "%";
         int tw = client.textRenderer.getWidth(txt);
-        context.drawText(client.textRenderer, Text.literal(txt), x + (int)(ICON_W * SCALE) / 2 - tw / 2, y + (int)(ICON_H * SCALE), 0xFFFFFF, false);
+        dc.drawText(client.textRenderer, txt, x + (int)(ICON_W * SCALE) / 2 - tw / 2, y + (int)(ICON_H * SCALE) + 2, 0xFFFFFF, true);
     }
 
     private float getPulseAlpha() {

@@ -32,7 +32,6 @@ public class Level_Transfer_Block extends Block {
             worlds.add(BackroomsLevels.POOLROOMS_WORLD_KEY);
             worlds.add(BackroomsLevels.INFINITE_FIELD_WORLD_KEY);
             // Ajoute tous tes niveaux custom
-            worlds.add(net.dark.spv_addon.init.BackroomsLevels.LEVEL5_WORLD_KEY);
             worlds.add(net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY);
 
             RegistryKey<World> current = player.getWorld().getRegistryKey();

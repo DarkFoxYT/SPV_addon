@@ -7,7 +7,6 @@ import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import com.sp.networking.InitializePackets;
 import com.sp.render.pbr.PbrRegistry;
 import eu.midnightdust.lib.config.MidnightConfig;
-import net.dark.spv_addon.client.NoclipEventHandler;
 import net.dark.spv_addon.commands.Level5Command;
 import net.dark.spv_addon.commands.SanityCommand;
 import net.dark.spv_addon.commands.ThirstCommand;
@@ -19,6 +18,7 @@ import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
+import net.dark.spv_addon.world.events.LevelRunTicker;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -28,9 +28,11 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -55,21 +57,22 @@ public class Spv_addon implements ModInitializer {
     public static final String MOD_ID = "spv_addon";
     public static final Logger LOGGER = LoggerFactory.getLogger("spv_addon");
 
+    public static final DefaultParticleType RAIN_PARTICLE = FabricParticleTypes.simple();
 
 
     @Override
     public void onInitialize() {
+        Registry.register(Registries.PARTICLE_TYPE, new Identifier(MOD_ID, "rain_particle"), RAIN_PARTICLE);
 
 
         ThirstManager.register();
         FlashlightBatteryEvents.register();
 
-        NoclipEventHandler.register();
-
+        ModChunkGenerators.register();
         BackroomsLevels.init();
+
         ModItems.registerItems();
         ModBlocks.registerModBlocks();
-        ModChunkGenerators.register();
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
 
@@ -86,28 +89,10 @@ public class Spv_addon implements ModInitializer {
             ThirstCommand.register(dispatcher);
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(
-                new Identifier("spv_addon", "prone_toggle"),
-                (server, player, handler, buf, responseSender) -> {
-                    server.execute(() -> {
-                        if (player.getPose() != EntityPose.SWIMMING) {
-                            player.setPose(EntityPose.SWIMMING);
-                            // Rends le joueur lent, etc, si tu veux
-                        } else {
-                            player.setPose(EntityPose.STANDING);
-                        }
-                    });
-                }
-        );
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             SpvAddonVoicechatPlugin.justSpoke.clear();
         });
-
-        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(((player, origin, destination) -> {
-            PacketByteBuf buffer = PacketByteBufs.create();
-            ServerPlayNetworking.send(player, InitializePackets.RELOAD_LIGHTS, buffer);
-        }));
 
         ServerPlayerEvents.AFTER_RESPAWN.register(((oldPlayer, newPlayer, alive) -> {
             if(!com.sp.init.BackroomsLevels.isInBackrooms(oldPlayer.getWorld().getRegistryKey())) {
