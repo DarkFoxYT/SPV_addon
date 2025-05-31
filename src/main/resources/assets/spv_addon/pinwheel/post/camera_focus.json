@@ -1,7 +1,0 @@
-{
-  "passes": [
-    {
-      "shader": "spv_addon:camera_focus"
-    }
-  ]
-}

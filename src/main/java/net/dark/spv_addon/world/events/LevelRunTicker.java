@@ -1,6 +1,7 @@
 package net.dark.spv_addon.world.events;
 
 import com.sp.SPBRevamped;
+import com.sp.SPBRevampedClient;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
@@ -61,11 +62,8 @@ public class LevelRunTicker {
     }
 
     private static boolean isInBackrooms(ServerPlayerEntity player) {
-        // On considère tous les mondes backrooms SAUF level run et kitty
-        Identifier key = player.getWorld().getRegistryKey().getValue();
-        return key.getNamespace().equals("spb-revamped")
-                && !key.equals(BackroomsLevels.LEVELRUN_WORLD_KEY.getValue())
-                && !key.equals(BackroomsLevels.LEVEL_KITTY_WORLD_KEY.getValue());
+
+        return SPBRevampedClient.isInBackrooms();
     }
 
     private static boolean isInLevelRun(ServerPlayerEntity player) {
