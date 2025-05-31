@@ -15,12 +15,9 @@ public class ModItems {
     public static final Item BATTERY_ITEM2 = new BatteryItem2(new Item.Settings().maxCount(16));
     public static final Item HOTEL_WALL = register("hotel_wall", new BlockItem(ModBlocks.HOTEL_WALL, new FabricItemSettings()));
     public static final Item HOTEL_FLOOR = register("hotel_floor", new BlockItem(ModBlocks.HOTEL_FLOOR, new FabricItemSettings()));
-    public static final Item TESTS = register("tests", new BlockItem(ModBlocks.TESTS, new FabricItemSettings()));
     public static final Item BED1 = register("bed1", new BlockItem(ModBlocks.BED1, new FabricItemSettings()));
     public static final Item BED2 = register("bed2", new BlockItem(ModBlocks.BED2, new FabricItemSettings()));
     public static final Item TABLE = register("table", new BlockItem(ModBlocks.TABLE, new FabricItemSettings()));
-    public static final Item LEVELTRANSFERBLOCK = register("leveltransferblock", new BlockItem(ModBlocks.LEVELTRANSFERBLOCK, new FabricItemSettings()));
-    public static final Item IKEA_EXIT = register("ikea_exit", new BlockItem(ModBlocks.IKEA_EXIT, new FabricItemSettings()));
     public static final Item IKEA_SHELF = register("ikea_shelf", new BlockItem(ModBlocks.IKEA_SHELF, new FabricItemSettings()));
     public static final Item IKEA_SHELF1 = register("ikea_shelf1", new BlockItem(ModBlocks.IKEA_SHELF1, new FabricItemSettings()));
     public static final Item IKEA_SHELF2 = register("ikea_shelf2", new BlockItem(ModBlocks.IKEA_SHELF2, new FabricItemSettings()));

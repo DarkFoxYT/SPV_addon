@@ -92,9 +92,9 @@ public class Spv_addonClient implements ClientModInitializer {
                             // Add other blocks as needed
 
                         });
-
                         // Register PBR materials
-                        PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(true, 1F, 2.0F, 512));
+                        PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 512));
+
                         BlockIdMap.init = false;
                         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
                             SPBRevamped.LOGGER.error("This mod is not compatible with MacOS. Please use Windows or Linux (wayland).");

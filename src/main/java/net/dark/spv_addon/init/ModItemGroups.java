@@ -20,12 +20,9 @@ public class ModItemGroups {
                         // Blocks
                         entries.add(ModBlocks.HOTEL_FLOOR);
                         entries.add(ModBlocks.HOTEL_WALL);
-                        entries.add(ModBlocks.TESTS);
                         entries.add(ModBlocks.BED1);
                         entries.add(ModBlocks.BED2);
                         entries.add(ModBlocks.TABLE);
-                        entries.add(ModBlocks.LEVELTRANSFERBLOCK);
-                        entries.add(ModBlocks.IKEA_EXIT);
                         entries.add(ModBlocks.IKEA_SHELF);
                         entries.add(ModBlocks.IKEA_SHELF1);
                         entries.add(ModBlocks.IKEA_SHELF2);
@@ -33,6 +30,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.KITTY_FLOOR);
                         entries.add(ModBlocks.KITTY_PLUSHIE);
                         entries.add(ModBlocks.EXIT_SIGN);
+                        entries.add(ModBlocks.KITTY_PLUSHIE1);
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);

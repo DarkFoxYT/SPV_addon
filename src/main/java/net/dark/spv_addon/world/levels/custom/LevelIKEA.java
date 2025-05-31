@@ -4,6 +4,7 @@ import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.events.AbstractEvent;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
@@ -47,7 +48,7 @@ public class LevelIKEA extends BackroomsLevel {
     public boolean transitionOut(CrossDimensionTeleport teleport) {
         // Exits seulement sur points spéciaux ou si player trouve la sortie
         // Ici, simple : il doit être sur une “sortie” définie par bloc, ou par pos
-        return teleport.playerComponent().player.getBlockStateAtPos().isOf(net.dark.spv_addon.init.ModBlocks.IKEA_EXIT);
+        return teleport.playerComponent().player.getBlockStateAtPos().isOf(ModBlocks.EXIT_SIGN);
     }
 
     @Override
