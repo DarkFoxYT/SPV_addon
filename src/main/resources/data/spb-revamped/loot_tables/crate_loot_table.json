@@ -1,40 +1,31 @@
 {
   "pools": [
     {
-      "rolls": {
-        "min": 1,
-        "max": 2
-      },
+      "rolls": { "min": 1, "max": 2 },
       "bonus_rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "spb-revamped:backshroom",
-          "weight": 10,
+          "weight": 3,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 0,
-                "max": 2
-              },
-              "add": true
-            }
+            { "function": "minecraft:set_count", "count": { "min": 0, "max": 2 }, "add": true }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "spv_addon:battery_item",
-          "weight": 2,
+          "name": "spv_addon:battery_item1",
+          "weight": 14,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 0,
-                "max": 3
-              },
-              "add": true
-            }
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 }, "add": true }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spv_addon:battery_item2",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 }, "add": true }
           ]
         },
         {
@@ -42,65 +33,45 @@
           "name": "spv_addon:almond_dirty",
           "weight": 1,
           "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{Poisoned:1b}"
-            }
+            { "function": "minecraft:set_nbt", "tag": "{Poisoned:1b}" }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "spv_addon:almond_water",
-          "weight": 1,
+          "weight": 2,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 0,
-                "max": 3
-              },
-              "add": true
-            }
-          ]
-        },
-
-
-        {
-          "type": "minecraft:item",
-          "name": "spv_addon:battery_item2",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 0,
-                "max": 1
-              },
-              "add": true
-            }
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 }, "add": true }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "spv_addon:canteen",
-          "weight": 1,
+          "weight": 2,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 0,
-                "max": 1,
-                "tag": "{Poisoned:1b}",
-                "add": true
-              }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 1 }, "add": true }
           ]
         },
-
         {
           "type": "minecraft:item",
           "name": "spb-revamped:canned_food",
           "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spv_addon:kitty_plushie",
+          "weight": 1,
+          "functions": [
+            { "function": "minecraft:set_count", "count": 1 }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spv_addon:kitty_plushie1",
+          "weight": 0.2,
+          "functions": [
+            { "function": "minecraft:set_count", "count": 1 }
+          ]
         }
       ]
     }

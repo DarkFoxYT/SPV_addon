@@ -90,16 +90,11 @@ public class Spv_addonClient implements ClientModInitializer {
                         // Register custom block IDs
                         BlockIdMap.registerBlockID(blockIdMap -> {
                             // Add other blocks as needed
+                        blockIdMap.put(ModBlocks.HOTEL_WALL, 35);
 
                         });
                         // Register PBR materials
-                        PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 512));
-
-                        BlockIdMap.init = false;
-                        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-                            SPBRevamped.LOGGER.error("This mod is not compatible with MacOS. Please use Windows or Linux (wayland).");
-                            MinecraftClient.getInstance().getToastManager().add(new SystemToast(SystemToast.Type.UNSECURE_SERVER_WARNING, Text.of("Potential Incompatibility found"), Text.of("This mod is not compatible with MacOS. Please use Windows or Linux (wayland).")));
-                        }
+                        //PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 512));
                     }
 
                 });

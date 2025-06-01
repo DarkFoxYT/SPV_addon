@@ -14,16 +14,13 @@ import net.minecraft.util.Identifier;
 /**
  * Found Footage DeathScreen:
  * - Death static with dynamic noise & flicker
- * - Enlarged centered text
  * - 10s timer, auto respawn
- * - Glitch at the end
  */
 @Environment(EnvType.CLIENT)
 public class CustomDeathScreen extends Screen {
     private static final Identifier BACKGROUND = new Identifier("spv_addon", "textures/gui/death_full.png");
-    private static final Identifier STATIC_OVERLAY = new Identifier("spv_addon", "textures/gui/static_overlay.png");
     // Optional scanlines
-    // private static final Identifier SCANLINES = new Identifier("spv_addon", "textures/gui/scanlines.png");
+     private static final Identifier SCANLINES = new Identifier("spv_addon", "textures/gui/scanlines.png");
 
     private final String playerName;
     private int ticksElapsed = 0;
@@ -138,13 +135,10 @@ public class CustomDeathScreen extends Screen {
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
         ctx.drawTexture(dynamicStaticId, 0, 0, 0, 0, w, h, w, h);
 
-        // PNG static overlay par dessus (optionnel pour boost le look)
-        RenderSystem.setShaderColor(1f, 1f, 1f, Math.min(1, alpha * 0.5f));
-        ctx.drawTexture(STATIC_OVERLAY, 0, 0, 0, 0, w, h, w, h);
 
         // Scanlines si tu veux (décommente si besoin)
-        // RenderSystem.setShaderColor(1f, 1f, 1f, 0.10f * alpha);
-        // ctx.drawTexture(SCANLINES, 0, 0, 0, 0, w, h, w, h);
+         RenderSystem.setShaderColor(1f, 1f, 1f, 0.10f * alpha);
+         ctx.drawTexture(SCANLINES, 0, 0, 0, 0, w, h, w, h);
 
         // Glitch flash (flash blanc ultra rapide)
         if (isGlitching && glitchTicks % 4 == 0) {

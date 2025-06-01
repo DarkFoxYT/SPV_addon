@@ -96,7 +96,6 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
                     .setRotation(BlockRotation.NONE)
                     .setIgnoreEntities(true);
 
-            // Place main room structure at Y=0
             optTpl.get().place(world, basePos, basePos, placeData, random, 2);
         }
 
@@ -105,7 +104,6 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         if (server == null) return;
         StructureTemplateManager mgr = server.getStructureTemplateManager();
 
-        // 4 roofs per chunk (each 8x8), tiled at Y=6
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 2; ++j) {
                 String roofName = random.nextBoolean() ? "kitty/roof1" : "kitty/roof2";
