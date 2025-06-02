@@ -1,9 +1,7 @@
 package net.dark.spv_addon;
 
-import com.sp.SPBRevamped;
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
-import net.dark.spv_addon.Additions.Sanity.SanityLightDebugRenderer;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.FocusHandler;
 import net.dark.spv_addon.client.gui.BatteryHud;
@@ -18,8 +16,7 @@ import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
-import net.dark.spv_addon.init.ModParticles;
-import net.dark.spv_addon.world.events.LevelRunTicker;
+import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,13 +27,10 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.toast.SystemToast;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -46,18 +40,20 @@ public class Spv_addonClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        FocusHandler.register();
-        ClientTickEvents.END_CLIENT_TICK.register(client -> flashlightRenderer.tick(client.getTickDelta()));
 
-
+        // Registers Hud elements and other client-side features
         BatteryHud.register();
         ThirstHud.register();
         SanityBar.register();
-        LevelRunTicker.init();
-
+        FocusHandler.register();
         ThirstManager.register();
-        SanityLightDebugRenderer.init();
+        LevelRunGlobalTicker.init();
 
+        // Register the flashlight renderer
+        ClientTickEvents.END_CLIENT_TICK.register(client -> flashlightRenderer.tick(client.getTickDelta()));
+
+
+        // Stuff for entities using IK
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
 
@@ -67,7 +63,7 @@ public class Spv_addonClient implements ClientModInitializer {
         FabricDefaultAttributeRegistry.register(ModEntities.IKEA_WALKER, IkeaWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.IKEA_WALKER, IKEAWalkerRenderer::new);
 
-        ModParticles.registerClientParticles();
+        // Registers Blocks and their render layers
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KITTY_PLUSHIE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.EXIT_SIGN, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TABLE, RenderLayer.getTranslucent());
@@ -78,6 +74,7 @@ public class Spv_addonClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF2, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KITTY_PLUSHIE1, RenderLayer.getTranslucent());
 
+        // PBR Materials and Block IDs but sill figuring it out caus // the PBR system is still in development
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
                 .registerReloadListener(new SimpleSynchronousResourceReloadListener() {
                     @Override
@@ -90,11 +87,23 @@ public class Spv_addonClient implements ClientModInitializer {
                         // Register custom block IDs
                         BlockIdMap.registerBlockID(blockIdMap -> {
                             // Add other blocks as needed
-                        blockIdMap.put(ModBlocks.HOTEL_WALL, 35);
+                        blockIdMap.put(ModBlocks.KITTY_PLUSHIE, 36);
+                        blockIdMap.put(ModBlocks.KITTY_PLUSHIE1, 37);
+                        blockIdMap.put(ModBlocks.EXIT_SIGN, 38);
+                        blockIdMap.put(ModBlocks.TABLE, 39);
+                        blockIdMap.put(ModBlocks.BED1, 40);
+                        blockIdMap.put(ModBlocks.BED2, 41);
+                        blockIdMap.put(ModBlocks.IKEA_SHELF, 42);
+                        blockIdMap.put(ModBlocks.IKEA_SHELF1, 43);
+                        blockIdMap.put(ModBlocks.IKEA_SHELF2, 44);
+                        blockIdMap.put(ModBlocks.KITTY_FLOOR, 45);
+                        blockIdMap.put(ModBlocks.KITTY_FLOOR, 46);
 
                         });
                         // Register PBR materials
-                        //PbrRegistry.registerPBR(ModBlocks.HOTEL_WALL, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 512));
+
+
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.5F, 2.0F, 256));
                     }
 
                 });

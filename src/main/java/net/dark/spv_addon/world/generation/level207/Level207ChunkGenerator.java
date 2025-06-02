@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.generation.kitty;
+package net.dark.spv_addon.world.generation.level207;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -6,8 +6,6 @@ import com.sp.SPBRevampedClient;
 import com.sp.world.generation.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;
@@ -34,14 +32,13 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class KittyChunkGenerator extends BackroomsChunkGenerator {
-    public static final Codec<KittyChunkGenerator> CODEC = RecordCodecBuilder.create(
+public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
+    public static final Codec<Level207ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
                     ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(gen -> gen.settings)
-            ).apply(instance, KittyChunkGenerator::new)
+            ).apply(instance, Level207ChunkGenerator::new)
     );
-
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final Random random = Random.create();
@@ -51,25 +48,12 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         return CODEC;
     }
 
-    public KittyChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
-        super(biomeSource); // PAS de placementRadius ici, change si tu veux
+    public Level207ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
+        super(biomeSource);
         this.settings = settings;
         SPBRevampedClient.setInBackrooms(true);
     }
 
-    // === FONCTION UTILE : scan et pose le loot table sur chaque crate placée ===
-    private static void applyLootTablesToCrates(StructureWorldAccess world, BlockPos start, BlockPos end, Identifier lootTable) {
-        BlockPos.iterate(start, end).forEach(pos -> {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof LootableContainerBlockEntity crate) {
-                crate.setLootTable(lootTable, world.getRandom().nextLong());
-                crate.markDirty();
-            }
-        });
-    }
-
-
-    // Nouvelle méthode 'generate' attendue par BackroomsChunkGenerator
     @Override
     public void generate(StructureWorldAccess world, Chunk chunk) {
         this.generateFeatures(world, chunk, null);
@@ -80,20 +64,21 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
 
-        // Seulement en haut-gauche de chaque pièce 2x2 chunks
+
+        // Place a room every 2x2 chunk area
         if (cx % 2 == 0 && cz % 2 == 0) {
             int rx = cx / 2;
             int rz = cz / 2;
 
             Identifier roomId;
             if (rx == 0 && rz == 0) {
-                roomId = new Identifier(Spv_addon.MOD_ID, "kitty/entrance");
+                roomId = new Identifier(Spv_addon.MOD_ID, "level207/entrance");
             } else {
                 int minRoom = 1, maxRoom = 20;
                 int bound = maxRoom - minRoom + 1;
                 int variant = minRoom;
                 if (bound > 0) variant = minRoom + random.nextInt(bound);
-                roomId = new Identifier(Spv_addon.MOD_ID, "kitty/room" + variant);
+                roomId = new Identifier(Spv_addon.MOD_ID, "level207/grave" + variant);
             }
 
             MinecraftServer server = world.getServer();
@@ -104,54 +89,23 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
 
             int bx = chunk.getPos().getStartX();
             int bz = chunk.getPos().getStartZ();
-            BlockPos.Mutable basePos = new BlockPos.Mutable(bx, 0, bz);
+            BlockPos.Mutable basePos = new BlockPos.Mutable(bx, 65, bz); // Y=65
 
             StructurePlacementData placeData = new StructurePlacementData()
                     .setMirror(BlockMirror.NONE)
                     .setRotation(BlockRotation.NONE)
                     .setIgnoreEntities(true);
 
+
             optTpl.get().place(world, basePos, basePos, placeData, random, 2);
-
-            // === AJOUT : pose le loot table sur chaque crate dans la pièce ===
-            // Change ici le lootTable selon ton besoin !
-            // On considère la zone [basePos, basePos+15,15,15] pour une room 16x16x16, ajuste si plus grand
-            applyLootTablesToCrates(world, basePos, basePos.add(15, 15, 15), new Identifier("spb-revamped", "wooden_crate"));
-        }
-
-        // ======== ROOF 16x16 FULL COVER ========
-        MinecraftServer server = world.getServer();
-        if (server == null) return;
-        StructureTemplateManager mgr = server.getStructureTemplateManager();
-
-        for (int i = 0; i < 2; ++i) {
-            for (int j = 0; j < 2; ++j) {
-                String roofName = random.nextBoolean() ? "kitty/roof1" : "kitty/roof2";
-                Identifier roofId = new Identifier(Spv_addon.MOD_ID, roofName);
-                Optional<StructureTemplate> optRoof = mgr.getTemplate(roofId);
-                if (optRoof.isEmpty()) continue;
-
-                int bx = chunk.getPos().getStartX();
-                int bz = chunk.getPos().getStartZ();
-                int px = bx + 8 * i;
-                int pz = bz + 8 * j;
-
-                BlockPos roofPos = new BlockPos(px, 5, pz);
-
-                StructurePlacementData roofData = new StructurePlacementData()
-                        .setMirror(BlockMirror.NONE)
-                        .setRotation(BlockRotation.NONE)
-                        .setIgnoreEntities(true);
-
-                optRoof.get().place(world, roofPos, roofPos, roofData, random, 16);
-            }
         }
     }
 
-    @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
-                                                            NoiseConfig noiseConfig,
-                                                            StructureAccessor structureAccessor,
-                                                            Chunk chunk) {
+    @Override
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
+                                                  NoiseConfig noiseConfig,
+                                                  StructureAccessor structureAccessor,
+                                                  Chunk chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 

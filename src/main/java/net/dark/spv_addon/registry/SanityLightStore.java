@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class SanityLightStore {
     private static final Set<BlockPos> REGISTERED_LIGHT_BLOCKS = new HashSet<>();
-    private static final int LIGHT_RADIUS = 10;
+    private static final int LIGHT_RADIUS = 15;
     private static final int RADIUS_SQ = LIGHT_RADIUS * LIGHT_RADIUS;
 
     public static void addLight(BlockPos pos) {

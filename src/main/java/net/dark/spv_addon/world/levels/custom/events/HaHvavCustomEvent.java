@@ -15,7 +15,7 @@ public class HaHvavCustomEvent extends AbstractEvent {
         if(far){
             playDistantSound(world, ModSounds.AMBIENCE);
         } else {
-            playSound(world, ModSounds.INTERCOM_BASIC1);
+            playSound(world, ModSounds.CARPET_RUN);
         }
     }
 

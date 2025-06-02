@@ -44,6 +44,7 @@ public class Spv_addon implements ModInitializer {
 
     @Override
     public void onInitialize() {
+
         Registry.register(Registries.PARTICLE_TYPE, new Identifier(MOD_ID, "rain_particle"), RAIN_PARTICLE);
 
 

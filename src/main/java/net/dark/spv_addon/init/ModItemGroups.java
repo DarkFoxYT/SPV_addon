@@ -31,6 +31,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.KITTY_PLUSHIE);
                         entries.add(ModBlocks.EXIT_SIGN);
                         entries.add(ModBlocks.KITTY_PLUSHIE1);
+                        entries.add(ModBlocks.GRASS1);
+                        entries.add(ModBlocks.CROSS);
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);

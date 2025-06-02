@@ -1,5 +1,6 @@
 package net.dark.spv_addon.mixins;
 
+import com.sp.init.BackroomsLevels;
 import net.dark.spv_addon.api.SanityLightEmitter;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
@@ -38,6 +39,25 @@ public abstract class PlayerTickMixin {
             BlockPos playerPos = player.getBlockPos();
             SanityComponent sanity = InitializeComponents.SANITY.get(player);
 
+
+            boolean inPool = world.getRegistryKey().equals(BackroomsLevels.POOLROOMS_WORLD_KEY);
+            boolean in207 = world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY);
+            boolean inField = world.getRegistryKey().equals(BackroomsLevels.INFINITE_FIELD_WORLD_KEY);
+
+// ======= NO DRAIN AT ALL IN POOLROOMS =======
+            if (inPool) {
+                // PAS DE DRAIN
+                return;
+            }
+            if (in207) {
+                // PAS DE DRAIN
+                return;
+            }
+            if (inField) {
+                // PAS DE DRAIN
+                return;
+            }
+
             boolean nearSanityLight = false;
 
             for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 3, 10)) {
@@ -75,6 +95,5 @@ public abstract class PlayerTickMixin {
             if (!nearSanityLight) {
                 sanity.decreaseSanity(1);
             }
-        }
-    }
+        }    }
 }

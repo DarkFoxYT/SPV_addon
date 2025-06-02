@@ -3,16 +3,17 @@ package net.dark.spv_addon.world.levels.custom;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
+import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
-public class LevelKittyBackroomsLevel extends BackroomsLevel {
+public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
-    public LevelKittyBackroomsLevel() {
-        super("level_kitty", KittyChunkGenerator.CODEC, new Vec3d(20, 1, 15), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
+    public Level207BackroomsLevel() {
+        super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
     }
 
     @Override

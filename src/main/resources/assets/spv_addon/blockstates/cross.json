@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "spv_addon:block/cross", "y": 180 },
+    "facing=east":  { "model": "spv_addon:block/cross", "y": 270 },
+    "facing=south": { "model": "spv_addon:block/cross", "y": 0 },
+    "facing=west":  { "model": "spv_addon:block/cross", "y": 90 }
+  }
+}

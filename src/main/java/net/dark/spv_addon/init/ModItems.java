@@ -11,8 +11,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModItems {
-    public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(16));
-    public static final Item BATTERY_ITEM2 = new BatteryItem2(new Item.Settings().maxCount(16));
     public static final Item HOTEL_WALL = register("hotel_wall", new BlockItem(ModBlocks.HOTEL_WALL, new FabricItemSettings()));
     public static final Item HOTEL_FLOOR = register("hotel_floor", new BlockItem(ModBlocks.HOTEL_FLOOR, new FabricItemSettings()));
     public static final Item BED1 = register("bed1", new BlockItem(ModBlocks.BED1, new FabricItemSettings()));
@@ -26,7 +24,12 @@ public class ModItems {
     public static final Item KITTY_PLUSH = register("kitty_plushie", new BlockItem(ModBlocks.KITTY_PLUSHIE, new FabricItemSettings()));
     public static final Item KITTY_PLUSH1 = register("kitty_plushie1", new BlockItem(ModBlocks.KITTY_PLUSHIE1, new FabricItemSettings()));
     public static final Item EXIT_SIGN = register("exit_sign", new BlockItem(ModBlocks.EXIT_SIGN, new FabricItemSettings()));
+    public static final Item CROSS = register("cross", new BlockItem(ModBlocks.CROSS, new FabricItemSettings()));
+    public static final Item GRASS1 = register("grass1", new BlockItem(ModBlocks.GRASS1, new FabricItemSettings()));
 
+
+    public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2));
+    public static final Item BATTERY_ITEM2 = new BatteryItem2(new Item.Settings().maxCount(2));
     public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 100, 50);
     public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10);
     public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 5, 2);

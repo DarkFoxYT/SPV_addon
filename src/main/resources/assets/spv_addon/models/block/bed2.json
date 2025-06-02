@@ -5,7 +5,7 @@
 		"0": "spv_addon:block/table",
 		"1": "spv_addon:block/cloth1",
 		"2": "spv_addon:block/cloth2",
-		"3": "spv_addon:block/metal",
+		"3": "spv_addon:block/table",
 		"particle": "spv_addon:block/table"
 	},
 	"elements": [
