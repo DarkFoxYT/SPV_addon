@@ -6,11 +6,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldRenderer.class)
@@ -24,11 +22,8 @@ public abstract class SkyboxMixin {
     private static void renderCustomSkybox(BufferBuilder builder, float tickDelta, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        // Utilise ta clé de dimension custom, ici par exemple "LEVEL207_WORLD_KEY"
         if (mc.world != null && mc.world.getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
-            // Appelle ton renderer custom, adapte si tu veux passer tickDelta ou autre
             CustomSkyboxRenderer.render(new MatrixStack(), 0);
-            // Annule le rendu vanilla du ciel
             cir.setReturnValue(null);
         }
     }

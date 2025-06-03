@@ -1,0 +1,5 @@
+{
+  "vertex": "spv_addon:grass/grass",
+  "fragment": "spv_addon:grass/grass"
+
+}

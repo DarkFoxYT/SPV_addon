@@ -2,6 +2,8 @@ package net.dark.spv_addon;
 
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
+import foundry.veil.api.event.VeilRenderLevelStageEvent;
+import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.FocusHandler;
 import net.dark.spv_addon.client.gui.BatteryHud;
@@ -16,6 +18,7 @@ import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
+import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -27,14 +30,18 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
 public class Spv_addonClient implements ClientModInitializer {
+    private GrassRenderer grassRenderer;
+
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     public static final DefaultParticleType RAIN_PARTICLE = FabricParticleTypes.simple();
 
@@ -105,7 +112,24 @@ public class Spv_addonClient implements ClientModInitializer {
                     }
 
                 });
+        VeilEventPlatform.INSTANCE.onVeilRenderTypeStageRender((stage, levelRenderer, bufferSource, poseStack, projectionMatrix, renderTick, partialTicks, camera, frustum) -> {
+                        MinecraftClient client = MinecraftClient.getInstance();
+            World clientWorld = client.world;
+            if (clientWorld != null) {
 
+                if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
+                    if (this.grassRenderer != null) {
+                        this.grassRenderer.close();
+                        this.grassRenderer = null;
+                    }
+                } else if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS) {
+                    if (this.grassRenderer == null) {
+                        this.grassRenderer = new GrassRenderer();
+                    }
 
+                    this.grassRenderer.render();
+                }
+            }
+        });
     }
 }
