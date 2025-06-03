@@ -30,7 +30,7 @@ import org.lwjgl.opengl.GL43C;
 public class GrassRenderer {
     VertexBuffer vertexBuffer;
     private static final Identifier shaderPath = new Identifier("spv_addon", "grass/grass");
-    private static final Identifier windTexture = new Identifier("spb-revamped", "textures/shaders/puddle_noise.png");
+    private static final Identifier windTexture = new Identifier("spv_addon", "textures/environment/puddle_noise.png");
     private static final Identifier computeShaderPath = new Identifier("spv_addon", "grass/compute/positions");
     private final int positionsVbo;
     private final int indirectVbo;
@@ -40,7 +40,7 @@ public class GrassRenderer {
     public static final VertexFormat POSITION_NORMAL;
 
     private float getGrassHeight() {
-        return 0.5f;
+        return 0.3f;
     }
 
     public GrassRenderer() {
