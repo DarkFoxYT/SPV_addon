@@ -9,7 +9,6 @@ import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.StructureTemplateManager;
@@ -35,32 +34,24 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public final class RunChunkGenerator extends ChunkGenerator {
-    public static final Codec<RunChunkGenerator> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
-                    ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(gen -> gen.settings)
-            ).apply(instance, RunChunkGenerator::new)
+    public static final Codec<RunChunkGenerator> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(g -> g.biomeSource),
+                    ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(g -> g.settings)
+            ).apply(inst, inst.stable(RunChunkGenerator::new))
     );
-    public static BlockPos EXIT_ROOM_CENTER = null; // Sera set dynamiquement à la génération
-    public static final int EXIT_ROOM_RADIUS = 8; // à ajuster selon ta room
-
-
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final Random random = Random.create();
     private final int corridorLength;
 
 
-    @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
-        return CODEC;
-    }
 
     public RunChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
-        this.settings = settings;
         SPBRevampedClient.setInBackrooms(true);
-        this.corridorLength = random.nextBetween(200, 500);
+        this.settings = settings;
+        this.corridorLength = random.nextBetween(100, 500);
     }
     public int getCorridorLength() {
         return corridorLength;
@@ -84,12 +75,10 @@ public final class RunChunkGenerator extends ChunkGenerator {
         Identifier roomId;
         if (cx == 0) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/entrance");
+        } else if (cx < exitChunk) {
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway");
         } else if (cx == exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/exit");
-        } else if (cx > 0 && cx < exitChunk) {
-            int variant = random.nextBetween(0, 4);
-            String variantName = variant == 0 ? "hallway" : "hallway" + variant;
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/" + variantName);
         } else {
             return;
         }
@@ -97,27 +86,61 @@ public final class RunChunkGenerator extends ChunkGenerator {
         MinecraftServer server = world.getServer();
         if (server == null) return;
         StructureTemplateManager mgr = server.getStructureTemplateManager();
-
-        // Random roof between run_roof1 and run_roof2
-        String roofName = random.nextBoolean() ? "run/run_roof1" : "run/run_roof2";
-        Identifier roofId = new Identifier(Spv_addon.MOD_ID, roofName);
-        Optional<StructureTemplate> optRoof = mgr.getTemplate(roofId);
-        if (optRoof.isEmpty()) return;
+        Optional<StructureTemplate> optTpl = mgr.getTemplate(roomId);
+        if (optTpl.isEmpty()) return;
 
         int bx = chunk.getPos().getStartX();
         int bz = chunk.getPos().getStartZ();
 
-        // Place roof so that it covers the entire chunk at y=6
-        BlockPos.Mutable roofPos = new BlockPos.Mutable(bx, 6, bz);
+        // Vérifions d'abord si la laine lime existe dans la structure
+        // Recherche de la position de la laine lime dans la structure
+        int yOffset = 0;
+        StructureTemplate template = optTpl.get();
+        boolean foundLimeWool = false;
+        for (StructureTemplate.StructureBlockInfo blockInfo : template.getInfosForBlock(BlockPos.ORIGIN, new StructurePlacementData(), Blocks.LIME_WOOL)) {
+            if (blockInfo.state().isOf(Blocks.LIME_WOOL)) {
+                yOffset = blockInfo.pos().getY() - 1;
+                foundLimeWool = true;
+                break;
+            }
+        }
+        if (!foundLimeWool) {
+            // Si aucune laine lime n'est trouvée, on place à Y=0 par défaut
+            yOffset = 0;
+        }
+
+        BlockPos.Mutable basePos = new BlockPos.Mutable(bx, -yOffset, bz);
+        StructurePlacementData placeData = new StructurePlacementData()
+                .setMirror(BlockMirror.NONE)
+                .setRotation(BlockRotation.CLOCKWISE_90)
+                .setIgnoreEntities(true);
+
+        boolean placed = template.place(world, basePos, basePos, placeData, random, 2);
+        if (!placed) return;
+
+        Identifier roofId = new Identifier(Spv_addon.MOD_ID, "run/run_roof1");
+        Optional<StructureTemplate> roofTpl = mgr.getTemplate(roofId);
+        if (roofTpl.isEmpty()) return;
 
         StructurePlacementData roofData = new StructurePlacementData()
                 .setMirror(BlockMirror.NONE)
                 .setRotation(BlockRotation.CLOCKWISE_90)
                 .setIgnoreEntities(true);
 
-        optRoof.get().place(world, roofPos, roofPos, roofData, random, 2);
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                int px = bx + 8 * i;
+                int pz = bz + 8 * j;
+                BlockPos roofPos = new BlockPos(px, 5 - yOffset, pz);
+
+                if (world.getBlockState(roofPos) == Blocks.AIR.getDefaultState()) {
+                    roofTpl.get().place(world, roofPos, roofPos, roofData, random, 16);
+                }
+            }
+        }
     }
 
+    @Override protected Codec<? extends ChunkGenerator> getCodec() { return CODEC; }
 
     @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
                                                             NoiseConfig noiseConfig,
@@ -152,14 +175,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
                                 NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
                                 StructureAccessor structAcc, Chunk chunk,
                                 GenerationStep.Carver carverStep) {}
-    public static boolean isPlayerInExit(ServerPlayerEntity player) {
-        if (EXIT_ROOM_CENTER == null) return false;
-        BlockPos p = player.getBlockPos();
-        // Test sur une sphère/cube
-        return Math.abs(p.getX() - EXIT_ROOM_CENTER.getX()) <= EXIT_ROOM_RADIUS &&
-                Math.abs(p.getZ() - EXIT_ROOM_CENTER.getZ()) <= EXIT_ROOM_RADIUS &&
-                (p.getY() >= EXIT_ROOM_CENTER.getY() && p.getY() <= EXIT_ROOM_CENTER.getY() + 6); // hauteur à adapter
-    }
+
     @Override public void buildSurface(ChunkRegion region,
                                        StructureAccessor structAcc,
                                        NoiseConfig noiseConfig,

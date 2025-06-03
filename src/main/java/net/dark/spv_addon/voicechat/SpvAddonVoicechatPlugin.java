@@ -57,14 +57,18 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
         UUID uuid = event.getPlayerUuid();
         removePlayerDecoder(uuid, decoders.get(uuid));
         justMadeNoise.remove(uuid);
+
     }
 
     private void removePlayerDecoder(UUID uuid, OpusDecoder decoder) {
         if (decoder != null) {
             try { decoder.close(); } catch (Exception ignored) {}
+
         }
         decoders.remove(uuid);
+
     }
+
 
     /** Call this once per server tick to reset the sound status */
     public static void resetNoiseEachTick(MinecraftServer server) {

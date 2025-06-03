@@ -77,12 +77,7 @@ public class LevelRunGlobalTicker {
             }
         }
 
-        // Level Run Exit Logic (comme avant)
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-            if (isInLevelRun(player) && RunChunkGenerator.isPlayerInExit(player)) {
-                exitPlayerFromLevelRun(player);
-            }
-        }
+
     }
 
     private static boolean isInBackrooms(ServerPlayerEntity player) {
