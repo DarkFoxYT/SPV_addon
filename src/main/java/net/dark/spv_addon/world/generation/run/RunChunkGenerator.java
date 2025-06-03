@@ -33,7 +33,15 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+/**
+ * Custom chunk generator for the "Run" dimension of the SPV Addon mod.
+ * Generates a long corridor with an entrance room, hallways, and an exit room.
+ * Also places a roof above each generated segment.
+ */
 public final class RunChunkGenerator extends ChunkGenerator {
+    /**
+     * Codec for serialization/deserialization of RunChunkGenerator.
+     */
     public static final Codec<RunChunkGenerator> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(g -> g.biomeSource),
@@ -45,24 +53,45 @@ public final class RunChunkGenerator extends ChunkGenerator {
     private final Random random = Random.create();
     private final int corridorLength;
 
-
-
+    /**
+     * Constructor for the "Run" chunk generator.
+     *
+     * @param biomeSource Source of biomes used for generation.
+     * @param settings Chunk generation settings.
+     */
     public RunChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
         SPBRevampedClient.setInBackrooms(true);
         this.settings = settings;
         this.corridorLength = random.nextBetween(100, 500);
     }
+
+    /**
+     * Returns the length of the generated corridor.
+     *
+     * @return corridor length in blocks.
+     */
     public int getCorridorLength() {
         return corridorLength;
     }
 
-    /**  zero‐based index of the chunk which holds the exit room  */
+    /**
+     * Returns the zero-based index of the chunk containing the exit room.
+     *
+     * @return exit chunk index (X axis).
+     */
     public int getExitChunkIndex() {
         // (corridorLength−1)/16 is how you computed it before
         return (corridorLength - 1) / 16;
     }
 
+    /**
+     * Generates structures (rooms, hallways, roof) in the given chunk.
+     *
+     * @param world World access for generation.
+     * @param chunk Target chunk.
+     * @param structureAccessor Structure accessor.
+     */
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         int cx = chunk.getPos().x;
@@ -92,8 +121,8 @@ public final class RunChunkGenerator extends ChunkGenerator {
         int bx = chunk.getPos().getStartX();
         int bz = chunk.getPos().getStartZ();
 
-        // Vérifions d'abord si la laine lime existe dans la structure
-        // Recherche de la position de la laine lime dans la structure
+        // First, check if lime wool exists in the structure
+        // Search for the position of lime wool in the structure
         int yOffset = 0;
         StructureTemplate template = optTpl.get();
         boolean foundLimeWool = false;
@@ -105,7 +134,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
             }
         }
         if (!foundLimeWool) {
-            // Si aucune laine lime n'est trouvée, on place à Y=0 par défaut
+            // If no lime wool is found, place at Y=0 by default
             yOffset = 0;
         }
 
@@ -118,6 +147,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
         boolean placed = template.place(world, basePos, basePos, placeData, random, 2);
         if (!placed) return;
 
+        // Place the roof above the structure
         Identifier roofId = new Identifier(Spv_addon.MOD_ID, "run/run_roof1");
         Optional<StructureTemplate> roofTpl = mgr.getTemplate(roofId);
         if (roofTpl.isEmpty()) return;
@@ -140,8 +170,18 @@ public final class RunChunkGenerator extends ChunkGenerator {
         }
     }
 
+    /**
+     * Returns the codec used for serialization of this generator.
+     *
+     * @return Codec for RunChunkGenerator.
+     */
     @Override protected Codec<? extends ChunkGenerator> getCodec() { return CODEC; }
 
+    /**
+     * Does nothing, as noise population is not used here.
+     *
+     * @return unchanged chunk.
+     */
     @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
                                                             NoiseConfig noiseConfig,
                                                             StructureAccessor structureAccessor,
@@ -149,10 +189,30 @@ public final class RunChunkGenerator extends ChunkGenerator {
         return CompletableFuture.completedFuture(chunk);
     }
 
+    /**
+     * Returns the sea level (always 0 for this generator).
+     *
+     * @return 0
+     */
     @Override public int getSeaLevel() { return 0; }
+
+    /**
+     * Returns the minimum world height (always 0).
+     *
+     * @return 0
+     */
     @Override public int getMinimumY() { return 0; }
+
+    /**
+     * Returns the maximum world height (256).
+     *
+     * @return 256
+     */
     @Override public int getWorldHeight() { return 256; }
 
+    /**
+     * Returns the height at the given position (always world height).
+     */
     @Override
     public int getHeight(int x, int z, net.minecraft.world.Heightmap.Type type,
                          net.minecraft.world.HeightLimitView view,
@@ -160,6 +220,9 @@ public final class RunChunkGenerator extends ChunkGenerator {
         return getWorldHeight();
     }
 
+    /**
+     * Returns a column sample filled with air blocks.
+     */
     @Override
     public VerticalBlockSample getColumnSample(int x, int z,
                                                net.minecraft.world.HeightLimitView view,
@@ -171,17 +234,30 @@ public final class RunChunkGenerator extends ChunkGenerator {
         return new VerticalBlockSample(0, states);
     }
 
+    /**
+     * Does nothing, as no carving is needed.
+     */
     @Override public void carve(ChunkRegion region, long seed,
                                 NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
                                 StructureAccessor structAcc, Chunk chunk,
                                 GenerationStep.Carver carverStep) {}
 
+    /**
+     * Does nothing, as no surface is generated.
+     */
     @Override public void buildSurface(ChunkRegion region,
                                        StructureAccessor structAcc,
                                        NoiseConfig noiseConfig,
                                        Chunk chunk) {}
 
+    /**
+     * Does nothing, as no entities are generated.
+     */
     @Override public void populateEntities(ChunkRegion region) {}
+
+    /**
+     * Does nothing, as no debug text is added.
+     */
     @Override public void getDebugHudText(java.util.List<String> text,
                                           NoiseConfig noiseConfig,
                                           BlockPos pos) {}

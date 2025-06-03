@@ -1,11 +1,14 @@
 package net.dark.spv_addon;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
+import net.dark.spv_addon.client.CustomSkyboxRenderer;
 import net.dark.spv_addon.client.FocusHandler;
+import net.dark.spv_addon.client.SkyShaderHandler;
 import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.client.gui.SanityBar;
 import net.dark.spv_addon.client.gui.ThirstHud;
@@ -15,6 +18,7 @@ import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
+import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
@@ -26,6 +30,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -52,6 +57,7 @@ public class Spv_addonClient implements ClientModInitializer {
         BatteryHud.register();
         ThirstHud.register();
         SanityBar.register();
+        SkyShaderHandler.register();
         FocusHandler.register();
         ThirstManager.register();
         LevelRunGlobalTicker.init();
@@ -129,6 +135,19 @@ public class Spv_addonClient implements ClientModInitializer {
 
                     this.grassRenderer.render();
                 }
+            }
+        });
+
+        WorldRenderEvents.START.register(ctx -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.world != null
+                    && client.world.getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
+
+                RenderSystem.disableBlend();
+                RenderSystem.depthMask(false);
+                CustomSkyboxRenderer.render(ctx.matrixStack(), ctx.tickDelta());
+                RenderSystem.depthMask(true);
+                RenderSystem.enableBlend();
             }
         });
     }

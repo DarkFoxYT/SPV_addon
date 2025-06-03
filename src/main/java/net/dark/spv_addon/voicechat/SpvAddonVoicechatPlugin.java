@@ -25,7 +25,7 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
     public void initialize(VoicechatApi api) {
         // Assign the API properly!
         decoders.clear();
-        // don't clear justMadeNoise here, it's cleared per tick
+
     }
 
     @Override

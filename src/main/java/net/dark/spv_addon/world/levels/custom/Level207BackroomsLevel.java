@@ -10,52 +10,95 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
+/**
+ * Represents Backrooms Level 207 in the mod.
+ * Handles generation, events, transitions, and specific rules for this level.
+ */
 public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
+    /**
+     * Constructs Level 207.
+     * Initializes the level with its chunk generator, spawn position, world key, and mod ID.
+     */
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
     }
+
+    /**
+     * Indicates if vanilla lighting is enabled in this level.
+     * @return true if vanilla lighting is used.
+     */
     @Override
     public boolean hasVanillaLighting() {
         return true;
     }
 
+    /**
+     * Indicates if the flashlight (torch) is allowed in this level.
+     * @return BoolTextPair containing the permission and a message.
+     */
     @Override
     public BoolTextPair allowsTorch() {
         return new BoolTextPair(true, Text.translatable("Flashlight is allowed in this level."));
     }
 
-
+    /**
+     * Registers custom events for this level.
+     */
     @Override
     public void register() {
-
         events.add(HaHvavCustomEvent::new);
     }
 
+    /**
+     * Determines the delay before the next event.
+     * @return the delay in ticks.
+     */
     @Override
     public int nextEventDelay() {
         return this.random.nextBetween(100000, 100000);
     }
 
+    /**
+     * Saves the level data to NBT.
+     * @param nbt the NBT container to write data to.
+     */
     @Override
     public void writeToNbt(NbtCompound nbt) {
     }
 
+    /**
+     * Loads the level data from NBT.
+     * @param nbt the NBT container to read data from.
+     */
     @Override
     public void readFromNbt(NbtCompound nbt) {
     }
 
+    /**
+     * Determines if the player can exit this level via a transition.
+     * @param teleport the cross-dimension teleport object.
+     * @return true if the transition is allowed (player is sneaking).
+     */
     @Override
     public boolean transitionOut(CrossDimensionTeleport teleport) {
         return teleport.playerComponent().player.isSneaking();
     }
 
+    /**
+     * Actions to perform when entering this level.
+     * @param teleport the cross-dimension teleport object.
+     */
     @Override
     public void transitionIn(CrossDimensionTeleport teleport) {
         teleport.playerComponent().loadPlayerSavedInventory();
     }
 
+    /**
+     * Duration of the level entry/exit transition.
+     * @return the duration in ticks.
+     */
     @Override
     public int getTransitionDuration() {
         return 40;
