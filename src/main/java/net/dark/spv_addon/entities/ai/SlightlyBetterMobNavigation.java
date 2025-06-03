@@ -13,7 +13,6 @@ public class SlightlyBetterMobNavigation extends MobNavigation {
     public SlightlyBetterMobNavigation(MobEntity mobEntity, World world) {
         super(mobEntity, world);
     }
-
     @Override
     public void tick() {
         LivingEntity target = this.entity.getTarget();
@@ -28,7 +27,6 @@ public class SlightlyBetterMobNavigation extends MobNavigation {
         }
         super.tick();
     }
-
     private boolean canSee(Entity source, Entity target) {
         if (source.getWorld() != target.getWorld()) return false;
         Vec3d eyePos = new Vec3d(source.getX(), source.getY() + source.getEyeHeight(source.getPose()), source.getZ());

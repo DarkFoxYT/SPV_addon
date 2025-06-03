@@ -74,6 +74,7 @@ public class Spv_addon implements ModInitializer {
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             SpvAddonVoicechatPlugin.justMadeNoise.clear();
+            SpvAddonVoicechatPlugin.voicechatApi.getBroadcastRange();
         });
 
         ServerPlayerEvents.AFTER_RESPAWN.register(((oldPlayer, newPlayer, alive) -> {

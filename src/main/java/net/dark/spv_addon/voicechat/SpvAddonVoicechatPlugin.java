@@ -6,14 +6,12 @@ import de.maxhenkel.voicechat.api.opus.OpusDecoder;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
-
     public static VoicechatServerApi voicechatApi;
     private final ConcurrentHashMap<UUID, OpusDecoder> decoders = new ConcurrentHashMap<>();
     public static final Set<UUID> justMadeNoise = new ConcurrentSkipListSet<>();
@@ -25,9 +23,9 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
 
     @Override
     public void initialize(VoicechatApi api) {
-        voicechatApi = null;
+        // Assign the API properly!
         decoders.clear();
-        justMadeNoise.clear();
+        // don't clear justMadeNoise here, it's cleared per tick
     }
 
     @Override
@@ -68,7 +66,7 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
         decoders.remove(uuid);
     }
 
-    /** Méthode appelée chaque tick serveur pour reset les bruitages */
+    /** Call this once per server tick to reset the sound status */
     public static void resetNoiseEachTick(MinecraftServer server) {
         justMadeNoise.clear();
     }

@@ -6,6 +6,7 @@ import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
@@ -15,6 +16,16 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
     }
+    @Override
+    public boolean hasVanillaLighting() {
+        return true;
+    }
+
+    @Override
+    public BoolTextPair allowsTorch() {
+        return new BoolTextPair(true, Text.translatable("Flashlight is allowed in this level."));
+    }
+
 
     @Override
     public void register() {

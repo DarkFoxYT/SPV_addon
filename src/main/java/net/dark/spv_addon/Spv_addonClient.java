@@ -84,9 +84,7 @@ public class Spv_addonClient implements ClientModInitializer {
                     @Override
                     public void reload(ResourceManager manager) {
 
-                        // Register custom block IDs
                         BlockIdMap.registerBlockID(blockIdMap -> {
-                            // Add other blocks as needed
                         blockIdMap.put(ModBlocks.KITTY_PLUSHIE, 36);
                         blockIdMap.put(ModBlocks.KITTY_PLUSHIE1, 37);
                         blockIdMap.put(ModBlocks.EXIT_SIGN, 38);
@@ -100,10 +98,10 @@ public class Spv_addonClient implements ClientModInitializer {
                         blockIdMap.put(ModBlocks.KITTY_FLOOR, 46);
 
                         });
-                        // Register PBR materials
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.5F, 2.0F, 256));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 1F, 2.0F, 256));
+                        //PbrRegistry.registerPBR(ModBlocks.KITTY_WALL, new PbrRegistry.PbrMaterial(true, 1F, 2.0F, 256));
                     }
 
                 });

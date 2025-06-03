@@ -43,8 +43,9 @@ public abstract class PlayerTickMixin {
             boolean inPool = world.getRegistryKey().equals(BackroomsLevels.POOLROOMS_WORLD_KEY);
             boolean in207 = world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY);
             boolean inField = world.getRegistryKey().equals(BackroomsLevels.INFINITE_FIELD_WORLD_KEY);
+            boolean inKitty = world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY);
 
-// ======= NO DRAIN AT ALL IN POOLROOMS =======
+// ======= NO DRAIN AT ALL IN LEVELS =======
             if (inPool) {
                 // PAS DE DRAIN
                 return;
@@ -54,6 +55,10 @@ public abstract class PlayerTickMixin {
                 return;
             }
             if (inField) {
+                // PAS DE DRAIN
+                return;
+            }
+            if (inKitty) {
                 // PAS DE DRAIN
                 return;
             }
@@ -70,7 +75,7 @@ public abstract class PlayerTickMixin {
             }
 
 
-            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 3, 10)) {
+            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 10, 10)) {
                 BlockState state = world.getBlockState(pos);
 
                 if (!state.isIn(SANITY_LIGHT_TAG)) continue;
@@ -95,5 +100,5 @@ public abstract class PlayerTickMixin {
             if (!nearSanityLight) {
                 sanity.decreaseSanity(1);
             }
-        }    }
+        } }
 }

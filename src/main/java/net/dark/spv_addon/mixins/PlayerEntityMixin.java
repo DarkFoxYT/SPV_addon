@@ -16,17 +16,18 @@ public class PlayerEntityMixin {
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void onTickMovement(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity)(Object)this;
-        // Marque comme "fait du bruit" si le joueur se déplace, saute, etc.
+        // Mark as "made noise" if moving, sprinting, swimming, or landing
         if (!player.isSpectator() && player.isAlive()) {
             if (player.getVelocity().lengthSquared() > 0.01) {
-                SpvAddonVoicechatPlugin.justMadeNoise.add(player.getUuid());
+                net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin.justMadeNoise.add(player.getUuid());
             }
             if (player.isSprinting() || player.isSwimming()) {
-                SpvAddonVoicechatPlugin.justMadeNoise.add(player.getUuid());
+                net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin.justMadeNoise.add(player.getUuid());
             }
             if (player.fallDistance > 0.5f) {
-                SpvAddonVoicechatPlugin.justMadeNoise.add(player.getUuid());
+                net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin.justMadeNoise.add(player.getUuid());
             }
         }
     }
 }
+

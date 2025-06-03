@@ -16,87 +16,79 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public class PlushieBlock extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    // Combine all cuboids from your Blockbench JSON
-    private static final VoxelShape SHAPE = VoxelShapes.union(
-            Block.createCuboidShape(3.975, 4.06727, 6, 11.975, 12.06727, 14),
-            Block.createCuboidShape(3.775, 3.86727, 5.8, 12.175, 12.26727, 14.2),
-            Block.createCuboidShape(5.375, 0.26727, 7.4, 10.575, 4.46727, 12.6),
-            Block.createCuboidShape(5.175, 0.26727, 7.2, 10.775, 4.26727, 12.8),
-            Block.createCuboidShape(4.975, -0.13273, 3.4, 6.975, 1.86727, 8.4),
-            Block.createCuboidShape(8.975, -0.13273, 3.4, 10.975, 1.86727, 8.4),
-            Block.createCuboidShape(9.975, -0.13273, 9, 11.975, 4.86727, 11),
-            Block.createCuboidShape(9.895, -0.45273, 8.92, 12.095, 5.34727, 11.12),
-            Block.createCuboidShape(4.17901, -0.40526, 8.92, 6.37901, 5.39474, 11.12),
-            Block.createCuboidShape(4.25901, -0.08526, 9, 6.25901, 4.91474, 11)
+    private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
+            2, 0, 2,  // from (x, y, z)
+            14, 10, 14 // to (x, y, z) - a bit short and not full width
     );
+    private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
+
+    static {
+        for (Direction dir : Direction.Type.HORIZONTAL) {
+            ROTATED_SHAPES.put(dir, rotateShape(BASE_SHAPE, dir));
+        }
+    }
 
     public PlushieBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
+    // Rotates a VoxelShape for each direction
+    private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
+        // No rotation for NORTH
+        if (dir == Direction.NORTH) return shape;
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
+        VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
+        int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        // Block faces opposite the player (so "front" faces player)
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
-
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityShapeContext context) {
-        return getRotatedShape(state);
-    }
-
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, EntityShapeContext context) {
-        return getRotatedShape(state);
-    }
-
-    private VoxelShape getRotatedShape(BlockState state) {
-        Direction facing = state.get(FACING);
-        // VoxelShapes.rotate not available, so use manual rotation
-        switch (facing) {
-            case SOUTH:
-                return SHAPE;
-            case WEST:
-                return rotateShapeY(SHAPE, 1);
-            case NORTH:
-                return rotateShapeY(SHAPE, 2);
-            case EAST:
-                return rotateShapeY(SHAPE, 3);
-            default:
-                return SHAPE;
-        }
-    }
-
-    // Rotates the shape around the Y axis 90° * times (clockwise)
-    public static VoxelShape rotateShapeY(VoxelShape shape, int times) {
-        VoxelShape rotated = shape;
-        for (int i = 0; i < times; i++) {
-            VoxelShape temp = VoxelShapes.empty();
-            for (var box : rotated.getBoundingBoxes()) {
-                temp = VoxelShapes.union(temp, Block.createCuboidShape(
-                        16 - box.minZ, box.minY, box.minX,
-                        16 - box.maxZ, box.maxY, box.maxX
+        for (int i = 0; i < times; ++i) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+                // 90 deg Y rotation: (x, z) -> (1-z, x)
+                buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
+                        1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
                 ));
-            }
-            rotated = temp;
+            });
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
         }
-        return rotated;
+        return buffer[0];
     }
+    // Placement
+        @Override
+        public BlockState getPlacementState(ItemPlacementContext ctx) {
+            return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        }
+
+        // Properties
+        @Override
+        protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+            builder.add(FACING);
+        }
+
+        // Outline shape (what you see)
+        @Override
+        public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+            return ROTATED_SHAPES.get(state.get(FACING));
+        }
+
+        // Collision shape (what you bump into)
+        @Override
+        public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+            return ROTATED_SHAPES.get(state.get(FACING));
+        }
+
+        // Rotation and mirror for blockstates (for structure placing etc)
+        @Override
+        public BlockState rotate(BlockState state, BlockRotation rotation) {
+            return state.with(FACING, rotation.rotate(state.get(FACING)));
+        }
+        @Override
+        public BlockState mirror(BlockState state, BlockMirror mirror) {
+            return state.rotate(mirror.getRotation(state.get(FACING)));
+        }
 }

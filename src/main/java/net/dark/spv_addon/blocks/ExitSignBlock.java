@@ -2,15 +2,15 @@ package net.dark.spv_addon.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -18,15 +18,13 @@ import net.minecraft.world.BlockView;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class CrossBlock extends HorizontalFacingBlock {
+public class ExitSignBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    private static final VoxelShape BASE_SHAPE = VoxelShapes.union(
-            VoxelShapes.cuboid(6/16.0, -1/16.0, 7/16.0, 10/16.0, 21/16.0, 9/16.0),
-            VoxelShapes.cuboid(10/16.0, 12/16.0, 7/16.0, 15/16.0, 16/16.0, 9/16.0),
-            VoxelShapes.cuboid(1/16.0, 12/16.0, 7/16.0, 6/16.0, 16/16.0, 9/16.0)
+    private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
+            5, 0, 6, // from (x, y, z) - 5, 0, 6
+            11, 16, 10 // to (x, y, z) - 11, 16, 10
     );
-
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
 
     static {
@@ -35,13 +33,13 @@ public class CrossBlock extends HorizontalFacingBlock {
         }
     }
 
-    public CrossBlock(Settings settings) {
+    public ExitSignBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
-
+    // Rotates a VoxelShape for each direction
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
-
+        // No rotation for NORTH
         if (dir == Direction.NORTH) return shape;
 
         VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
@@ -59,27 +57,31 @@ public class CrossBlock extends HorizontalFacingBlock {
         }
         return buffer[0];
     }
-
+    // Placement
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
+    // Properties
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
+    // Outline shape (what you see)
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
         return ROTATED_SHAPES.get(state.get(FACING));
     }
 
+    // Collision shape (what you bump into)
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
         return ROTATED_SHAPES.get(state.get(FACING));
     }
 
+    // Rotation and mirror for blockstates (for structure placing etc)
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));

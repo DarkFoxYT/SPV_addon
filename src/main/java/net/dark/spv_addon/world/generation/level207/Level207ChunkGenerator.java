@@ -65,7 +65,7 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
         int cz = chunk.getPos().z;
 
 
-        // Place a room every 2x2 chunk area
+        // Place a room every 2x2 chunk area (room sizes are 32x32)
         if (cx % 2 == 0 && cz % 2 == 0) {
             int rx = cx / 2;
             int rz = cz / 2;
@@ -74,10 +74,10 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
             if (rx == 0 && rz == 0) {
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/entrance");
             } else {
-                int minRoom = 1, maxRoom = 20;
+                int minRoom = 1, maxRoom = 2;
                 int bound = maxRoom - minRoom + 1;
                 int variant = minRoom;
-                if (bound > 0) variant = minRoom + random.nextInt(bound);
+                variant = minRoom + random.nextInt(bound);
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/grave" + variant);
             }
 

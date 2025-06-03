@@ -26,7 +26,6 @@ public class CustomSkyboxRenderer {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 
         matrices.push();
-        // Centre la skybox sur la caméra
         matrices.peek().getPositionMatrix().rotateY((float) Math.toRadians(-(mc.player.getYaw(tickDelta))));
         matrices.peek().getPositionMatrix().rotateX((float) Math.toRadians(mc.player.getPitch(tickDelta)));
 

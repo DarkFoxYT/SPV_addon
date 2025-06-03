@@ -25,7 +25,7 @@ public abstract class SkyboxMixin {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         // Utilise ta clé de dimension custom, ici par exemple "LEVEL207_WORLD_KEY"
-        if (mc.world != null && mc.world.getRegistryKey().equals(BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
+        if (mc.world != null && mc.world.getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
             // Appelle ton renderer custom, adapte si tu veux passer tickDelta ou autre
             CustomSkyboxRenderer.render(new MatrixStack(), 0);
             // Annule le rendu vanilla du ciel

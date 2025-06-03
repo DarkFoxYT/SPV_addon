@@ -31,7 +31,7 @@ public class ModBlocks {
     public static final Block KITTY_PLUSHIE = new PlushieBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_PLUSHIE1 = new PlushieBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block CROSS = new CrossBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.ConcreteBlock1).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
-    public static final Block EXIT_SIGN = new TableBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).collidable(false).hardness(-1f).noBlockBreakParticles().nonOpaque());
+    public static final Block EXIT_SIGN = new ExitSignBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.RED_METAL_CASING).hardness(-1f).noBlockBreakParticles().nonOpaque());
 
 
     public static final Block TABLE = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
