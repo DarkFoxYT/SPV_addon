@@ -1,5 +1,5 @@
 {
-  "type": "spb-revamped:level0_type",
+  "type": "spv_addon:run",
   "generator": {
     "type": "spv_addon:levelrun_chunk_generator",
     "settings": "spb-revamped:level0",

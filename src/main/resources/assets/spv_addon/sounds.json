@@ -4,6 +4,11 @@
       { "name": "spv_addon:entity/bellwalker/bell", "stream": false }
     ]
   },
+  "stuff.207_ambiance": {
+    "sounds": [
+      { "name": "spv_addon:stuff/207_ambiance", "stream": false }
+    ]
+  },
   "entity.bellwalker.carp": {
     "sounds": [
       { "name": "spv_addon:entity/bellwalker/carp", "stream": false }

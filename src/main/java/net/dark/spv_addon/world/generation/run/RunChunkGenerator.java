@@ -104,10 +104,11 @@ public final class RunChunkGenerator extends ChunkGenerator {
         Identifier roomId;
         if (cx == 0) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/entrance");
-        } else if (cx < exitChunk) {
-            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway");
         } else if (cx == exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/exit");
+        } else if (cx < exitChunk) {
+            int hallwayType = random.nextBetween(1, 5);
+            roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway" + hallwayType);
         } else {
             return;
         }
@@ -121,21 +122,13 @@ public final class RunChunkGenerator extends ChunkGenerator {
         int bx = chunk.getPos().getStartX();
         int bz = chunk.getPos().getStartZ();
 
-        // First, check if lime wool exists in the structure
-        // Search for the position of lime wool in the structure
         int yOffset = 0;
         StructureTemplate template = optTpl.get();
-        boolean foundLimeWool = false;
         for (StructureTemplate.StructureBlockInfo blockInfo : template.getInfosForBlock(BlockPos.ORIGIN, new StructurePlacementData(), Blocks.LIME_WOOL)) {
             if (blockInfo.state().isOf(Blocks.LIME_WOOL)) {
-                yOffset = blockInfo.pos().getY() - 1;
-                foundLimeWool = true;
+                yOffset = blockInfo.pos().getY() + 1;
                 break;
             }
-        }
-        if (!foundLimeWool) {
-            // If no lime wool is found, place at Y=0 by default
-            yOffset = 0;
         }
 
         BlockPos.Mutable basePos = new BlockPos.Mutable(bx, -yOffset, bz);
@@ -144,10 +137,8 @@ public final class RunChunkGenerator extends ChunkGenerator {
                 .setRotation(BlockRotation.CLOCKWISE_90)
                 .setIgnoreEntities(true);
 
-        boolean placed = template.place(world, basePos, basePos, placeData, random, 2);
-        if (!placed) return;
+        if (!template.place(world, basePos, basePos, placeData, random, 2)) return;
 
-        // Place the roof above the structure
         Identifier roofId = new Identifier(Spv_addon.MOD_ID, "run/run_roof1");
         Optional<StructureTemplate> roofTpl = mgr.getTemplate(roofId);
         if (roofTpl.isEmpty()) return;

@@ -19,7 +19,7 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
     public LevelRUNBackroomsLevel() {
-        super("run", RunChunkGenerator.CODEC, new Vec3d(7.5, 1, 7.5), BackroomsLevels.LEVELRUN_WORLD_KEY, "spv_addon");
+        super("run", RunChunkGenerator.CODEC, new Vec3d(-7.5, 1, 7.5), BackroomsLevels.LEVELRUN_WORLD_KEY, "spv_addon");
     }
 
     @Override
