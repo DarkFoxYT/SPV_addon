@@ -40,11 +40,18 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
         this.registerTransition((world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
-            if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= (double)12.0F && playerComponent.player.isOnGround()) {
+            if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= 12.0F && playerComponent.player.isOnGround()) {
                 for(PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
                     PlayerComponent otherPlayerComponent = (PlayerComponent) InitializeComponents.PLAYER.get(player);
-                    if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY) {
-                        playerList.add(new BackroomsLevel.CrossDimensionTeleport(player.getWorld(), otherPlayerComponent, this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()), BackroomsLevels.LEVEL207_BACKROOMS_LEVEL, com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL));
+                    double playerY = player.getPos().getY();
+                    if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY && playerY == 60.0 && player.isOnGround()) {
+                        playerList.add(new BackroomsLevel.CrossDimensionTeleport(
+                            player.getWorld(),
+                            otherPlayerComponent,
+                            this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()),
+                            BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
+                            com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL
+                        ));
                     }
                 }
             }
@@ -81,7 +88,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
      */
     @Override
     public BoolTextPair allowsTorch() {
-        return new BoolTextPair(true, Text.translatable("Flashlight is allowed in this level."));
+        return new BoolTextPair(false, Text.translatable("Flashlight twitchin in this level."));
     }
 
     /**

@@ -31,6 +31,7 @@ public class ModBlocks {
     public static final Block IKEA_SHELF2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
     public static final Block KITTY_PLUSHIE = new PlushieBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_PLUSHIE1 = new PlushieBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block KITTY_PLUSHIE_DEV = new PlushieBlock_bonk(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block CROSS = new CrossBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.ConcreteBlock1).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block EXIT_SIGN = new ExitSignBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.RED_METAL_CASING).hardness(-1f).noBlockBreakParticles().nonOpaque());
 
@@ -47,6 +48,7 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "grass1"), GRASS1);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie"), KITTY_PLUSHIE);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie1"), KITTY_PLUSHIE1);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie_dev"), KITTY_PLUSHIE_DEV);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "cross"), CROSS);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "exit_sign"), EXIT_SIGN);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_wall"), KITTY_WALL);

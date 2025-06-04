@@ -22,8 +22,8 @@ public class ExitSignBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
-            5, 0, 6, // from (x, y, z) - 5, 0, 6
-            11, 16, 10 // to (x, y, z) - 11, 16, 10
+            4, 0, 6,
+            12, 16, 10
     );
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
 
@@ -37,9 +37,7 @@ public class ExitSignBlock extends Block {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
-    // Rotates a VoxelShape for each direction
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
-        // No rotation for NORTH
         if (dir == Direction.NORTH) return shape;
 
         VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
@@ -47,7 +45,6 @@ public class ExitSignBlock extends Block {
 
         for (int i = 0; i < times; ++i) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                // 90 deg Y rotation: (x, z) -> (1-z, x)
                 buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
                         1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
                 ));

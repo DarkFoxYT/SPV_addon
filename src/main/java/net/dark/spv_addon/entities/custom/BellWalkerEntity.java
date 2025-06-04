@@ -75,21 +75,21 @@ public class BellWalkerEntity extends PathAwareEntity
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 3000.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0);
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5);
     }
 
     @Override
     protected void initGoals() {
         // 0: melee if in range
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0, true));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.5, true));
         // 1: look around when idle
         this.goalSelector.add(2, new LookAroundGoal(this));
         // 2: smart wander (move, pause, repeat)
-        this.goalSelector.add(2, new SmartWanderGoal(this, 0.5, 20, 60));
+        this.goalSelector.add(3, new SmartWanderGoal(this, 0.5, 10, 30));
         // 3: agro nearest player who spoke
         this.goalSelector.add(1, new AggroNearestPlayerGoal(this, 20.0));
-        this.goalSelector.add(3, new BellWalkerStalkGoal(this, 0.45, 0.30));
+        this.goalSelector.add(3, new BellWalkerStalkGoal(this, 0.75, 0.30));
 
     }
 

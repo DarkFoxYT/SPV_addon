@@ -9,6 +9,7 @@ import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -31,6 +32,14 @@ public class LevelIKEA extends BackroomsLevel {
     public AbstractEvent getRandomEvent(World world) {
         // Ikea peut avoir ses propres events (“Staff appears”, “Lights Out”, etc)
         return null;
+    }
+    /**
+     * Indicates if the flashlight (torch) is allowed in this level.
+     * @return BoolTextPair containing the permission and a message.
+     */
+    @Override
+    public BoolTextPair allowsTorch() {
+        return new BoolTextPair(true, Text.translatable("Flashlight on."));
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import eu.midnightdust.lib.config.MidnightConfig;
-import net.dark.spv_addon.commands.Level5Command;
+import net.dark.spv_addon.commands.AddonLevelsTPCommand;
 import net.dark.spv_addon.commands.SanityCommand;
 import net.dark.spv_addon.commands.ThirstCommand;
 import net.dark.spv_addon.compat.modmenu.ConfigStuff;
@@ -68,7 +68,7 @@ public class Spv_addon implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             FlashlightBatteryCommand.register(dispatcher);
             SanityCommand.register(dispatcher);
-            Level5Command.register(dispatcher);
+            AddonLevelsTPCommand.register(dispatcher);
             ThirstCommand.register(dispatcher);
         });
 

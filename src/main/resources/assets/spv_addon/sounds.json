@@ -19,6 +19,11 @@
       { "name": "spv_addon:stuff/belldong", "stream": false }
     ]
   },
+  "stuff.bonk": {
+    "sounds": [
+      { "name": "spv_addon:stuff/bonk", "stream": false }
+    ]
+  },
   "stuff.elevator": {
     "sounds": [
       { "name": "spv_addon:stuff/elevator", "stream": false }

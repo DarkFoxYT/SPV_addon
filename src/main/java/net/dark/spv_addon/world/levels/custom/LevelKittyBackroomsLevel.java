@@ -8,6 +8,7 @@ import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
@@ -39,6 +40,15 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     public void register() {
 
         events.add(HaHvavCustomEvent::new);
+    }
+
+    /**
+     * Indicates if the flashlight (torch) is allowed in this level.
+     * @return BoolTextPair containing the permission and a message.
+     */
+    @Override
+    public BoolTextPair allowsTorch() {
+        return new BoolTextPair(false, Text.translatable("Flashlight twitchin in this level."));
     }
 
     @Override
