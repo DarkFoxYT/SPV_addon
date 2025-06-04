@@ -24,6 +24,7 @@ import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
+import net.dark.spv_addon.world.levels.custom.events.Level207MoveTracker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -116,6 +117,8 @@ public class Spv_addonClient implements ClientModInitializer {
                     }
 
                 });
+
+
         VeilEventPlatform.INSTANCE.onVeilRenderTypeStageRender((stage, levelRenderer, bufferSource, poseStack, projectionMatrix, renderTick, partialTicks, camera, frustum) -> {
                         MinecraftClient client = MinecraftClient.getInstance();
             World clientWorld = client.world;

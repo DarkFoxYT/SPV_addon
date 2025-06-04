@@ -24,6 +24,7 @@ public class ModItems {
     public static final Item KITTY_2 = register("kitty_wall", new BlockItem(ModBlocks.KITTY_WALL, new FabricItemSettings()));
     public static final Item KITTY_PLUSH = register("kitty_plushie", new BlockItem(ModBlocks.KITTY_PLUSHIE, new FabricItemSettings()));
     public static final Item KITTY_PLUSH1 = register("kitty_plushie1", new BlockItem(ModBlocks.KITTY_PLUSHIE1, new FabricItemSettings()));
+    public static final Item KITTY_PLUSH_DEV = register("kitty_plushie_dev", new BlockItem(ModBlocks.KITTY_PLUSHIE_DEV, new FabricItemSettings()));
     public static final Item EXIT_SIGN = register("exit_sign", new BlockItem(ModBlocks.EXIT_SIGN, new FabricItemSettings()));
     public static final Item CROSS = register("cross", new BlockItem(ModBlocks.CROSS, new FabricItemSettings()));
     public static final Item GRASS1 = register("grass1", new BlockItem(ModBlocks.GRASS1, new FabricItemSettings()));

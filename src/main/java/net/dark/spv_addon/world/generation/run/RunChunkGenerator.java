@@ -148,18 +148,17 @@ public final class RunChunkGenerator extends ChunkGenerator {
                 .setRotation(BlockRotation.CLOCKWISE_90)
                 .setIgnoreEntities(true);
 
+        // Génère le toit sur toute la largeur du chunk, à une hauteur fixe (par exemple Y=6)
+        int roofY = 6;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 int px = bx + 8 * i;
                 int pz = bz + 8 * j;
-                BlockPos roofPos = new BlockPos(px, 5 - yOffset, pz);
-
-                if (world.getBlockState(roofPos) == Blocks.AIR.getDefaultState()) {
+                BlockPos roofPos = new BlockPos(px, roofY, pz);
                     roofTpl.get().place(world, roofPos, roofPos, roofData, random, 16);
                 }
             }
         }
-    }
 
     /**
      * Returns the codec used for serialization of this generator.

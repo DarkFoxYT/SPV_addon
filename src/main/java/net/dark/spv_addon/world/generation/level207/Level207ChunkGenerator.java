@@ -74,7 +74,7 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
             if (rx == 0 && rz == 0) {
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/entrance");
             } else {
-                int minRoom = 1, maxRoom = 4;
+                int minRoom = 1, maxRoom = 3;
                 int bound = maxRoom - minRoom + 1;
                 int variant = minRoom;
                 variant = minRoom + random.nextInt(bound);
