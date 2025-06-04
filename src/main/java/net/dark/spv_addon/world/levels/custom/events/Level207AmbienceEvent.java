@@ -1,13 +1,13 @@
 package net.dark.spv_addon.world.levels.custom.events;
 
 import com.sp.world.events.AbstractEvent;
-import net.dark.spv_addon.init.ModSounds; // Replace with your sound registry class
+import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
 public class Level207AmbienceEvent extends AbstractEvent {
     private int ticks = 0;
-    private static final int AMBIENCE_INTERVAL = 400; // duration in ticks (20 ticks = 1 second, 400 = 20 sec)
+    private static final int AMBIENCE_INTERVAL = 440; // duration in ticks (20 ticks = 1 second, 400 = 20 sec)
 
     @Override
     public void init(World world) {
