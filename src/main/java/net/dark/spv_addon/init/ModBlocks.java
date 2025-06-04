@@ -21,6 +21,7 @@ import static software.bernie.example.registry.BlockRegistry.registerBlock;
 
 public class ModBlocks {
     public static final Block HOTEL_WALL = new WallBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
+    public static final Block C_WALL = new WallBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block KITTY_WALL = new WallBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.WallBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block KITTY_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.CarpetBlock).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block GRASS1 = new Block(FabricBlockSettings.copyOf(Blocks.DIRT).strength(-1.0F).noBlockBreakParticles().sounds(SprintBlockSoundGroup.GRASS2));
@@ -42,6 +43,7 @@ public class ModBlocks {
 
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "c_wall"), C_WALL);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "grass1"), GRASS1);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie"), KITTY_PLUSHIE);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie1"), KITTY_PLUSHIE1);

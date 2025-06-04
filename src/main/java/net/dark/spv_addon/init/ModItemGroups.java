@@ -33,6 +33,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.KITTY_PLUSHIE1);
                         entries.add(ModBlocks.GRASS1);
                         entries.add(ModBlocks.CROSS);
+                        entries.add(ModBlocks.C_WALL);
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);
