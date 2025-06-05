@@ -1,15 +1,8 @@
 package net.dark.spv_addon.entities.custom;
 
-import com.sp.entity.ik.components.IKAnimatable;
-import com.sp.entity.ik.components.IKModelComponent;
-import com.sp.entity.ik.parts.Segment;
-import com.sp.entity.ik.parts.ik_chains.EntityLeg;
-import com.sp.entity.ik.parts.ik_chains.StretchingIKChain;
-import com.sp.entity.ik.parts.ik_chains.TargetReachingIKChain;
-import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
-import com.sp.entity.ik.model.ModelAccessor;
-import com.sp.entity.ik.util.MathUtil;
-import net.dark.spv_addon.entities.ik.components.IKLegCompKitty;
+import com.sp.init.BackroomsLevels;
+import com.sp.world.levels.BackroomsLevel;
+import net.dark.spv_addon.init.ModBlocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -17,69 +10,32 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEntity>, GeoAnimatable {
+public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final IKLegCompKitty<StretchingIKChain, KittyEntity> legComponent;
-    private final IKLegCompKitty<StretchingIKChain, KittyEntity> armComponent;
+    // private final IKLegCompKitty<StretchingIKChain, KittyEntity> legComponent;
+    public float headYaw = 0.0F;
+    public float headPitch = 0.0F;
 
     public KittyEntity(EntityType<? extends KittyEntity> type, World world) {
         super(type, world);
-
-        List<ServerLimb> legs = List.of(
-                new ServerLimb(-0.125, 0.0, 0),
-                new ServerLimb(0.125, 0.0, 0)
-        );
-        var legSettings = legs.stream().map(e -> new IKLegCompKitty.LegSetting.Builder()
-                .maxDistance(1.5)
-                .stepInFront(1)
-                .movementSpeed(0.6)
-                .maxStandingStillDistance(0.1)
-                .standStillCounter(20)
-                .build()).collect(Collectors.toList());
-        // 16 Blockbench units is 1 block
-
-        StretchingIKChain legChain = new EntityLeg(
-                new Segment.Builder().length(0.1).angleSize(180).build(),
-                new Segment.Builder().length(0.6).angleSize(180).build(),
-                new Segment.Builder().length(.8).angleSize(180).build(),
-                new Segment.Builder().length(0.4).angleSize(180).build()
-        );
-        this.legComponent = new IKLegCompKitty<>("leg", legSettings, legs, legChain, legChain);
-
-        List<ServerLimb> arms = List.of(
-                new ServerLimb(-0.8, 1.5, 0),
-                new ServerLimb(0.8, 1.5, 0)
-        );
-        var armSettings = arms.stream().map(e -> new IKLegCompKitty.LegSetting.Builder()
-                .maxDistance(2.0)
-                .stepInFront(0)
-                .movementSpeed(0.4)
-                .maxStandingStillDistance(0.0)
-                .standStillCounter(0)
-                .build()).collect(Collectors.toList());
-        TargetReachingIKChain armChain = new TargetReachingIKChain(
-                new Segment.Builder().length(0.6).build(),
-                new Segment.Builder().length(0.5).build(),
-                new Segment.Builder().length(0.5).build()
-        );
-        this.armComponent = new IKLegCompKitty<>("arm", armSettings, arms, armChain, armChain);
+        this.setBoundingBox(this.getBoundingBox().expand(0.5, 3, 0.5)); // Agrandit la hitbox
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 4000.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0);
     }
 
@@ -92,30 +48,79 @@ public class KittyEntity extends PathAwareEntity implements IKAnimatable<KittyEn
     @Override
     public void tick() {
         super.tick();
-        legComponent.tickServer(this);
-        armComponent.tickServer(this);
 
-        if (getTarget() != null) {
-            var pos = getTarget().getEyePos();
-            armComponent.setArmTarget(pos.x, pos.y, pos.z);
+        if (!this.getWorld().isClient) {
+            double range = 64.0;
+            PlayerEntity nearest = null;
+            double nearestDist = Double.MAX_VALUE;
+            boolean isSeen = false;
+
+            for (PlayerEntity player : this.getWorld().getPlayers()) {
+                double dist = this.squaredDistanceTo(player);
+                if (dist <= range * range) {
+                    if (player.canSee(this)) {
+                        isSeen = true;
+                        break;
+                    }
+                    if (dist < nearestDist) {
+                        nearest = player;
+                        nearestDist = dist;
+                    }
+                }
+            }
+
+            // Si aucun joueur ne voit Kitty, téléporte-le près du joueur le plus proche
+            if (!isSeen && nearest != null) {
+                double px = nearest.getX() + (this.random.nextDouble() - 0.5) * 2.5;
+                double py = nearest.getY();
+                double pz = nearest.getZ() + (this.random.nextDouble() - 0.5) * 2.5;
+                this.requestTeleport(px, py, pz);
+                this.setYaw(nearest.getYaw());
+                this.setHeadYaw(nearest.getYaw());
+                this.setBodyYaw(nearest.getYaw());
+            }
+        }
+
+        // Toujours regarder le joueur le plus proche
+        PlayerEntity closest = null;
+        double minDist = Double.MAX_VALUE;
+        for (PlayerEntity player : this.getWorld().getPlayers()) {
+            double dist = this.squaredDistanceTo(player);
+            if (dist < minDist) {
+                closest = player;
+                minDist = dist;
+            }
+        }
+        if (closest != null) {
+            double dx = closest.getX() - this.getX();
+            double dy = closest.getEyeY() - this.getEyeY();
+            double dz = closest.getZ() - this.getZ();
+            double dist = Math.sqrt(dx * dx + dz * dz);
+            this.headYaw = (float)(Math.atan2(dz, dx) * (180F / Math.PI)) - 90F;
+            this.headPitch = (float)-(Math.atan2(dy, dist) * (180F / Math.PI));
         }
     }
 
-    @Override
-    public List<IKModelComponent<KittyEntity>> getComponents() {
-        return List.of(legComponent, armComponent);
-    }
-
-    public void applyModelPose(ModelAccessor model) {
-        legComponent.getModelPositions(this, model);
-        legComponent.tickClient(this, model);
-
-        armComponent.getModelPositions(this, model);
-        armComponent.tickClient(this, model);
-    }
-
-    @Override public double getSize() { return 1.0; }
     @Override public AnimatableInstanceCache getAnimatableInstanceCache() { return cache; }
     @Override public double getTick(Object o) { return age; }
     @Override public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (!player.getWorld().isClient) {
+            // Téléporte le joueur dans le monde avec la world key 327
+            if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
+                var targetWorld = serverPlayer.getServer().getWorld(BackroomsLevels.LEVEL324_WORLD_KEY);
+                if (targetWorld != null) {
+                            serverPlayer.teleport(
+                        targetWorld,
+                        serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
+                                    serverPlayer.getYaw(), serverPlayer.getPitch()
+                            );
+                return ActionResult.success(true);
+            }
+        }
+        }
+        return super.interactMob(player, hand);
+    }
 }

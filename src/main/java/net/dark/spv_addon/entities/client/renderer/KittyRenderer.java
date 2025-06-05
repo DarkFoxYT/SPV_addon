@@ -27,7 +27,6 @@ public class KittyRenderer extends DynamicGeoEntityRenderer<KittyEntity> {
                        VertexConsumerProvider vb, int light) {
         super.render(ent, yaw, pt, ms, vb, light);
 
-        ent.getModelPositions(ent, new GeoModelAccessor(this.model));
     }
 
     @Override

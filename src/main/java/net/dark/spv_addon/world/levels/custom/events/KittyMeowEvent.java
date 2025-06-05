@@ -34,9 +34,6 @@ public class KittyMeowEvent extends AbstractEvent {
             // Remplace ceci par le code d’apparition de ton mob ou item
             // world.spawnEntity(new EntityKittyPlush(world, plushPos));
         }
-
-        // Message immersif
-        player.sendMessage(Text.translatable("Des miaulements résonnent... Quelque chose te regarde."), false);
     }
 
     public String getName() {
