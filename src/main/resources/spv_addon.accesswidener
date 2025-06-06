@@ -1,6 +1,5 @@
 accessWidener v2 named
 
-accessible field com/sp/cca_stuff/PlayerComponent flashLightOn Z
 accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask
 accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask$RenderData
 accessible class net/minecraft/client/render/WorldRenderer$ChunkInfo

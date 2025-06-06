@@ -32,9 +32,9 @@ public class ModItems {
 
     public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2));
     public static final Item BATTERY_ITEM2 = new BatteryItem2(new Item.Settings().maxCount(2));
-    public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 100, 50);
-    public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10);
-    public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 5, 2);
+    public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 10, 50, false, true, false);
+    public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10, false, false, false);
+    public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 2, 3, true, false, true);
 
 
     public static void registerItems() {

@@ -1,13 +1,17 @@
 package net.dark.spv_addon.client;
 
+import com.sp.SPBRevamped;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
+import com.sp.init.ModSounds;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.deferred.light.AreaLight;
 import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.client.gui.BatteryHud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
@@ -31,6 +35,7 @@ public class ClientFlashlightRendererAddon {
             UUID uuid = player.getUuid();
             PlayerComponent comp = InitializeComponents.PLAYER.get(player);
             boolean isOn = comp.isFlashLightOn();
+            int sanity = net.dark.spv_addon.cca.InitializeComponents.SANITY.get(player).getSanityLevel();
             int battery = BatteryManager.getBattery(uuid);
             if (battery <= 0) {
                 if (isOn) comp.setFlashLightOn(false);
@@ -38,19 +43,47 @@ public class ClientFlashlightRendererAddon {
                 continue;
             }
 
+            // Flicker à 20 de sanity (aléatoire, mais reste souvent allumé puis clignote rapidement par moments)
+            if (sanity <= 20) {
+                // 80% du temps, la lampe reste allumée normalement
+                if (client.world.getRandom().nextFloat() > 0.135f) {
+                    if (!comp.isFlashLightOn()) comp.setFlashLightOn(true);
+                    updateLight(player, tickDelta);
+                } else {
+                    for (int i = 0; i < 5; i++) {
+                        boolean shouldBeOn = client.world.getRandom().nextBoolean();
+
+                    comp.setFlashLightOn(shouldBeOn);
+                if (shouldBeOn) {
+                    updateLight(player, tickDelta);
+                } else {
+                    removeLights(player);
+                }
+                    }
+                }
+                continue;
+            }
+
+            if (sanity <= 0) {
+                if (!comp.shouldGlitch()) {
+                    comp.setShouldGlitch(true);
+                    comp.justChanged();
+                    if (!comp.shouldInflictGlitchDamage) {
+                        comp.shouldInflictGlitchDamage = true;
+                    }
+                }
+            } else {
+                if (comp.shouldGlitch()) {
+                    comp.setShouldGlitch(false);
+                    comp.justChanged();
+                    comp.shouldInflictGlitchDamage = false;
+                }
+            }
+
             if (isOn) {
                 updateLight(player, tickDelta);
             } else {
                 removeLights(player);
-            }
-
-
-            int sanity = net.dark.spv_addon.cca.InitializeComponents.SANITY.get(player).getSanityLevel();
-            if (battery <= 10 && sanity <= 50) {
-                if (client.world.getTime() % 20 < 10) {
-                    removeLights(player); // flicker
-                    return;
-                }
             }
         }
     }

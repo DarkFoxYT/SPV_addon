@@ -111,23 +111,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     }
 
 
-    /**
-     * Indicates if vanilla lighting is enabled in this level.
-     * @return true if vanilla lighting is used.
-     */
-    @Override
-    public boolean hasVanillaLighting() {
-        return true;
-    }
 
-    /**
-     * Indicates if the flashlight (torch) is allowed in this level.
-     * @return BoolTextPair containing the permission and a message.
-     */
-    @Override
-    public BoolTextPair allowsTorch() {
-        return new BoolTextPair(false, Text.translatable("Flashlight twitchin in this level."));
-    }
 
     /**
      * Registers custom events for this level.

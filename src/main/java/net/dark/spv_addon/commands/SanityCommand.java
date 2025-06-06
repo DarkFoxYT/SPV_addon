@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 public class SanityCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("setsanity")
+        dispatcher.register(CommandManager.literal("sanity")
                 .then(CommandManager.argument("value", IntegerArgumentType.integer(0, 100))
                         .executes(ctx -> {
                             ServerPlayerEntity player = ctx.getSource().getPlayer();

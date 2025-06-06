@@ -16,7 +16,7 @@ import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 public class FlashlightBatteryCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("flashbattery")
+        dispatcher.register(CommandManager.literal("battery")
                 .then(CommandManager.literal("toggle")
                         .executes(ctx -> {
                             boolean current = BatteryManager.isBatteryEnabled();

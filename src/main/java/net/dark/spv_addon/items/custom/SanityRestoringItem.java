@@ -15,14 +15,27 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class SanityRestoringItem extends Item {
-    private final int restoreAmount;
-    private final int thirstAmount;
+    private final int sanityChange;
+    private final int thirstChange;
+    private final boolean poisoned;
+    private final boolean decreaseSanity;
+    private final boolean decreaseThirst;
 
+    public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange) {
+        this(settings, sanityChange, thirstChange, false, false, false);
+    }
 
-    public SanityRestoringItem(Settings settings, int restoreAmount, int thirstAmount) {
+    public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange, boolean poisoned) {
+        this(settings, sanityChange, thirstChange, poisoned, false, false);
+    }
+
+    public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange, boolean poisoned, boolean decreaseSanity, boolean decreaseThirst) {
         super(settings);
-        this.restoreAmount = restoreAmount;
-        this.thirstAmount = thirstAmount;
+        this.sanityChange = sanityChange;
+        this.thirstChange = thirstChange;
+        this.poisoned = poisoned;
+        this.decreaseSanity = decreaseSanity;
+        this.decreaseThirst = decreaseThirst;
     }
 
     @Override
@@ -31,15 +44,34 @@ public class SanityRestoringItem extends Item {
         SanityComponent sanity = InitializeComponents.SANITY.get(player);
 
         if (!world.isClient) {
-            ThirstManager.increaseThirst(player, 15); // Restore 15
-            player.getStackInHand(hand).decrement(1);
-            if (!SanityLightStore.isPlayerInLightRange(world, player)) {
-                sanity.increaseSanity(10); // adjust value
-                stack.decrement(1);
+            // Gérer la soif
+            if (thirstChange != 0) {
+                int value = decreaseThirst ? -Math.abs(thirstChange) : Math.abs(thirstChange);
+                ThirstManager.increaseThirst(player, value);
             }
-        }
-        if (!world.isClient) {
+            // Gérer la santé mentale
+            if (sanityChange != 0) {
+            if (!SanityLightStore.isPlayerInLightRange(world, player)) {
+                    int value = decreaseSanity ? -Math.abs(sanityChange) : Math.abs(sanityChange);
+                    if (value > 0) {
+                        sanity.increaseSanity(value);
+                    } else {
+                        sanity.decreaseSanity(-value);
+                    }
+                }
+            }
+                stack.decrement(1);
 
+            // Effet poison custom
+            if (poisoned) {
+                player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+                        net.minecraft.entity.effect.StatusEffects.POISON,
+                        100, // durée en ticks (5 secondes)
+                        0,   // niveau
+                        true, // ambient (pas d'icône)
+                        false // pas de particules
+                ));
+        }
         }
         return TypedActionResult.success(stack, world.isClient());
     }
