@@ -75,6 +75,8 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         }
     }
 
+
+
     public void onPlayerMove(PlayerEntity player, Vec3d oldPos, Vec3d newPos) {
         if (!player.isOnGround()) return;
         int steps = (int) oldPos.distanceTo(newPos);
@@ -107,6 +109,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             });
         }
     }
+
 
     /**
      * Indicates if vanilla lighting is enabled in this level.

@@ -149,7 +149,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
                 .setIgnoreEntities(true);
 
         // Génère le toit sur toute la largeur du chunk, à une hauteur fixe (par exemple Y=6)
-        int roofY = 6;
+        int roofY = 5;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 int px = bx + 8 * i;

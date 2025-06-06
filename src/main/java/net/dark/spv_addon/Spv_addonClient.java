@@ -61,7 +61,6 @@ public class Spv_addonClient implements ClientModInitializer {
         SkyShaderHandler.register();
         FocusHandler.register();
         ThirstManager.register();
-        LevelRunGlobalTicker.init();
 
         // Register the flashlight renderer
         ClientTickEvents.END_CLIENT_TICK.register(client -> flashlightRenderer.tick(client.getTickDelta()));

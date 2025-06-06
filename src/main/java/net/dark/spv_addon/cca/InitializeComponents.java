@@ -10,6 +10,7 @@ import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.UUID;
@@ -28,11 +29,14 @@ public class InitializeComponents implements EntityComponentInitializer {
             ComponentRegistry.getOrCreate(new Identifier("spv_addon", "sanity"), SanityComponent.class);
     public static final ComponentKey<RunTimerComponent> RUN_TIMER =
             ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "run_timer"), RunTimerComponent.class);
+    public static final ComponentKey<net.dark.spv_addon.cca.DeathTeleportComponent> DEATH_TELEPORT =
+            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "death_teleport"), net.dark.spv_addon.cca.DeathTeleportComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
 
         registry.registerFor(BellWalkerEntity.class, BELL_WALKER, BellWalkerComponent::new);
+        registry.registerFor(ServerPlayerEntity.class, DEATH_TELEPORT, DeathTeleportComponent::new);
         registry.registerFor(KittyEntity.class, KITTY, KittyComponent::new);
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
         registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);

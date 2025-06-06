@@ -96,7 +96,7 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
             double dy = closest.getEyeY() - this.getEyeY();
             double dz = closest.getZ() - this.getZ();
             double dist = Math.sqrt(dx * dx + dz * dz);
-            this.headYaw = (float)(Math.atan2(dz, dx) * (180F / Math.PI)) - 90F;
+            this.headYaw = (float)(Math.toDegrees(Math.atan2(dx, dz)));
             this.headPitch = (float)-(Math.atan2(dy, dist) * (180F / Math.PI));
         }
     }
@@ -108,18 +108,34 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (!player.getWorld().isClient) {
-            // Téléporte le joueur dans le monde avec la world key 327
             if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
-                var targetWorld = serverPlayer.getServer().getWorld(BackroomsLevels.LEVEL324_WORLD_KEY);
-                if (targetWorld != null) {
-                            serverPlayer.teleport(
-                        targetWorld,
-                        serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
-                                    serverPlayer.getYaw(), serverPlayer.getPitch()
-                            );
-                return ActionResult.success(true);
+                // Vérifie si on est bien dans LevelKittyBackroomsLevel
+                if (serverPlayer.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+                    // Récupère le niveau courant
+                    var level = (net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel)
+                            net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL;
+                    // Récupère le PlayerComponent (à adapter selon votre API)
+                    var playerComponent = com.sp.cca_stuff.InitializeComponents.PLAYER.get(serverPlayer);
+                    // Crée la transition
+                    var teleport = new com.sp.world.levels.BackroomsLevel.CrossDimensionTeleport(
+                            serverPlayer.getWorld(),
+                            playerComponent,
+                            level.getSpawnPos(),
+                            net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL,
+                            com.sp.init.BackroomsLevels.LEVEL324_BACKROOMS_LEVEL
+                    );
+                    // Appelle la transition out
+                    if (level.transitionOut(teleport)) {
+                        // Effectue la téléportation
+                        serverPlayer.teleport(
+                                serverPlayer.getServer().getWorld(com.sp.init.BackroomsLevels.LEVEL324_WORLD_KEY),
+                                serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
+                                serverPlayer.getYaw(), serverPlayer.getPitch()
+                        );
+                        return ActionResult.success(true);
+                    }
+                }
             }
-        }
         }
         return super.interactMob(player, hand);
     }

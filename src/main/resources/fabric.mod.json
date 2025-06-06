@@ -30,7 +30,8 @@
       "spv_addon:thirst",
       "spv_addon:flashlight_battery",
       "spv_addon:sanity",
-      "spv_addon:run_timer"
+      "spv_addon:run_timer",
+      "spv_addon:death_teleport"
 
     ]
   },

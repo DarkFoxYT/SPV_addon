@@ -11,11 +11,7 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-/**
- * Found Footage DeathScreen:
- * - Death static with dynamic noise & flicker
- * - 10s timer, auto respawn
- */
+
 @Environment(EnvType.CLIENT)
 public class CustomDeathScreen extends Screen {
     private static final Identifier BACKGROUND = new Identifier("spv_addon", "textures/gui/death_full.png");
