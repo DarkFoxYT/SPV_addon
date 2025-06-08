@@ -61,7 +61,9 @@ public class LevelIKEA extends BackroomsLevel {
     }
 
     @Override
-    public void transitionIn(CrossDimensionTeleport teleport) { }
+    public void transitionIn(CrossDimensionTeleport teleport) {
+
+    }
 
     @Override
     public int getTransitionDuration() {

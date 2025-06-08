@@ -7,7 +7,6 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import net.dark.spv_addon.commands.AddonLevelsTPCommand;
 import net.dark.spv_addon.commands.SanityCommand;
 import net.dark.spv_addon.commands.ThirstCommand;
-import net.dark.spv_addon.compat.modmenu.ConfigStuff;
 import net.dark.spv_addon.init.*;
 import net.dark.spv_addon.init.ModItemGroups;
 import net.dark.spv_addon.init.ModItems;
@@ -49,7 +48,7 @@ public class Spv_addon implements ModInitializer {
 
         Registry.register(Registries.PARTICLE_TYPE, new Identifier(MOD_ID, "rain_particle"), RAIN_PARTICLE);
 
-
+        ModBlockEntities.register();
         ThirstManager.register();
         FlashlightBatteryEvents.register();
 
@@ -63,7 +62,6 @@ public class Spv_addon implements ModInitializer {
         LevelRunGlobalTicker.init();
         LevelRunVoidDamageHandler.register();
 
-        MidnightConfig.init(MOD_ID, ConfigStuff.class);
 
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();

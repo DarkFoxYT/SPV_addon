@@ -52,12 +52,11 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
     }
 
     public KittyChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
-        super(biomeSource); // PAS de placementRadius ici, change si tu veux
+        super(biomeSource);
         this.settings = settings;
         SPBRevampedClient.setInBackrooms(true);
     }
 
-    // === FONCTION UTILE : scan et pose le loot table sur chaque crate placée ===
     private static void applyLootTablesToCrates(StructureWorldAccess world, BlockPos start, BlockPos end, Identifier lootTable) {
         BlockPos.iterate(start, end).forEach(pos -> {
             BlockEntity be = world.getBlockEntity(pos);
@@ -69,7 +68,6 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
     }
 
 
-    // Nouvelle méthode 'generate' attendue par BackroomsChunkGenerator
     @Override
     public void generate(StructureWorldAccess world, Chunk chunk) {
         this.generateFeatures(world, chunk, null);
@@ -80,7 +78,6 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
 
-        // Seulement en haut-gauche de chaque pièce 2x2 chunks
         if (cx % 2 == 0 && cz % 2 == 0) {
             int rx = cx / 2;
             int rz = cz / 2;
@@ -89,7 +86,7 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
             if (rx == 0 && rz == 0) {
                 roomId = new Identifier(Spv_addon.MOD_ID, "kitty/entrance");
             } else {
-                int minRoom = 1, maxRoom = 20;
+                int minRoom = 1, maxRoom = 27;
                 int bound = maxRoom - minRoom + 1;
                 int variant = minRoom;
                 if (bound > 0) variant = minRoom + random.nextInt(bound);
@@ -113,13 +110,9 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
 
             optTpl.get().place(world, basePos, basePos, placeData, random, 2);
 
-            // === AJOUT : pose le loot table sur chaque crate dans la pièce ===
-            // Change ici le lootTable selon ton besoin !
-            // On considère la zone [basePos, basePos+15,15,15] pour une room 16x16x16, ajuste si plus grand
             applyLootTablesToCrates(world, basePos, basePos.add(15, 15, 15), new Identifier("spb-revamped", "wooden_crate"));
         }
 
-        // ======== ROOF 16x16 FULL COVER ========
         MinecraftServer server = world.getServer();
         if (server == null) return;
         StructureTemplateManager mgr = server.getStructureTemplateManager();

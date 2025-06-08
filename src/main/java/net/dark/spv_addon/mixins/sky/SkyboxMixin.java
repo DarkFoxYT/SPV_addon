@@ -22,7 +22,7 @@ public abstract class SkyboxMixin {
     private static void renderCustomSkybox(BufferBuilder builder, float tickDelta, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world != null && mc.world.getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
+        if (mc.world != null && mc.world.getRegistryKey().equals(BackroomsLevels.LEVEL5_BACKROOMS_LEVEL)) {
             CustomSkyboxRenderer.render(new MatrixStack(), 0);
             cir.setReturnValue(null);
         }

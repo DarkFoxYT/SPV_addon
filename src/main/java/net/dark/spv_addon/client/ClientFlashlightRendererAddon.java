@@ -53,12 +53,12 @@ public class ClientFlashlightRendererAddon {
                     for (int i = 0; i < 5; i++) {
                         boolean shouldBeOn = client.world.getRandom().nextBoolean();
 
-                    comp.setFlashLightOn(shouldBeOn);
-                if (shouldBeOn) {
-                    updateLight(player, tickDelta);
-                } else {
-                    removeLights(player);
-                }
+                        comp.setFlashLightOn(shouldBeOn);
+                        if (shouldBeOn) {
+                            updateLight(player, tickDelta);
+                        } else {
+                            removeLights(player);
+                        }
                     }
                 }
                 continue;

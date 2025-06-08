@@ -23,8 +23,6 @@ import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.init.grass.GrassRenderer;
-import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
-import net.dark.spv_addon.world.levels.custom.events.Level207MoveTracker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -98,21 +96,12 @@ public class Spv_addonClient implements ClientModInitializer {
                     public void reload(ResourceManager manager) {
 
                         BlockIdMap.registerBlockID(blockIdMap -> {
-                        blockIdMap.put(ModBlocks.KITTY_PLUSHIE, 36);
-                        blockIdMap.put(ModBlocks.KITTY_PLUSHIE1, 37);
-                        blockIdMap.put(ModBlocks.EXIT_SIGN, 38);
-                        blockIdMap.put(ModBlocks.TABLE, 39);
-                        blockIdMap.put(ModBlocks.BED1, 40);
-                        blockIdMap.put(ModBlocks.BED2, 41);
-                        blockIdMap.put(ModBlocks.IKEA_SHELF, 42);
-                        blockIdMap.put(ModBlocks.IKEA_SHELF1, 43);
-                        blockIdMap.put(ModBlocks.IKEA_SHELF2, 44);
                         blockIdMap.put(ModBlocks.KITTY_FLOOR, 45);
 
                         });
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(true, 0.35F, 2.0F, 256));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 256));
                     }
 
                 });

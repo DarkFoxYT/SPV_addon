@@ -59,6 +59,7 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
         this.generateFeatures(world, chunk, null);
     }
 
+
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         int cx = chunk.getPos().x;

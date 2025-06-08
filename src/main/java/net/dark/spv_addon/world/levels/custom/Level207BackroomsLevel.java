@@ -8,7 +8,9 @@ import com.sp.mixininterfaces.NewServerProperties;
 import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level1BackroomsLevel;
 import com.sp.world.levels.custom.Level2BackroomsLevel;
+import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
@@ -18,27 +20,24 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.chunk.Chunk;
 
 import java.util.*;
 
-/**
- * Represents Backrooms Level 207 in the mod.
- * Handles generation, events, transitions, and specific rules for this level.
- */
 public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
-    private static final int STEPS_BEFORE_WARP = 500; // nombre de blocs à parcourir avant warp
+    private int STEPS_BEFORE_WARP = 300 + random.nextInt(701); // nombre de blocs à parcourir avant warp (300 à 1000)
     private final Map<UUID, Integer> stepsWalked = new HashMap<>();
+    private static final int STEPS_BEFORE_BELLWALKER = 100;
 
-    /**
-     * Constructs Level 207.
-     * Initializes the level with its chunk generator, spawn position, world key, and mod ID.
-     */
+
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
         this.registerTransition((world, playerComponent, from) -> {
@@ -53,14 +52,14 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                             otherPlayerComponent,
                             this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()),
                             BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
-                            com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL
+                            com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
                         ));
                     }
                 }
             }
 
             return playerList;
-        }, "level207 -> level2");
+        }, "level207 -> poolrooms");
     }
 
     private Vec3d calculateLevel2TeleportCoords(PlayerEntity player, ChunkPos chunkPos) {
@@ -75,8 +74,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         }
     }
 
-
-
     public void onPlayerMove(PlayerEntity player, Vec3d oldPos, Vec3d newPos) {
         if (!player.isOnGround()) return;
         int steps = (int) oldPos.distanceTo(newPos);
@@ -84,11 +81,25 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         UUID uuid = player.getUuid();
         stepsWalked.put(uuid, stepsWalked.getOrDefault(uuid, 0) + steps);
 
+        int walked = stepsWalked.get(uuid);
+
+        // Spawn Bell Walkers tous les 100 blocs parcourus
+        if (walked >= STEPS_BEFORE_BELLWALKER) {
+            stepsWalked.put(uuid, walked % STEPS_BEFORE_BELLWALKER);
+            ServerWorld world = (ServerWorld) player.getWorld();
+            for (int i = 0; i < 2 + random.nextInt(3); i++) {
+                double dx = player.getX() + random.nextBetween(-5, 5);
+                double dz = player.getZ() + random.nextBetween(-5, 5);
+                BellWalkerEntity bellWalker = new BellWalkerEntity(ModEntities.SIX_LEG_ENTITY, world);
+                bellWalker.refreshPositionAndAngles(dx, player.getY(), dz, 0, 0);
+                world.spawnEntity(bellWalker);
+            }
+        }
+
         if (stepsWalked.get(uuid) >= STEPS_BEFORE_WARP) {
             stepsWalked.put(uuid, 0);
             PlayerComponent pc = (PlayerComponent) InitializeComponents.PLAYER.get(player);
 
-            // Active le noclip avant le warp
             pc.setShouldNoClip(true);
             pc.sync();
 
@@ -97,54 +108,40 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                     pc,
                     this.getSpawnPos(),
                     BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
-                    com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL
+                    com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
             );
             this.transitionOut(teleport);
 
-            // Désactive le noclip après un court délai (ex: 2 secondes)
             player.getServer().execute(() -> {
                 try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
                 pc.setShouldNoClip(false);
                 pc.sync();
             });
+
+            // Redéfinir un nouveau seuil aléatoire pour le prochain warp
+            STEPS_BEFORE_WARP = 300 + random.nextInt(701);
         }
     }
 
 
 
 
-    /**
-     * Registers custom events for this level.
-     */
     @Override
     public void register() {
-        events.add(Level207AmbienceEvent::new);
         Level207MoveTracker.register(this);
     }
 
 
-
-    /**
-     * Determines the delay before the next event.
-     * @return the delay in ticks.
-     */
     @Override
     public int nextEventDelay() {
-        return this.random.nextBetween(0, 0);
+        return 100;
     }
 
-    /**
-     * Saves the level data to NBT.
-     * @param nbt the NBT container to write data to.
-     */
     @Override
     public void writeToNbt(NbtCompound nbt) {
     }
 
-    /**
-     * Loads the level data from NBT.
-     * @param nbt the NBT container to read data from.
-     */
+
     @Override
     public void readFromNbt(NbtCompound nbt) {
     }
@@ -158,11 +155,17 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         return crossDimensionTeleport.playerComponent().player.isOnGround();
     }
 
-    public void transitionIn(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
+    @Override
+        public void transitionIn (BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport){
+            // Démarre l'événement d'ambiance dès l'entrée du joueur dans le niveau
+            if (!crossDimensionTeleport.world().isClient()) {
+                Level207AmbienceEvent ambienceEvent = new Level207AmbienceEvent();
+                ambienceEvent.init((ServerWorld) crossDimensionTeleport.world());
+            }
     }
 
-    public int getTransitionDuration() {
-        return 30;
+    @Override
+        public int getTransitionDuration () {
+            return 30;
+        }
     }
-
-}

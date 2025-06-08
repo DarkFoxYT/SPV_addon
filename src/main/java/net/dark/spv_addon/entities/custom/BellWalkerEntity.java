@@ -82,14 +82,15 @@ public class BellWalkerEntity extends PathAwareEntity
     @Override
     protected void initGoals() {
         // 0: melee if in range
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.5, true));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.75, true));
         // 1: look around when idle
-        this.goalSelector.add(2, new LookAroundGoal(this));
+        this.goalSelector.add(1, new LookAroundGoal(this));
         // 2: smart wander (move, pause, repeat)
-        this.goalSelector.add(3, new SmartWanderGoal(this, 0.5, 10, 30));
+        this.goalSelector.add(2, new SmartWanderGoal(this, 0.5, 10, 60));
         // 3: agro nearest player who spoke
         this.goalSelector.add(1, new AggroNearestPlayerGoal(this, 20.0));
-        this.goalSelector.add(3, new BellWalkerStalkGoal(this, 0.75, 0.30));
+        // 4: stalk player who made noise
+        this.goalSelector.add(1, new BellWalkerStalkGoal(this, 0.75, 0.30));
 
     }
 

@@ -35,12 +35,16 @@ public class ModItemGroups {
                         entries.add(ModBlocks.CROSS);
                         entries.add(ModBlocks.C_WALL);
                         entries.add(ModBlocks.KITTY_PLUSHIE_DEV);
+                        entries.add(ModItems.TAPE_RECORDER);
+
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.BATTERY_ITEM2);
                         entries.add(ModItems.ALMOND_BOTTLE);
                         entries.add(ModItems.ALMOND_DIRTY);
                         entries.add(ModItems.CANTEEN);
+                        entries.add(ModItems.TAPE1);
+
                     })
                     .build()
     );

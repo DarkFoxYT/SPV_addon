@@ -18,8 +18,8 @@ public class BatteryHud implements HudRenderCallback {
     private static final Identifier BATTERY_2 = new Identifier(MOD_ID, "textures/gui/battery2.png");
     // Les textures sont 66x44 px (batterie vide et pleine)
     private static final int BAR_W = 44, BAR_H = 44;
-    private static final float SCALE = 1.0f; // Tu peux ajuster à 0.75f pour le style
-    private static final int X_MARGIN = 16, Y_MARGIN = 40; // Ajuste pour aligner avec Sanity
+    private static final float SCALE = 1.0f;
+    private static final int X_MARGIN = 16, Y_MARGIN = 40;
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -38,8 +38,8 @@ public class BatteryHud implements HudRenderCallback {
         float alpha = (level <= 15) ? getPulseAlpha() : 1f;
 
         int sw = client.getWindow().getScaledWidth();
-        int x = sw - (int)(BAR_W * SCALE) - 16; // 16px depuis le bord droit
-        int y = 16; // 16px depuis le haut
+        int x = sw - (int)(BAR_W * SCALE) - 16;
+        int y = 16;
 
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);
@@ -58,7 +58,6 @@ public class BatteryHud implements HudRenderCallback {
         RenderSystem.disableBlend();
         dc.getMatrices().pop();
 
-        // Affiche le pourcentage juste sous la barre
         String txt = level + "%";
         int tw = client.textRenderer.getWidth(txt);
         int tx = x + (int)(BAR_W * SCALE) / 2 - tw / 2;

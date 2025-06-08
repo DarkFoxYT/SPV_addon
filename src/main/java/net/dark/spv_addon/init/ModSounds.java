@@ -14,6 +14,10 @@ public class ModSounds {
     public static final SoundEvent DONG = register("stuff.belldong");
     public static final SoundEvent ELEV = register("stuff.elevator");
 
+
+    public static final SoundEvent TAPE1 = register("tapes.tape1");
+    public static final SoundEvent TAPE2 = register("tapes.tape2");
+
     private static SoundEvent register(String name) {
         Identifier id = new Identifier(Spv_addon.MOD_ID, name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));

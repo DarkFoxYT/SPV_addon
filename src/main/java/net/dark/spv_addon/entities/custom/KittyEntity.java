@@ -78,6 +78,8 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
                 this.setYaw(nearest.getYaw());
                 this.setHeadYaw(nearest.getYaw());
                 this.setBodyYaw(nearest.getYaw());
+                // Réinitialise la tête pour qu'elle regarde le joueur après la rotation du corps
+                this.headYaw = nearest.getYaw();
             }
         }
 
@@ -96,8 +98,14 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
             double dy = closest.getEyeY() - this.getEyeY();
             double dz = closest.getZ() - this.getZ();
             double dist = Math.sqrt(dx * dx + dz * dz);
-            this.headYaw = (float)(Math.toDegrees(Math.atan2(dx, dz)));
-            this.headPitch = (float)-(Math.atan2(dy, dist) * (180F / Math.PI));
+            float targetYaw = (float)(Math.toDegrees(Math.atan2(dx, dz)));
+            float targetPitch = (float)-(Math.atan2(dy, dist) * (180F / Math.PI));
+            // Si le corps a tourné, réinitialise la tête pour qu'elle regarde le joueur
+            if (Math.abs(this.getYaw() - this.headYaw) > 1.0F) {
+                this.headYaw = this.getYaw();
+            }
+            this.headYaw = targetYaw;
+            this.headPitch = targetPitch;
         }
     }
 

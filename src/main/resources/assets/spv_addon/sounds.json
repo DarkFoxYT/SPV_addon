@@ -28,5 +28,15 @@
     "sounds": [
       { "name": "spv_addon:stuff/elevator", "stream": false }
     ]
+  },
+  "tapes.tape1": {
+    "sounds": [
+      { "name": "spv_addon:tapes/tape1", "stream": false }
+    ]
+  },
+  "tapes.tape2": {
+    "sounds": [
+      { "name": "spv_addon:tapes/tape2", "stream": false }
+    ]
   }
 }

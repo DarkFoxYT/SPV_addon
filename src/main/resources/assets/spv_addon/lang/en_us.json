@@ -4,8 +4,7 @@
     "item.spv_addon.canteen": "Canteen With Drinkable Water",
     "item.spv_addon.almond_dirty": "Dirty Almond Water",
     "item.spv_addon.almond_water": "Almond Water",
-
-
+    "item.spv_addon.tape1": "tape : Volume 1",
 
     "block.spv_addon.hotel_wall": "Hotel Wall",
     "block.spv_addon.hotel_floor": "Hotel Floor",
@@ -19,20 +18,11 @@
     "block.spv_addon.exit_sign": "EXIT Sign Block",
     "block.spv_addon.kitty_floor": "Kitty Floor Block",
     "block.spv_addon.kitty_wall": "Kity Wall Block",
-    "block.spv_addon.kitty_plushie": "Kitty Plushie Block",
-    "block.spv_addon.kitty_plushie1": "Bitch Block",
-    "block.spv_addon.leveltransferblock": "EXIT Block",
+    "block.spv_addon.kitty_plushie": "Kitty Plushie",
+    "block.spv_addon.kitty_plushie1": "Another Kitty Plushie",
+    "block.spv_addon.tape_recorder": "Tape Recorder",
 
 
-    "itemGroup.spv_addon":"Found Footage Addon",
-
-
-    "item.spv_addon.kitty_plushie.tooltip": "§dIt's so cute! Might save you from something scary...",
-    "item.spv_addon.kitty_plushie1.tooltip": "§dIt's so cute! Might save you from something scary... \\nThis is a rare version ",
-    "item.spv_addon.battery_item.tooltip": "§6Looks like you can use this on your flashlight to regain batteries.",
-    "item.spv_addon.battery_item2.tooltip": "§3Looks like you can use this on your flashlight to regain batteries.",
-    "item.spv_addon.canteen.tooltip": "§aMaybe still water?",
-    "item.spv_addon.almond_dirty.tooltip": "§4This may kill you.",
-    "item.spv_addon.almond_water.tooltip": "§6This will help you a ton."
+    "itemGroup.spv_addon":"The Volatile Addon"
 
 }

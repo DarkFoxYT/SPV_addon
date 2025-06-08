@@ -3,6 +3,7 @@ package net.dark.spv_addon.init;
 import net.dark.spv_addon.items.custom.BatteryItem;
 import net.dark.spv_addon.items.custom.BatteryItem2;
 import net.dark.spv_addon.items.custom.SanityRestoringItem;
+import net.dark.spv_addon.items.custom.TapeItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -11,6 +12,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModItems {
+
+    // Block items
     public static final Item HOTEL_WALL = register("hotel_wall", new BlockItem(ModBlocks.HOTEL_WALL, new FabricItemSettings()));
     public static final Item C_WALL = register("c_wall", new BlockItem(ModBlocks.C_WALL, new FabricItemSettings()));
     public static final Item HOTEL_FLOOR = register("hotel_floor", new BlockItem(ModBlocks.HOTEL_FLOOR, new FabricItemSettings()));
@@ -28,13 +31,17 @@ public class ModItems {
     public static final Item EXIT_SIGN = register("exit_sign", new BlockItem(ModBlocks.EXIT_SIGN, new FabricItemSettings()));
     public static final Item CROSS = register("cross", new BlockItem(ModBlocks.CROSS, new FabricItemSettings()));
     public static final Item GRASS1 = register("grass1", new BlockItem(ModBlocks.GRASS1, new FabricItemSettings()));
+    public static final Item TAPE_RECORDER = register("tape_recorder", new BlockItem(ModBlocks.TAPE_RECORDER, new FabricItemSettings()));
 
-
+    // Custom items
     public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2));
     public static final Item BATTERY_ITEM2 = new BatteryItem2(new Item.Settings().maxCount(2));
     public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 10, 50, false, true, false);
     public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10, false, false, false);
     public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 2, 3, true, false, true);
+
+    // Tape items
+    public static final Item TAPE1 = new TapeItem(new Item.Settings().maxCount(1), ModSounds.TAPE1);
 
 
     public static void registerItems() {
@@ -43,6 +50,9 @@ public class ModItems {
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "canteen"), CANTEEN);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_dirty"), ALMOND_DIRTY);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_water"), ALMOND_BOTTLE);
+
+
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "tape1"), TAPE1);
     }
     private static Item register(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier("spv_addon", name), item);
