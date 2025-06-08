@@ -1,7 +1,7 @@
 ![Volitile Addon](https://github.com/DarkFoxYT/SPV_addon/blob/a06a60760aee728074f5151bae3a80699fcb62a9/src/main/resources/Volitileicon.png)
 
 
-# Space Potatoes Volatile Addon for Space Potatoes Backrooms Revamped!
+# The Volatile Addon for Space Potatoes Found Footage Mod!
 
 
 SPV Addon is a powerful content expansion for [Space Potatoes Backrooms Mod](https://modrinth.com/mod/minecraft-found-footage) Revamped mod that pushes the horror and immersion of the Backrooms even further. This addon is designed for both players seeking new challenges and modders looking to create their own Backrooms content.
@@ -14,7 +14,7 @@ Track your character’s mental state as you explore. Lower sanity leads to hall
 Monitor your thirst and Sanity stats with some HUD overlays. Running out isn’t just an inconvenience—it’s a threat.
 
 **Battery & Flashlight Mechanics:**
-Manage your flashlight’s battery! Stay in the light, or risk being plunged into the darkness… and whatever lurks there.
+Manage your flashlight’s battery! Stay in the light, or risk being plunged into the darkness…
 
 **Custom HUDs & Visual Overlays:**
 Redesigned on-screen elements make your status clear and keep you on edge.
@@ -25,9 +25,6 @@ Experience new levels and more events making you feel disconfort.
 **Lore & player interaction**
 A new lore system is in the production and will be added shortly, the system will be in casset tapes scattered arround everywhere.
 A player voice and interaction will be added aswell giving that imersion of being in a found footage or at least watching one while being one but no voices in multiplayer.
-
-**Extra Modding Hooks:**
-The addon is fully compatible with content creators and modders, providing new ways to add custom mechanics, visuals, and events (details in the wiki).
 
 ## ⚠️ Requirements
 [Space Potatoes Backrooms Mod](https://modrinth.com/mod/minecraft-found-footage)
@@ -51,7 +48,4 @@ Start the game and enjoy a deeper, scarier Backrooms experience!
 Have suggestions, issues, or want to contribute?
 Open an issue on GitHub or join the community Discord.
 
-### Tip
-*Enter the darkness. Survive the unknown.*
-
-**Space Potatoes Volatile Addon: You are not alone.**
+**Space Potatoes Volatile Addon: The never ending expantion.**
