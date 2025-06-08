@@ -1,4 +1,4 @@
-![Volitile Addon](https://github.com/DarkFoxYT/SPV_addon/blob/81e6a2b459c2a075ca2cdd407627f21ff3ee3394/src/main/resources/Volitileicon.png)
+![Volitile Addon](https://github.com/DarkFoxYT/SPV_addon/blob/a06a60760aee728074f5151bae3a80699fcb62a9/src/main/resources/Volitileicon.png)
 
 
 # Space Potatoes Volatile Addon for Space Potatoes Backrooms Revamped!
@@ -10,8 +10,8 @@ SPV Addon is a powerful content expansion for [Space Potatoes Backrooms Mod](htt
 **Sanity System:**
 Track your character’s mental state as you explore. Lower sanity leads to hallucinations and dangerous effects.
 
-**Thirst & Survival HUDs:**
-Monitor your thirst and other survival stats with immersive HUD overlays. Running out isn’t just an inconvenience—it’s a threat.
+**Thirst & Sanity:**
+Monitor your thirst and Sanity stats with some HUD overlays. Running out isn’t just an inconvenience—it’s a threat.
 
 **Battery & Flashlight Mechanics:**
 Manage your flashlight’s battery! Stay in the light, or risk being plunged into the darkness… and whatever lurks there.
@@ -19,8 +19,12 @@ Manage your flashlight’s battery! Stay in the light, or risk being plunged int
 **Custom HUDs & Visual Overlays:**
 Redesigned on-screen elements make your status clear and keep you on edge.
 
-**Unique Events & Cutscenes:**
-Experience new world events, special respawn sequences, and more atmospheric moments.
+**Unique Levels & Events:**
+Experience new levels and more events making you feel disconfort.
+
+**Lore & player interaction**
+A new lore system is in the production and will be added shortly, the system will be in casset tapes scattered arround everywhere.
+A player voice and interaction will be added aswell giving that imersion of being in a found footage or at least watching one while being one but no voices in multiplayer.
 
 **Extra Modding Hooks:**
 The addon is fully compatible with content creators and modders, providing new ways to add custom mechanics, visuals, and events (details in the wiki).
@@ -31,6 +35,8 @@ The addon is fully compatible with content creators and modders, providing new w
 **Fabric API**
 
 **geckolib**
+
+**VoiceChat**
 
 **modmenu (optional)**
 
