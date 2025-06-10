@@ -34,11 +34,11 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
             }
 
             if (from instanceof LevelKittyBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
-                playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL, com.sp.init.BackroomsLevels.LEVEL324_BACKROOMS_LEVEL));
+                playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL, com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL));
             }
 
             return playerList;
-        }, "kitty -> level324");
+        }, "kitty -> poolrooms");
     }
 
 
@@ -71,7 +71,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     public static void ensureSingleKitty(ServerWorld world) {
         if (!kittySpawned) {
             KittyEntity kitty = new KittyEntity(ModEntities.KITTY, world);
-            kitty.refreshPositionAndAngles(15, 1, 15, 0, 0);
+            kitty.refreshPositionAndAngles(15, 2, 15, 0, 0);
             world.spawnEntity(kitty);
             kittySpawned = true;
         }

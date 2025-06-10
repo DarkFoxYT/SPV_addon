@@ -36,7 +36,6 @@ public class ModItemGroups {
                         entries.add(ModBlocks.C_WALL);
                         entries.add(ModBlocks.KITTY_PLUSHIE_DEV);
                         entries.add(ModItems.TAPE_RECORDER);
-                        entries.add(ModItems.VENT);
 
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);

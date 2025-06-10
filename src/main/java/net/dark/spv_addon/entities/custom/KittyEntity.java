@@ -23,13 +23,14 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    // private final IKLegCompKitty<StretchingIKChain, KittyEntity> legComponent;
     public float headYaw = 0.0F;
     public float headPitch = 0.0F;
 
     public KittyEntity(EntityType<? extends KittyEntity> type, World world) {
         super(type, world);
-        this.setBoundingBox(this.getBoundingBox().expand(0.5, 3, 0.5)); // Agrandit la hitbox
+        if (!world.isClient && world.getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+            this.refreshPositionAndAngles(15.0, 2.0, 15.0, this.getYaw(), this.getPitch());
+        }
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -37,6 +38,10 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 4000.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0);
+    }
+
+    public double getSize() {
+        return 2;
     }
 
     @Override
