@@ -35,11 +35,12 @@ public class ModBlocks {
     public static final Block CROSS = new CrossBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block EXIT_SIGN = new ExitSignBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.RED_METAL_CASING).hardness(-1f).noBlockBreakParticles().nonOpaque());
     public static final Block TAPE_RECORDER = new TapeRecorderBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
+    public static final Block VENT = new VentBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
 
 
     public static final Block TABLE = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
-    public static final Block BED1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
-    public static final Block BED2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
+    public static final Block BED1 = new BedBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
+    public static final Block BED2 = new BedBlock2(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
 
 
 
@@ -62,5 +63,6 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "bed1"), BED1);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "bed2"), BED2);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "tape_recorder"), TAPE_RECORDER);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "vent1"), VENT);
     }
 }

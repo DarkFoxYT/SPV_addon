@@ -32,6 +32,7 @@ public class ModItems {
     public static final Item CROSS = register("cross", new BlockItem(ModBlocks.CROSS, new FabricItemSettings()));
     public static final Item GRASS1 = register("grass1", new BlockItem(ModBlocks.GRASS1, new FabricItemSettings()));
     public static final Item TAPE_RECORDER = register("tape_recorder", new BlockItem(ModBlocks.TAPE_RECORDER, new FabricItemSettings()));
+    public static final Item VENT = register("vent1", new BlockItem(ModBlocks.VENT, new FabricItemSettings()));
 
     // Custom items
     public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2));
