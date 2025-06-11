@@ -97,13 +97,11 @@ public class Spv_addonClient implements ClientModInitializer {
 
                         BlockIdMap.registerBlockID(blockIdMap -> {
                         blockIdMap.put(ModBlocks.KITTY_FLOOR, 45);
-                        blockIdMap.put(ModBlocks.FUN_FLOOR, 46);
 
                         });
 
 
                         PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 256));
-                        PbrRegistry.registerPBR(ModBlocks.FUN_FLOOR, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 256));
                     }
 
                 });
