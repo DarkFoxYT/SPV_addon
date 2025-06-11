@@ -24,22 +24,24 @@ public class DeathTeleportComponent implements Component, AutoSyncedComponent {
         if (globalDeathCount >= 3) {
             hasTeleported = true;
             ServerWorld level207 = player.getServer().getWorld(BackroomsLevels.LEVEL207_WORLD_KEY);
-        if (level207 != null) {
-            Vec3d spawn = new Vec3d(16, 66, 16);
-                for (ServerPlayerEntity p : player.getServer().getPlayerManager().getPlayerList()) {
+            if (level207 != null) {
+                Vec3d spawn = new Vec3d(16, 66, 16);
+                  for (ServerPlayerEntity p : player.getServer().getPlayerManager().getPlayerList()) {
                     p.teleport(level207, spawn.x, spawn.y, spawn.z, p.getYaw(), p.getPitch());
-                }
+                 }
             }
         }
     }
 
     @Override
     public void readFromNbt(NbtCompound nbtCompound) {
-        // Pas de persistance pour le compteur global dans ce composant
+        globalDeathCount = nbtCompound.getInt("globalDeathCount");
+        hasTeleported = nbtCompound.getBoolean("hasTeleported");
     }
 
     @Override
     public void writeToNbt(NbtCompound nbtCompound) {
-        // Pas de persistance pour le compteur global dans ce composant
+        nbtCompound.putInt("globalDeathCount", globalDeathCount);
+        nbtCompound.putBoolean("hasTeleported", hasTeleported);
     }
 }

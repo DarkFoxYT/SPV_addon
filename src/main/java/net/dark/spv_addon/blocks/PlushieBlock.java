@@ -1,10 +1,13 @@
 package net.dark.spv_addon.blocks;
 
+import net.dark.spv_addon.registry.SanityLightStore;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.EntityShapeContext;
 import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -15,6 +18,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -23,8 +28,8 @@ public class PlushieBlock extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
-            2, 0, 2,  // from (x, y, z)
-            14, 10, 14 // to (x, y, z) - a bit short and not full width
+            2, 0, 2,
+            14, 10, 14
     );
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
 
@@ -38,9 +43,7 @@ public class PlushieBlock extends HorizontalFacingBlock {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
-    // Rotates a VoxelShape for each direction
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
-        // No rotation for NORTH
         if (dir == Direction.NORTH) return shape;
 
         VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
@@ -48,7 +51,6 @@ public class PlushieBlock extends HorizontalFacingBlock {
 
         for (int i = 0; i < times; ++i) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                // 90 deg Y rotation: (x, z) -> (1-z, x)
                 buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
                         1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
                 ));
@@ -58,31 +60,41 @@ public class PlushieBlock extends HorizontalFacingBlock {
         }
         return buffer[0];
     }
-    // Placement
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        if (!world.isClient) {
+            SanityLightStore.addLight(pos);
+        }
+    }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (!world.isClient()) {
+            SanityLightStore.removeLight(pos);
+        }
+        super.onBroken(world, pos, state);
+    }
+
         @Override
         public BlockState getPlacementState(ItemPlacementContext ctx) {
             return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
         }
 
-        // Properties
         @Override
         protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
             builder.add(FACING);
         }
 
-        // Outline shape (what you see)
         @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
             return ROTATED_SHAPES.get(state.get(FACING));
         }
 
-        // Collision shape (what you bump into)
         @Override
         public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
             return ROTATED_SHAPES.get(state.get(FACING));
         }
 
-        // Rotation and mirror for blockstates (for structure placing etc)
         @Override
         public BlockState rotate(BlockState state, BlockRotation rotation) {
             return state.with(FACING, rotation.rotate(state.get(FACING)));

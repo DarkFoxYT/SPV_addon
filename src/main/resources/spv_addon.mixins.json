@@ -8,15 +8,13 @@
     "PlayerEntityMixin",
     "PlayerTickMixin",
     "blocks.CeilingLightMixin",
-    "blocks.EmergencyLightBlockMixin",
-    "sky.SkyboxMixin"
+    "blocks.EmergencyLightBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "MixinMinecraftClient",
-    "sky.SkyboxMixin"
+    "MixinMinecraftClient"
   ]
 
 

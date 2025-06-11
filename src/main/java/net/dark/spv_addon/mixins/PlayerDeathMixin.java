@@ -2,7 +2,6 @@ package net.dark.spv_addon.mixins;
 
 import net.dark.spv_addon.cca.DeathTeleportComponent;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

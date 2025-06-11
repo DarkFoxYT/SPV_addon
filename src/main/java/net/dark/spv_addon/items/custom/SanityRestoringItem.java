@@ -1,5 +1,3 @@
-// SanityRestoringItem.java
-
 package net.dark.spv_addon.items.custom;
 
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
@@ -44,12 +42,10 @@ public class SanityRestoringItem extends Item {
         SanityComponent sanity = InitializeComponents.SANITY.get(player);
 
         if (!world.isClient) {
-            // Gérer la soif
             if (thirstChange != 0) {
                 int value = decreaseThirst ? -Math.abs(thirstChange) : Math.abs(thirstChange);
                 ThirstManager.increaseThirst(player, value);
             }
-            // Gérer la santé mentale
             if (sanityChange != 0) {
             if (!SanityLightStore.isPlayerInLightRange(world, player)) {
                     int value = decreaseSanity ? -Math.abs(sanityChange) : Math.abs(sanityChange);
@@ -62,14 +58,13 @@ public class SanityRestoringItem extends Item {
             }
                 stack.decrement(1);
 
-            // Effet poison custom
             if (poisoned) {
                 player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
                         net.minecraft.entity.effect.StatusEffects.POISON,
-                        100, // durée en ticks (5 secondes)
-                        0,   // niveau
-                        true, // ambient (pas d'icône)
-                        false // pas de particules
+                        100,
+                        0,
+                        true,
+                        false
                 ));
         }
         }

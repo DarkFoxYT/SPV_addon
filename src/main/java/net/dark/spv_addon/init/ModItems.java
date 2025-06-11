@@ -1,7 +1,6 @@
 package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.items.custom.BatteryItem;
-import net.dark.spv_addon.items.custom.BatteryItem2;
 import net.dark.spv_addon.items.custom.SanityRestoringItem;
 import net.dark.spv_addon.items.custom.TapeItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -36,8 +35,10 @@ public class ModItems {
     public static final Item VENT = register("vent1", new BlockItem(ModBlocks.VENT, new FabricItemSettings()));
 
     // Custom items
-    public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2));
-    public static final Item BATTERY_ITEM2 = new BatteryItem2(new Item.Settings().maxCount(2));
+    public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2), 25);
+    public static final Item BATTERY_ITEM2 = new BatteryItem(new Item.Settings().maxCount(2), 100);
+    public static final Item BATTERY_ITEM3 = new BatteryItem(new Item.Settings().maxCount(2), 75);
+    public static final Item BATTERY_ITEM4 = new BatteryItem(new Item.Settings().maxCount(2), 50);
     public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 10, 50, false, true, false);
     public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10, false, false, false);
     public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 2, 3, true, false, true);
@@ -49,6 +50,8 @@ public class ModItems {
     public static void registerItems() {
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item"), BATTERY_ITEM);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item2"), BATTERY_ITEM2);
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item3"), BATTERY_ITEM3);
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item4"), BATTERY_ITEM4);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "canteen"), CANTEEN);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_dirty"), ALMOND_DIRTY);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_water"), ALMOND_BOTTLE);

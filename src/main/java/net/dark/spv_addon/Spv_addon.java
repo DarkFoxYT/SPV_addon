@@ -3,16 +3,10 @@ package net.dark.spv_addon;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
-import eu.midnightdust.lib.config.MidnightConfig;
-import net.dark.spv_addon.commands.AddonLevelsTPCommand;
-import net.dark.spv_addon.commands.SanityCommand;
-import net.dark.spv_addon.commands.ThirstCommand;
+import net.dark.spv_addon.commands.*;
 import net.dark.spv_addon.init.*;
-import net.dark.spv_addon.init.ModItemGroups;
-import net.dark.spv_addon.init.ModItems;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
-import net.dark.spv_addon.commands.FlashlightBatteryCommand;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
 import net.dark.spv_addon.world.events.LevelRunVoidDamageHandler;
@@ -39,22 +33,17 @@ import static com.sp.SPBRevamped.sendBlackScreenPacket;
 public class Spv_addon implements ModInitializer {
     public static final String MOD_ID = "spv_addon";
     public static final Logger LOGGER = LoggerFactory.getLogger("spv_addon");
-
     public static final DefaultParticleType RAIN_PARTICLE = FabricParticleTypes.simple();
-
 
     @Override
     public void onInitialize() {
-
         Registry.register(Registries.PARTICLE_TYPE, new Identifier(MOD_ID, "rain_particle"), RAIN_PARTICLE);
 
         ModBlockEntities.register();
         ThirstManager.register();
         FlashlightBatteryEvents.register();
-
         ModChunkGenerators.register();
         BackroomsLevels.init();
-
         ModItems.registerItems();
         ModBlocks.registerModBlocks();
         ModItemGroups.registerItemGroups();
@@ -62,16 +51,11 @@ public class Spv_addon implements ModInitializer {
         LevelRunGlobalTicker.init();
         LevelRunVoidDamageHandler.register();
 
-
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
-
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            FlashlightBatteryCommand.register(dispatcher);
-            SanityCommand.register(dispatcher);
-            AddonLevelsTPCommand.register(dispatcher);
-            ThirstCommand.register(dispatcher);
+            SpvCommands.register(dispatcher);
         });
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
@@ -81,23 +65,20 @@ public class Spv_addon implements ModInitializer {
             }
         });
 
-        ServerPlayerEvents.AFTER_RESPAWN.register(((oldPlayer, newPlayer, alive) -> {
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             if(!com.sp.init.BackroomsLevels.isInBackrooms(oldPlayer.getWorld().getRegistryKey())) {
                 return;
             }
-
-            boolean backupInvulnerable;
             try {
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 PlayerComponent playerComponent = InitializeComponents.PLAYER.get(newPlayer);
 
                 sendBlackScreenPacket(newPlayer, 120, false, false);
-                backupInvulnerable = newPlayer.getAbilities().invulnerable;
+                boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
                 newPlayer.getAbilities().invulnerable = true;
                 playerComponent.setShouldRender(false);
                 playerComponent.sync();
 
-                //After YOU CAN'T ESCAPE is over
                 executorService.schedule(() -> {
                     playerComponent.setShouldRender(true);
                     playerComponent.setShouldDoStatic(true);
@@ -112,10 +93,8 @@ public class Spv_addon implements ModInitializer {
                     executorService.shutdown();
                 }, 8000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
-                LOGGER.error("Error in AFTER_RESPAWN event: {}", String.valueOf(e));
+                LOGGER.error("Error in AFTER_RESPAWN event: {}", e);
             }
-        }));
-
-
+        });
     }
 }

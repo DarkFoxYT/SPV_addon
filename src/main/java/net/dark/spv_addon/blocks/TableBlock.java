@@ -62,7 +62,15 @@ public class TableBlock extends Block {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable net.minecraft.entity.LivingEntity placer, net.minecraft.item.ItemStack itemStack) {
-        // Ne place plus de second block
+        if (state.get(PART) == Part.FOOT) {
+            BlockPos headPos = pos.offset(state.get(FACING));
+            BlockState headState = world.getBlockState(headPos);
+            if (headState.isAir()) {
+                world.setBlockState(headPos, state.with(PART, Part.HEAD), 3);
+            } else if (headState.getBlock() != this || headState.get(PART) != Part.HEAD) {
+                world.setBlockState(pos, state.with(PART, Part.HEAD), 3);
+            }
+        }
     }
 
     private static VoxelShape rotateShape180(VoxelShape shape) {

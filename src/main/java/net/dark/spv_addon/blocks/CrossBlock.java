@@ -49,7 +49,6 @@ public class CrossBlock extends HorizontalFacingBlock {
 
         for (int i = 0; i < times; ++i) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                // 90 deg Y rotation: (x, z) -> (1-z, x)
                 buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
                         1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
                 ));

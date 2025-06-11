@@ -66,10 +66,8 @@ public class BedBlock extends Block {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable net.minecraft.entity.LivingEntity placer, net.minecraft.item.ItemStack itemStack) {
-        // Ne place plus de second block
     }
 
-    // Rotation 180° autour du pied (FOOT)
     private static VoxelShape rotateShape180Foot(VoxelShape shape) {
         VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
@@ -84,7 +82,6 @@ public class BedBlock extends Block {
         return buffer[0];
     }
 
-    // Rotation 90° autour du pied (FOOT)
     private static VoxelShape rotateShape90Foot(VoxelShape shape) {
         VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
@@ -99,7 +96,6 @@ public class BedBlock extends Block {
         return buffer[0];
     }
 
-    // Rotation 270° autour du pied (FOOT)
     private static VoxelShape rotateShape270Foot(VoxelShape shape) {
         VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {

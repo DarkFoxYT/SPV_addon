@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "spv_addon",
-  "version": "1.0",
+  "version": "1.0.0 - BETA 1",
   "name": "The Volatile Addon",
-  "description": "Adds stuff to space potatoes found footage mod",
+  "description": "Adds a bunch of stuff to space potatoes found footage mod",
+    "icon": "Volatileicon.png",
   "authors": [
-    "DarkFox"
+    "DarkFox Studios"
   ],
   "accessWidener": "spv_addon.accesswidener",
 
@@ -26,7 +27,6 @@
   "custom": {
     "cardinal-components": [
       "spv_addon:bell_walker",
-      "spv_addon:kitty",
       "spv_addon:thirst",
       "spv_addon:flashlight_battery",
       "spv_addon:sanity",

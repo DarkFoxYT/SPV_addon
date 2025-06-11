@@ -7,7 +7,8 @@ import net.dark.spv_addon.Spv_addon;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -23,9 +24,7 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
 
     @Override
     public void initialize(VoicechatApi api) {
-        // Assign the API properly!
         decoders.clear();
-
     }
 
     @Override
@@ -38,9 +37,12 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
 
     private void onMicrophonePacket(MicrophonePacketEvent event) {
         VoicechatConnection sender = event.getSenderConnection();
-        if (sender != null && sender.getPlayer().getPlayer() instanceof PlayerEntity player) {
+        if (sender != null) {
+            Object playerObj = sender.getPlayer().getPlayer();
+            if (playerObj instanceof PlayerEntity player) {
             justMadeNoise.add(player.getUuid());
         }
+    }
     }
 
     private void onServerStart(VoicechatServerStartedEvent event) {
@@ -57,20 +59,21 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
         UUID uuid = event.getPlayerUuid();
         removePlayerDecoder(uuid, decoders.get(uuid));
         justMadeNoise.remove(uuid);
-
     }
 
     private void removePlayerDecoder(UUID uuid, OpusDecoder decoder) {
         if (decoder != null) {
-            try { decoder.close(); } catch (Exception ignored) {}
-
+            try {
+                decoder.close();
+            } catch (Exception ignored) {}
         }
         decoders.remove(uuid);
-
     }
 
+    public static boolean hasJustMadeNoise(UUID uuid) {
+        return justMadeNoise.contains(uuid);
+    }
 
-    /** Call this once per server tick to reset the sound status */
     public static void resetNoiseEachTick(MinecraftServer server) {
         justMadeNoise.clear();
     }

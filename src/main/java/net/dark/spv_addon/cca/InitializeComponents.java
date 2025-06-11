@@ -8,7 +8,6 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
-import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -21,8 +20,6 @@ public class InitializeComponents implements EntityComponentInitializer {
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "bell_walker"), BellWalkerComponent.class);
     public static final ComponentKey<FlashlightBatteryComponent> FLASHLIGHT_BATTERY =
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "flashlight_battery"), FlashlightBatteryComponent.class);
-    public static final ComponentKey<KittyComponent> KITTY =
-            ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "kitty"), KittyComponent.class);
     public static final ComponentKey<ThirstComponent> THIRST =
             ComponentRegistry.getOrCreate(new Identifier(Spv_addon.MOD_ID, "thirst"), ThirstComponent.class);
     public static final ComponentKey<SanityComponent> SANITY =
@@ -37,7 +34,6 @@ public class InitializeComponents implements EntityComponentInitializer {
 
         registry.registerFor(BellWalkerEntity.class, BELL_WALKER, BellWalkerComponent::new);
         registry.registerFor(ServerPlayerEntity.class, DEATH_TELEPORT, DeathTeleportComponent::new);
-        registry.registerFor(KittyEntity.class, KITTY, KittyComponent::new);
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
         registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);
         registry.registerForPlayers(RUN_TIMER, player -> new RunTimerComponent(), RespawnCopyStrategy.ALWAYS_COPY);

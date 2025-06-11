@@ -24,7 +24,7 @@ public class BackroomsLevels {
     public static final RegistryKey<World> LEVEL207_WORLD_KEY =
             RegistryKey.of(RegistryKeys.WORLD, new Identifier(Spv_addon.MOD_ID, "level207"));
 
-    // === SPV LEVEL OBJECTS ===
+    // === SPV LEVELs ===
     public static final BackroomsLevel LEVEL5_BACKROOMS_LEVEL = new Level5BackroomsLevel();
     public static final BackroomsLevel LEVELRUN_BACKROOMS_LEVEL = new LevelRUNBackroomsLevel();
     public static final BackroomsLevel LEVEL_IKEA_BACKROOMS_LEVEL = new LevelIKEA();

@@ -26,29 +26,18 @@ public class SanityLightStore {
     }
 
     public static boolean isNearLight(BlockPos playerPos, int radius) {
-        for (BlockPos lightPos : REGISTERED_LIGHT_BLOCKS) {
-            if (lightPos.isWithinDistance(playerPos, radius)) {
-                return true;
-            }
-        }
-        return false;
+        return REGISTERED_LIGHT_BLOCKS.stream()
+                .anyMatch(lightPos -> lightPos.isWithinDistance(playerPos, radius));
     }
 
     public static boolean isPlayerInLightRange(World world, PlayerEntity player) {
         BlockPos playerPos = player.getBlockPos();
-
-        for (BlockPos lightSource : REGISTERED_LIGHT_BLOCKS) {
-            if (lightSource.getSquaredDistance(playerPos) < RADIUS_SQ) {
-                return true;
+        return REGISTERED_LIGHT_BLOCKS.stream()
+                .anyMatch(lightSource -> lightSource.getSquaredDistance(playerPos) < RADIUS_SQ);
             }
         }
 
-        return false;
-    }
-}
-
-
-/* (for custom blocks if you wanna use it)
+/* (pour blocs personnalisés si besoin)
 @Override
 public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
     if (!world.isClient) {

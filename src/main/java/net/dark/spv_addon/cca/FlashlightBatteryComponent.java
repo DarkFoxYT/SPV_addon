@@ -1,5 +1,3 @@
-// File: net/dark/spv_addon/cca/FlashlightBatteryComponent.java
-
 package net.dark.spv_addon.cca;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;

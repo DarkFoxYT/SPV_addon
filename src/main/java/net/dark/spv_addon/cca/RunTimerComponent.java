@@ -5,7 +5,7 @@ import net.minecraft.nbt.NbtCompound;
 
 public class RunTimerComponent implements AutoSyncedComponent {
     private int ticksSpentInBackrooms = 0;
-    private int noclipThreshold = 12000; // 10 min (12000 ticks, 20 ticks = 1 sec)
+    private int noclipThreshold = 18000;
     private boolean active = false;
 
     @Override

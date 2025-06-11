@@ -1,38 +1,64 @@
-// File: net/dark/spv_addon/items/custom/BatteryItem.java
-
 package net.dark.spv_addon.items.custom;
 
 import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class BatteryItem extends Item {
+    private final int chargeAmount;
+    private static final int FLASHLIGHT_DISABLE_TICKS = 4 * 20;
+    private static final String NBT_RECHARGE_TICKS = "RechargeTicks";
 
-    public BatteryItem(Settings settings) {
+    public BatteryItem(Settings settings, int chargeAmount) {
         super(settings);
+        this.chargeAmount = chargeAmount;
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            int current = BatteryManager.getBattery(user.getUuid());
-            if (current < 100) {
-                int added = Math.min(10, 50 - current);
-                BatteryManager.setBattery(user.getUuid(), current + added);
-                user.getStackInHand(hand).decrement(1);
-                user.sendMessage(Text.literal("Battery charged by " + added + "%. Now at " + (current + added) + "%"), false);
-                return TypedActionResult.success(user.getStackInHand(hand));
-            } else {
-                user.sendMessage(Text.literal("Battery is already full."), false);
-                return TypedActionResult.fail(user.getStackInHand(hand));
-            }
+            ItemStack stack = user.getStackInHand(hand);
+            playBatterySound(world, user);
+
+            BatteryManager.setBattery(user.getUuid(), 0);
+            stack.decrement(1);
+            user.sendMessage(Text.literal("Changing Battery"), true);
+
+            NbtCompound nbt = stack.getOrCreateNbt();
+            nbt.putInt(NBT_RECHARGE_TICKS, FLASHLIGHT_DISABLE_TICKS);
+
+            return TypedActionResult.success(stack);
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, net.minecraft.entity.Entity entity, int slot, boolean selected) {
+        if (!world.isClient && entity instanceof PlayerEntity player) {
+            NbtCompound nbt = stack.getOrCreateNbt();
+            if (nbt.contains(NBT_RECHARGE_TICKS)) {
+                int ticks = nbt.getInt(NBT_RECHARGE_TICKS);
+                if (ticks > 0) {
+                    nbt.putInt(NBT_RECHARGE_TICKS, ticks - 1);
+                } else {
+                    int added = Math.min(chargeAmount, 100);
+                    int current = BatteryManager.getBattery(player.getUuid());
+                    BatteryManager.setBattery(player.getUuid(), Math.min(current + added, 100));
+                    player.sendMessage(Text.literal("Battery Changed"), true);
+                    nbt.remove(NBT_RECHARGE_TICKS);
+                }
+            }
+        }
+    }
+
+    protected void playBatterySound(World world, PlayerEntity user) {
+        user.playSound(ModSounds.ELEV, 1.0F, 1.0F);
     }
 }

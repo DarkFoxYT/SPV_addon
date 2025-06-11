@@ -1,4 +1,3 @@
-// src/main/java/net/dark/spv_addon/blocks/BedBlock2.java
 package net.dark.spv_addon.blocks;
 
 import net.minecraft.block.*;

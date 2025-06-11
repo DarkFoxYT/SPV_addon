@@ -1,5 +1,3 @@
-// net.dark.spv_addon.init.ModChunkGenerators.java
-
 package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.Spv_addon;
@@ -18,27 +16,27 @@ public class ModChunkGenerators {
     public static void register() {
         Registry.register(
                 Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level5_chunk_generator"),  // all lowercase
+                new Identifier(Spv_addon.MOD_ID, "level5_chunk_generator"),
                 Level5ChunkGenerator.CODEC
         );
         Registry.register(
                 Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level207_chunk_generator"),  // all lowercase
+                new Identifier(Spv_addon.MOD_ID, "level207_chunk_generator"),
                 Level207ChunkGenerator.CODEC
         );
         Registry.register(
                 Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "levelrun_chunk_generator"),  // all lowercase, no caps
+                new Identifier(Spv_addon.MOD_ID, "levelrun_chunk_generator"),
                 RunChunkGenerator.CODEC
         );
         Registry.register(
                 Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level_ikea"), // all lowercase
+                new Identifier(Spv_addon.MOD_ID, "level_ikea"),
                 LevelIKEAChunkGenerator.CODEC
         );
         Registry.register(
                 Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level_kitty"), // all lowercase
+                new Identifier(Spv_addon.MOD_ID, "level_kitty"),
                 KittyChunkGenerator.CODEC
         );
     }

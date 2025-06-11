@@ -10,7 +10,7 @@ public interface SanityLightEmitter {
 
     static boolean isPlayerNearSanityLight(World world, BlockPos playerPos) {
         int checkRadius = 16;
-        int verticalMargin = 5; // Met 0 si tu veux vraiment que Y strictement égal
+        int verticalMargin = 5;
         BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 
         for (int dx = -checkRadius; dx <= checkRadius; dx++) {

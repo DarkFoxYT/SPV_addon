@@ -54,31 +54,26 @@ public class ExitSignBlock extends Block {
         }
         return buffer[0];
     }
-    // Placement
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
-    // Properties
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
-    // Outline shape (what you see)
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
         return ROTATED_SHAPES.get(state.get(FACING));
     }
 
-    // Collision shape (what you bump into)
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
         return ROTATED_SHAPES.get(state.get(FACING));
     }
 
-    // Rotation and mirror for blockstates (for structure placing etc)
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
