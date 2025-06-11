@@ -1,8 +1,13 @@
 {
   "variants": {
-    "facing=north": { "model": "spv_addon:block/table", "y": 180 },
-    "facing=east":  { "model": "spv_addon:block/table", "y": 270 },
-    "facing=south": { "model": "spv_addon:block/table", "y": 0 },
-    "facing=west":  { "model": "spv_addon:block/table", "y": 90 }
+    "facing=north,part=foot": { "model": "spv_addon:block/table", "y": 180 },
+    "facing=south,part=foot": { "model": "spv_addon:block/table" },
+    "facing=west,part=foot": { "model": "spv_addon:block/table", "y": 90 },
+    "facing=east,part=foot": { "model": "spv_addon:block/table", "y": 270 },
+
+    "facing=north,part=head": { "model": "spv_addon:block/inv", "y": 180 },
+    "facing=south,part=head": { "model": "spv_addon:block/inv" },
+    "facing=west,part=head": { "model": "spv_addon:block/inv", "y": 90 },
+    "facing=east,part=head": { "model": "spv_addon:block/inv", "y": 270 }
   }
 }

@@ -21,7 +21,7 @@ import static com.sp.init.BackroomsLevels.*;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {
-    private static final boolean IS_DEV = true; // Passe à true pour le mode dev
+    private static final boolean IS_DEV = false; // Passe à true pour le mode dev
     private static int globalTimerTicks = -1;
     private static boolean alreadyActivated = false;
     private static final int TICKS_PER_MIN = 20 * 60;

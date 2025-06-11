@@ -1,3 +1,4 @@
+// src/main/java/net/dark/spv_addon/entities/custom/BellWalkerEntity.java
 package net.dark.spv_addon.entities.custom;
 
 import com.sp.entity.ik.components.IKAnimatable;
@@ -38,32 +39,36 @@ public class BellWalkerEntity extends PathAwareEntity
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache((GeoAnimatable) this);
     private final IKLegCompDark<TargetReachingIKChain, BellWalkerEntity> legComponent;
 
+    private PlayerEntity stalkTarget = null;
+    private int stalkCooldown = 0;
+    private Vec3d lastHeardPos = null;
+
     public BellWalkerEntity(EntityType<? extends BellWalkerEntity> type, World world) {
         super(type, world);
         this.navigation = new SlightlyBetterMobNavigation(this, world);
 
         List<ServerLimb> endpoints = List.of(
-                new ServerLimb( 1, 0.0,  1.5),
-                new ServerLimb(-1, 0.0,  1.5),
-                new ServerLimb( 1.2, 0.0,  0),
-                new ServerLimb(-1.2, 0.0,  0),
-                new ServerLimb( 1, 0.0, -1.5),
-                new ServerLimb(-1, 0.0, -1.5)
+                new ServerLimb( 1.25, 0.0,  1.25),
+                new ServerLimb(-1.25, 0.0,  1.25),
+                new ServerLimb( 1.25, 0.0,  0.1),
+                new ServerLimb(-1.25, 0.0,  0.1),
+                new ServerLimb( 1.25, 0.0, -1.25),
+                new ServerLimb(-1.25, 0.0, -1.25)
         );
         IKLegCompDark.LegSetting setting = new IKLegCompDark.LegSetting.Builder()
-                .maxDistance(1.5)
+                .maxDistance(0.5)
                 .stepInFront(1)
                 .movementSpeed(0.7)
-                .maxStandingStillDistance(0.1)
+                .maxStandingStillDistance(0.2)
                 .standStillCounter(20)
                 .build();
         List<IKLegCompDark.LegSetting> settings = endpoints.stream()
                 .map(e -> setting).collect(Collectors.toList());
         TargetReachingIKChain chain = new TargetReachingIKChain(
-                new Segment.Builder().length(0.40).build(),
+                new Segment.Builder().length(0.20).build(),
+                new Segment.Builder().length(0.60).build(),
                 new Segment.Builder().length(0.80).build(),
-                new Segment.Builder().length(1.00).build(),
-                new Segment.Builder().length(0.60).build()
+                new Segment.Builder().length(0.40).build()
         );
         this.legComponent = new IKLegCompDark<>(
                 settings, endpoints,
@@ -79,34 +84,32 @@ public class BellWalkerEntity extends PathAwareEntity
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5);
     }
 
-    @Override
-    protected void initGoals() {
-        // 0: melee if in range
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.75, true));
-        // 1: look around when idle
-        this.goalSelector.add(1, new LookAroundGoal(this));
-        // 2: smart wander (move, pause, repeat)
-        this.goalSelector.add(2, new SmartWanderGoal(this, 0.5, 10, 60));
-        // 3: agro nearest player who spoke
-        this.goalSelector.add(1, new AggroNearestPlayerGoal(this, 20.0));
-        // 4: stalk player who made noise
-        this.goalSelector.add(1, new BellWalkerStalkGoal(this, 0.75, 0.30));
-
+    /** Permet à la goal de réinitialiser la cible de traque */
+    public void clearStalkTarget() {
+        this.stalkTarget = null;
+        this.stalkCooldown = 0;
+        this.lastHeardPos = null;
     }
 
-    private PlayerEntity stalkTarget = null;
-    private int stalkCooldown = 0;
-    private Vec3d lastHeardPos = null;
-
+    @Override
+    protected void initGoals() {
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.75, true));
+        this.goalSelector.add(1, new LookAroundGoal(this));
+        this.goalSelector.add(2, new SmartWanderGoal(this, 0.5, 10, 60));
+        this.goalSelector.add(1, new AggroNearestPlayerGoal(this, 20.0));
+        this.goalSelector.add(1, new BellWalkerStalkGoal(this, 0.75, 0.30));
+    }
 
     public void onPlayerSoundHeard(PlayerEntity player, Vec3d pos) {
         this.stalkTarget = player;
         this.lastHeardPos = pos;
         this.stalkCooldown = 100; // ticks (5s)
     }
+
     public boolean hasStalkTarget() {
         return stalkTarget != null && stalkCooldown > 0 && stalkTarget.isAlive() && stalkTarget.distanceTo(this) < 32;
     }
+
     public PlayerEntity getStalkTarget() {
         return hasStalkTarget() ? stalkTarget : null;
     }
@@ -116,16 +119,16 @@ public class BellWalkerEntity extends PathAwareEntity
         super.tick();
         legComponent.tickServer(this);
 
-        // Tick down cooldown
+        // Gestion du cooldown de traque
         if (stalkCooldown > 0) {
             stalkCooldown--;
             if (stalkCooldown == 0) stalkTarget = null;
         }
-        // Make bell sounds randomly if not stalking
+        // Sons de cloche aléatoires si non en traque
         if (!hasStalkTarget() && age % 40 == 0 && this.getWorld().random.nextInt(8) == 0) {
             this.playSound(ModSounds.BELLWALKER_BELL, 1.0f, 1.0f);
         }
-        // Check for noisy players each tick (core voice/move detection)
+        // Détection des joueurs bruyants
         if (!this.getWorld().isClient) {
             double detectRadius = 18.0;
             for (PlayerEntity player : this.getWorld().getPlayers()) {
@@ -136,10 +139,10 @@ public class BellWalkerEntity extends PathAwareEntity
                 }
             }
         }
+        // Si traque, cible le joueur
         if (hasStalkTarget()) {
-            this.setTarget(this.stalkTarget); // Vanilla method: makes mob attack
+            this.setTarget(this.stalkTarget);
         }
-
     }
 
     @Override
@@ -162,7 +165,6 @@ public class BellWalkerEntity extends PathAwareEntity
     }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        // no custom GeckoLib controllers here
     }
 
     public void applyModelPose(ModelAccessor model) {
@@ -205,7 +207,6 @@ public class BellWalkerEntity extends PathAwareEntity
         public void tick() {
             if (idlePhase) {
                 if (--idleTicks <= 0) {
-                    // pick a reachable random target within 10 blocks
                     double dx = (mob.getRandom().nextDouble() * 2 - 1) * 10;
                     double dz = (mob.getRandom().nextDouble() * 2 - 1) * 10;
                     BlockPos dest = mob.getBlockPos().add((int)dx, 0, (int)dz);
@@ -216,9 +217,7 @@ public class BellWalkerEntity extends PathAwareEntity
                 }
             } else {
                 if (mob.getNavigation().isIdle()) {
-                    // movement finished: play your custom stop sound
                     mob.playSound(ModSounds.BELLWALKER_BELL, 0.5f, 0.5f);
-
                     idlePhase = true;
                     resetIdle();
                 }

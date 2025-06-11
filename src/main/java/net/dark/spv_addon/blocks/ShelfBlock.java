@@ -1,34 +1,30 @@
 package net.dark.spv_addon.blocks;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.*;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-public class TableBlock extends Block {
+public class ShelfBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
 
-    private static final VoxelShape TOP = VoxelShapes.cuboid(0, 0.75, 0, 1, 1, 2);
-    private static final VoxelShape LEG1 = VoxelShapes.cuboid(0, -0.125, 0, 0.125, 0.75, 0.125);
-    private static final VoxelShape LEG2 = VoxelShapes.cuboid(0.875, -0.125, 0, 1, 0.75, 0.125);
-    private static final VoxelShape LEG3 = VoxelShapes.cuboid(0, -0.125, 1.875, 0.125, 0.75, 2);
-    private static final VoxelShape LEG4 = VoxelShapes.cuboid(0.875, -0.125, 1.875, 1, 0.75, 2);
-
-    private static final VoxelShape SHAPE = VoxelShapes.union(TOP, LEG1, LEG2, LEG3, LEG4);
-    private static final VoxelShape SHAPE_EMPTY = VoxelShapes.empty();
+    private static final VoxelShape SHAPE = VoxelShapes.union(
+            VoxelShapes.cuboid(0.0, 0.0, 0.0, 1.0, 1.0/16.0, 1.0),
+            VoxelShapes.cuboid(0.0, 1.0/16.0, 7.0/16.0, 1.0, 1.0, 9.0/16.0)
+    );
 
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
 
@@ -39,30 +35,20 @@ public class TableBlock extends Block {
         ROTATED_SHAPES.put(Direction.EAST, rotateShape270(SHAPE));
     }
 
-    public TableBlock(Settings settings) {
+    public ShelfBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.stateManager.getDefaultState()
-                .with(FACING, Direction.NORTH)
-                .with(PART, Part.FOOT));
+        setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
+        builder.add(FACING);
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction facing = ctx.getHorizontalPlayerFacing();
-        BlockPos headPos = ctx.getBlockPos().offset(facing);
-        if (!ctx.getWorld().getBlockState(headPos).canReplace(ctx)) return null;
-        return getDefaultState().with(FACING, facing).with(PART, Part.FOOT);
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable net.minecraft.entity.LivingEntity placer, net.minecraft.item.ItemStack itemStack) {
-        // Ne place plus de second block
+        return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     private static VoxelShape rotateShape180(VoxelShape shape) {
@@ -96,13 +82,13 @@ public class TableBlock extends Block {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-        return state.get(PART) == Part.HEAD ? SHAPE_EMPTY : ROTATED_SHAPES.get(state.get(FACING));
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, net.minecraft.util.math.BlockPos pos, ShapeContext context) {
+        return ROTATED_SHAPES.get(state.get(FACING));
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-        return state.get(PART) == Part.HEAD ? SHAPE_EMPTY : ROTATED_SHAPES.get(state.get(FACING));
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, net.minecraft.util.math.BlockPos pos, ShapeContext context) {
+        return ROTATED_SHAPES.get(state.get(FACING));
     }
 
     @Override
@@ -113,21 +99,5 @@ public class TableBlock extends Block {
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
-
-    public enum Part implements net.minecraft.util.StringIdentifiable {
-        HEAD("head"),
-        FOOT("foot");
-
-        private final String name;
-
-        Part(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
     }
 }

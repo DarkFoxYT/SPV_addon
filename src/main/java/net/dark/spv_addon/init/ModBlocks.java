@@ -27,9 +27,9 @@ public class ModBlocks {
     public static final Block KITTY_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block GRASS1 = new Block(FabricBlockSettings.copyOf(Blocks.DIRT).strength(-1.0F).noBlockBreakParticles().sounds(SprintBlockSoundGroup.GRASS2));
     public static final Block HOTEL_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
-    public static final Block IKEA_SHELF = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
-    public static final Block IKEA_SHELF1 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
-    public static final Block IKEA_SHELF2 = new TableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
+    public static final Block IKEA_SHELF = new ShelfBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
+    public static final Block IKEA_SHELF1 = new ShelfBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
+    public static final Block IKEA_SHELF2 = new ShelfBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
     public static final Block KITTY_PLUSHIE = new PlushieBlock(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_PLUSHIE1 = new PlushieBlock(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_PLUSHIE_DEV = new PlushieBlock_bonk(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
