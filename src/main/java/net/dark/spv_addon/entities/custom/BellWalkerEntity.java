@@ -1,4 +1,3 @@
-// src/main/java/net/dark/spv_addon/entities/custom/BellWalkerEntity.java
 package net.dark.spv_addon.entities.custom;
 
 import com.sp.entity.ik.components.IKAnimatable;
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
 public class BellWalkerEntity extends PathAwareEntity
         implements IKAnimatable<BellWalkerEntity>, GeoAnimatable {
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache((GeoAnimatable) this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final IKLegCompDark<TargetReachingIKChain, BellWalkerEntity> legComponent;
 
     private PlayerEntity stalkTarget = null;
@@ -84,7 +83,6 @@ public class BellWalkerEntity extends PathAwareEntity
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5);
     }
 
-    /** Permet à la goal de réinitialiser la cible de traque */
     public void clearStalkTarget() {
         this.stalkTarget = null;
         this.stalkCooldown = 0;
@@ -103,7 +101,7 @@ public class BellWalkerEntity extends PathAwareEntity
     public void onPlayerSoundHeard(PlayerEntity player, Vec3d pos) {
         this.stalkTarget = player;
         this.lastHeardPos = pos;
-        this.stalkCooldown = 100; // ticks (5s)
+        this.stalkCooldown = 100;
     }
 
     public boolean hasStalkTarget() {
@@ -119,16 +117,13 @@ public class BellWalkerEntity extends PathAwareEntity
         super.tick();
         legComponent.tickServer(this);
 
-        // Gestion du cooldown de traque
         if (stalkCooldown > 0) {
             stalkCooldown--;
             if (stalkCooldown == 0) stalkTarget = null;
         }
-        // Sons de cloche aléatoires si non en traque
         if (!hasStalkTarget() && age % 40 == 0 && this.getWorld().random.nextInt(8) == 0) {
             this.playSound(ModSounds.BELLWALKER_BELL, 1.0f, 1.0f);
         }
-        // Détection des joueurs bruyants
         if (!this.getWorld().isClient) {
             double detectRadius = 18.0;
             for (PlayerEntity player : this.getWorld().getPlayers()) {
@@ -139,7 +134,6 @@ public class BellWalkerEntity extends PathAwareEntity
                 }
             }
         }
-        // Si traque, cible le joueur
         if (hasStalkTarget()) {
             this.setTarget(this.stalkTarget);
         }

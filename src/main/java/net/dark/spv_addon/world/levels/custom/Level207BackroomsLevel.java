@@ -44,7 +44,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
             if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= 12.0F && playerComponent.player.isOnGround()) {
                 for(PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
-                    PlayerComponent otherPlayerComponent = (PlayerComponent) InitializeComponents.PLAYER.get(player);
+                    PlayerComponent otherPlayerComponent = InitializeComponents.PLAYER.get(player);
                     double playerY = player.getPos().getY();
                     if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY && playerY == 60.0 && player.isOnGround()) {
                         playerList.add(new BackroomsLevel.CrossDimensionTeleport(
@@ -98,7 +98,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
         if (stepsWalked.get(uuid) >= STEPS_BEFORE_WARP) {
             stepsWalked.put(uuid, 0);
-            PlayerComponent pc = (PlayerComponent) InitializeComponents.PLAYER.get(player);
+            PlayerComponent pc = InitializeComponents.PLAYER.get(player);
 
             pc.setShouldNoClip(true);
             pc.sync();
@@ -160,7 +160,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             // Démarre l'événement d'ambiance dès l'entrée du joueur dans le niveau
             if (!crossDimensionTeleport.world().isClient()) {
                 Level207AmbienceEvent ambienceEvent = new Level207AmbienceEvent();
-                ambienceEvent.init((ServerWorld) crossDimensionTeleport.world());
+                ambienceEvent.init(crossDimensionTeleport.world());
             }
     }
 

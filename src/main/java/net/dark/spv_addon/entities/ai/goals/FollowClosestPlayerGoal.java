@@ -13,7 +13,7 @@ public class FollowClosestPlayerGoal extends Goal {
     private final float minDistance;
     private final float maxDistance;
     private PlayerEntity target;
-    private double speed;
+    private final double speed;
 
 
     public FollowClosestPlayerGoal(SkinWalkerEntity entity, float minDistance, float maxDistance, float speed) {
@@ -65,11 +65,7 @@ public class FollowClosestPlayerGoal extends Goal {
 
     @Override
     public void tick() {
-        if(this.isTooFar(this.target)){
-            this.entity.setSprinting(true);
-        } else {
-            this.entity.setSprinting(false);
-        }
+        this.entity.setSprinting(this.isTooFar(this.target));
 
         this.entity.getNavigation().startMovingTo(this.target, this.speed);
     }

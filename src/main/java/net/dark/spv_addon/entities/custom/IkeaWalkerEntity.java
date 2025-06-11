@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class IkeaWalkerEntity extends PathAwareEntity
         implements IKAnimatable<IkeaWalkerEntity>, GeoAnimatable {
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache((GeoAnimatable) this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final IKLegCompDark<TargetReachingIKChain, IkeaWalkerEntity> legComponent;
 
     public IkeaWalkerEntity(EntityType<? extends IkeaWalkerEntity> type, World world) {
@@ -35,8 +35,8 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
         // 1. Setup des endpoints
         List<ServerLimb> endpoints = List.of(
-                new ServerLimb(0.1, 0.0,  0.1), // jambe gauche
-                new ServerLimb(-0.1, 0.0, 0.1)  // jambe droite
+                new ServerLimb(0.1, 0.0,  0.1),
+                new ServerLimb(-0.1, 0.0, 0.1)
         );
         // 2. Settings
         IKLegCompDark.LegSetting setting = new IKLegCompDark.LegSetting.Builder()
@@ -49,7 +49,6 @@ public class IkeaWalkerEntity extends PathAwareEntity
         List<IKLegCompDark.LegSetting> settings = endpoints.stream()
                 .map(e -> setting).collect(Collectors.toList());
 
-        // 3. Chaînes IK
         TargetReachingIKChain leftLeg = new TargetReachingIKChain(
                 new Segment.Builder().length(0.2).build(),
                 new Segment.Builder().length(0.23).build(),
@@ -71,11 +70,8 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
     @Override
     protected void initGoals() {
-        // 0: melee if in range
         this.goalSelector.add(0, new MeleeAttackGoal(this, 1.0, true));
-        // 1: look around when idle
         this.goalSelector.add(1, new LookAroundGoal(this));
-        // 2: smart wander (move, pause, repeat)
         this.goalSelector.add(2, new AggroNearestPlayerGoalSmart(this, 0.5, 20, 60));
 
     }
@@ -115,7 +111,7 @@ public class IkeaWalkerEntity extends PathAwareEntity
     }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        // no custom GeckoLib controllers here
+
     }
 
     public void applyModelPose(ModelAccessor model) {

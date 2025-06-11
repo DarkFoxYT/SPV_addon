@@ -9,7 +9,6 @@ import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
-import net.dark.spv_addon.world.events.LevelRunVoidDamageHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -49,7 +48,6 @@ public class Spv_addon implements ModInitializer {
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
         LevelRunGlobalTicker.init();
-        LevelRunVoidDamageHandler.register();
 
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();

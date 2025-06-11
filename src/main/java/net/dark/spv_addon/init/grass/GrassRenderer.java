@@ -182,14 +182,14 @@ public class GrassRenderer {
         float xStep = 0.1F / (float)segments;
 
         for(int i = 0; i < segments; ++i) {
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)(i + 1)), (double)(this.getGrassHeight() / (float)segments * (float)(i + 1)), (double)0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)(i + 1)), (double)(this.getGrassHeight() / (float)segments * (float)(i + 1)), (double)0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)i), (double)(this.getGrassHeight() / (float)segments * (float)i), (double)0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)i), (double)(this.getGrassHeight() / (float)segments * (float)i), (double)0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)i), (double)(this.getGrassHeight() / (float)segments * (float)i), (double)0.0F).normal(0.0F, 0.0F, -1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)i), (double)(this.getGrassHeight() / (float)segments * (float)i), (double)0.0F).normal(0.0F, 0.0F, -1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)(i + 1)), (double)(this.getGrassHeight() / (float)segments * (float)(i + 1)), (double)0.0F).normal(0.0F, 0.0F, -1.0F).next();
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)(i + 1)), (double)(this.getGrassHeight() / (float)segments * (float)(i + 1)), (double)0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.6 - (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.4 + (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.4 + (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.6 - (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.6 - (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.4 + (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.4 + (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.6 - (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, -1.0F).next();
         }
 
     }

@@ -117,14 +117,12 @@ public class Level5ChunkGenerator extends ChunkGenerator {
 
         BlockPos.Mutable mutable = new BlockPos.Mutable();
 
-        // On veut scatter 3x3, mais en tenant compte des tailles variables
         int gridSize = 3;
-        int spacing = 20; // Espace entre rooms, à ajuster si tu veux des gaps/espaces vides
-        int[][] occupied = new int[64][64]; // Grille "utilisée" simple
+        int spacing = 20;
+        int[][] occupied = new int[64][64];
 
         for (int gx = 0; gx < gridSize; gx++) {
             for (int gz = 0; gz < gridSize; gz++) {
-                // Random room type : guest, mega, hallway, junction, etc.
                 Level5RoomRegistry.RoomType type = switch (random.nextInt(5)) {
                     case 0 -> Level5RoomRegistry.RoomType.GUESTROOM;
                     case 1 -> Level5RoomRegistry.RoomType.MEGAROOM;
@@ -139,11 +137,13 @@ public class Level5ChunkGenerator extends ChunkGenerator {
                 int px = baseX + gx * spacing;
                 int pz = baseZ + gz * spacing;
 
-                // (Facultatif) Vérifie qu'on ne "chevauche" pas une autre salle déjà placée
                 boolean overlap = false;
                 for (int x = px; x < px + room.sizeX(); x++)
                     for (int z = pz; z < pz + room.sizeZ(); z++)
-                        if (occupied[x % 64][z % 64] == 1) overlap = true;
+                        if (occupied[x % 64][z % 64] == 1) {
+                            overlap = true;
+                            break;
+                        }
                 if (overlap) continue;
 
                 // Marque comme "occupé"
@@ -172,12 +172,12 @@ public class Level5ChunkGenerator extends ChunkGenerator {
             }
         }
 
-        // Tu peux faire pareil pour lights, traps, storage, etc.
+
     }
 
 
 
-    // Génère des toits comme dans Level0
+
     private void placeRoofs(StructureWorldAccess world, int x, int z, Random random, StructureTemplateManager manager, BlockPos.Mutable pos) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
@@ -197,7 +197,7 @@ public class Level5ChunkGenerator extends ChunkGenerator {
     public class Level5RoomRegistry {
         public enum RoomType { GUESTROOM, HALLWAY, JUNCTION, LOBBY, MEGAROOM, ROOF, STAIRS, STORAGE, TRAP }
 
-        public static record RoomEntry(RoomType type, Identifier id, int sizeX, int sizeZ) {}
+        public record RoomEntry(RoomType type, Identifier id, int sizeX, int sizeZ) {}
 
         private static final List<RoomEntry> registeredRooms = new ArrayList<>();
 
