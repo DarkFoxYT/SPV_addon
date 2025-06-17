@@ -1,6 +1,6 @@
 package net.dark.spv_addon.items.custom;
 
-import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,7 +28,7 @@ public class BatteryItem extends Item {
             playBatterySound(world, user);
 
             BatteryManager.setBattery(user.getUuid(), 0);
-            stack.decrement(1);
+            // stack.decrement(1); // La consommation de l'objet est maintenant retardée
             user.sendMessage(Text.literal("Changing Battery"), true);
 
             NbtCompound nbt = stack.getOrCreateNbt();
@@ -53,6 +53,7 @@ public class BatteryItem extends Item {
                     BatteryManager.setBattery(player.getUuid(), Math.min(current + added, 100));
                     player.sendMessage(Text.literal("Battery Changed"), true);
                     nbt.remove(NBT_RECHARGE_TICKS);
+                    stack.decrement(1); // Consomme l'objet après 4 secondes
                 }
             }
         }

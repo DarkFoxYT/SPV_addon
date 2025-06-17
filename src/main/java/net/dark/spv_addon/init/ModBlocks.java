@@ -1,28 +1,21 @@
 package net.dark.spv_addon.init;
 
 import com.sp.block.SprintBlockSoundGroup;
-import com.sp.block.custom.CeilingLight;
-import com.sp.block.custom.FluorescentLightBlock;
-import com.sp.init.BackroomsLevels;
 import net.dark.spv_addon.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import com.sp.block.custom.CarpetBlock;
 import com.sp.block.custom.WallBlock;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.block.Blocks;
 
-import static software.bernie.example.registry.BlockRegistry.registerBlock;
-
 
 public class ModBlocks {
     public static final Block HOTEL_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block C_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.BLACK_CARPET).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
-    public static final Block FUN_FLOOR = new WallBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block KITTY_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block KITTY_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block GRASS1 = new Block(FabricBlockSettings.copyOf(Blocks.DIRT).strength(-1.0F).noBlockBreakParticles().sounds(SprintBlockSoundGroup.GRASS2));
@@ -48,7 +41,6 @@ public class ModBlocks {
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "c_wall"), C_WALL);
-        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "fun_floor"), FUN_FLOOR);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "grass1"), GRASS1);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie"), KITTY_PLUSHIE);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_plushie1"), KITTY_PLUSHIE1);

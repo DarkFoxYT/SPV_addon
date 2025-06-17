@@ -3,7 +3,7 @@ package net.dark.spv_addon.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;

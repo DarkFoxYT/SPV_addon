@@ -3,30 +3,19 @@ package net.dark.spv_addon.world.levels.custom;
 import com.sp.SPBRevamped;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
-import com.sp.compat.modmenu.ConfigStuff;
-import com.sp.mixininterfaces.NewServerProperties;
 import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level1BackroomsLevel;
-import com.sp.world.levels.custom.Level2BackroomsLevel;
-import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.init.ModEntities;
-import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
-import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
-import net.dark.spv_addon.world.levels.custom.events.Level207AmbienceEvent;
-import net.dark.spv_addon.world.levels.custom.events.Level207MoveTracker;
+import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
+import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
+import net.dark.spv_addon.world.events.level207.Level207MoveTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.chunk.Chunk;
 
 import java.util.*;
 
@@ -81,20 +70,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         UUID uuid = player.getUuid();
         stepsWalked.put(uuid, stepsWalked.getOrDefault(uuid, 0) + steps);
 
-        int walked = stepsWalked.get(uuid);
-
-        // Spawn Bell Walkers tous les 100 blocs parcourus
-        if (walked >= STEPS_BEFORE_BELLWALKER) {
-            stepsWalked.put(uuid, walked % STEPS_BEFORE_BELLWALKER);
-            ServerWorld world = (ServerWorld) player.getWorld();
-            for (int i = 0; i < 2 + random.nextInt(3); i++) {
-                double dx = player.getX() + random.nextBetween(-5, 5);
-                double dz = player.getZ() + random.nextBetween(-5, 5);
-                BellWalkerEntity bellWalker = new BellWalkerEntity(ModEntities.SIX_LEG_ENTITY, world);
-                bellWalker.refreshPositionAndAngles(dx, player.getY(), dz, 0, 0);
-                world.spawnEntity(bellWalker);
-            }
-        }
 
         if (stepsWalked.get(uuid) >= STEPS_BEFORE_WARP) {
             stepsWalked.put(uuid, 0);
@@ -129,7 +104,11 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     @Override
     public void register() {
         Level207MoveTracker.register(this);
+        events.add(Level207BellWalkerEvent::new);
+
     }
+
+
 
 
     @Override

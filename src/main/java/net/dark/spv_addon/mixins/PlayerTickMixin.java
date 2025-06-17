@@ -1,7 +1,6 @@
 package net.dark.spv_addon.mixins;
 
 import com.sp.init.BackroomsLevels;
-import net.dark.spv_addon.api.SanityLightEmitter;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.minecraft.block.Block;
@@ -18,8 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerTickMixin {

@@ -13,6 +13,8 @@ public class ModSounds {
     public static final SoundEvent BELLWALKER_CARP = register("entity.bellwalker.carp");
     public static final SoundEvent DONG = register("stuff.belldong");
     public static final SoundEvent ELEV = register("stuff.elevator");
+    public static final SoundEvent IC1 = register("stuff.intercom_custom1");
+    public static final SoundEvent IC2 = register("stuff.intercom_custom2");
 
 
     public static final SoundEvent TAPE1 = register("tapes.tape1");

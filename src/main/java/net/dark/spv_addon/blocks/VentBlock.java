@@ -30,7 +30,6 @@ public class VentBlock extends Block {
     public static final BooleanProperty OPEN = BooleanProperty.of("open");
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    // Collisions (profondeur sur 15-16)
     private static final VoxelShape SHAPE_CLOSED = VoxelShapes.union(
             VoxelShapes.cuboid(15/16.0, 1/16.0, 15/16.0, 16/16.0, 15/16.0, 16/16.0),
             VoxelShapes.cuboid(0/16.0, 0/16.0, 15/16.0, 16/16.0, 1/16.0, 16/16.0),

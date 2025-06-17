@@ -2,6 +2,7 @@ package net.dark.spv_addon.world.levels.custom;
 
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.events.AbstractEvent;
+import com.sp.world.events.EmptyEvent;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlocks;
@@ -23,20 +24,14 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public void register() {
-        // Ajoute des events custom ici si besoin
-        events.add(HaHvavCustomEvent::new);
+        events.add(EmptyEvent::new);
 
     }
 
     @Override
     public AbstractEvent getRandomEvent(World world) {
-        // Ikea peut avoir ses propres events (“Staff appears”, “Lights Out”, etc)
         return null;
     }
-    /**
-     * Indicates if the flashlight (torch) is allowed in this level.
-     * @return BoolTextPair containing the permission and a message.
-     */
     @Override
     public BoolTextPair allowsTorch() {
         return new BoolTextPair(true, Text.translatable("Flashlight on."));
@@ -44,7 +39,7 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return 999999999; // Change si tu veux des events
+        return 100;
     }
 
     @Override
@@ -55,9 +50,7 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public boolean transitionOut(CrossDimensionTeleport teleport) {
-        // Exits seulement sur points spéciaux ou si player trouve la sortie
-        // Ici, simple : il doit être sur une “sortie” définie par bloc, ou par pos
-        return teleport.playerComponent().player.getBlockStateAtPos().isOf(ModBlocks.EXIT_SIGN);
+        return false;
     }
 
     @Override

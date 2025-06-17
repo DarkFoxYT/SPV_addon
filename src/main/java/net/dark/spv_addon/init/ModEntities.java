@@ -19,7 +19,7 @@ public class ModEntities {
             Registry.register(Registries.ENTITY_TYPE,
                     new Identifier(Spv_addon.MOD_ID, "bellwalker_entity"),
                     FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, BellWalkerEntity::new)
-                            .dimensions(EntityDimensions.fixed(1.0f, 0.8f))
+                            .dimensions(EntityDimensions.fixed(0.5f, 0.6f))
                             .build()
             );
 
@@ -29,7 +29,7 @@ public class ModEntities {
             Registry.register(Registries.ENTITY_TYPE,
                     new Identifier(Spv_addon.MOD_ID, "kitty"),
                     FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, KittyEntity::new)
-                            .dimensions(EntityDimensions.fixed(1.0f, 0.8f))
+                            .dimensions(EntityDimensions.fixed(0.5f, 2.5f))
                             .build()
             );
 

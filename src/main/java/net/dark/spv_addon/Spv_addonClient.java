@@ -5,7 +5,6 @@ import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
-import net.dark.spv_addon.client.FocusHandler;
 import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.client.gui.SanityBar;
 import net.dark.spv_addon.client.gui.ThirstHud;
@@ -47,7 +46,6 @@ public class Spv_addonClient implements ClientModInitializer {
         BatteryHud.register();
         ThirstHud.register();
         SanityBar.register();
-        FocusHandler.register();
         ThirstManager.register();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> flashlightRenderer.tick(client.getTickDelta()));

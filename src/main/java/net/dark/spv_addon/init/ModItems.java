@@ -30,7 +30,6 @@ public class ModItems {
     public static final Item EXIT_SIGN = register("exit_sign", new BlockItem(ModBlocks.EXIT_SIGN, new FabricItemSettings()));
     public static final Item CROSS = register("cross", new BlockItem(ModBlocks.CROSS, new FabricItemSettings()));
     public static final Item GRASS1 = register("grass1", new BlockItem(ModBlocks.GRASS1, new FabricItemSettings()));
-    public static final Item FUN_FLOOR = register("fun_floor", new BlockItem(ModBlocks.FUN_FLOOR, new FabricItemSettings()));
     public static final Item TAPE_RECORDER = register("tape_recorder", new BlockItem(ModBlocks.TAPE_RECORDER, new FabricItemSettings()));
     public static final Item VENT = register("vent1", new BlockItem(ModBlocks.VENT, new FabricItemSettings()));
 

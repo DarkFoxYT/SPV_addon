@@ -1,9 +1,8 @@
 package net.dark.spv_addon.mixins.blocks;
 
-import net.dark.spv_addon.api.SanityLightEmitter;
+import net.dark.spv_addon.Additions.api.SanityLightEmitter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Mixin;
 
 //@Mixin(TargetModLightBlock.class)
 public class TargetModLightBlockMixin implements SanityLightEmitter {

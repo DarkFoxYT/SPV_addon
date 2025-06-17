@@ -1,4 +1,4 @@
-package net.dark.spv_addon.battery;
+package net.dark.spv_addon.Additions.battery;
 
 import java.util.HashMap;
 import java.util.UUID;

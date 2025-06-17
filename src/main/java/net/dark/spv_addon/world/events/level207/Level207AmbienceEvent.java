@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.levels.custom.events;
+package net.dark.spv_addon.world.events.level207;
 
 import com.sp.world.events.AbstractEvent;
 import net.dark.spv_addon.init.ModSounds;

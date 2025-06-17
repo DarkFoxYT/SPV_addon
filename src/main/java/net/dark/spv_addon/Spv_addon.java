@@ -13,11 +13,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
@@ -32,11 +27,11 @@ import static com.sp.SPBRevamped.sendBlackScreenPacket;
 public class Spv_addon implements ModInitializer {
     public static final String MOD_ID = "spv_addon";
     public static final Logger LOGGER = LoggerFactory.getLogger("spv_addon");
-    public static final DefaultParticleType RAIN_PARTICLE = FabricParticleTypes.simple();
 
     @Override
     public void onInitialize() {
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(MOD_ID, "rain_particle"), RAIN_PARTICLE);
+
+
 
         ModBlockEntities.register();
         ThirstManager.register();
@@ -91,7 +86,7 @@ public class Spv_addon implements ModInitializer {
                     executorService.shutdown();
                 }, 8000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
-                LOGGER.error("Error in AFTER_RESPAWN event: {}", e);
+                LOGGER.error("Error in AFTER_RESPAWN event: ", e);
             }
         });
     }

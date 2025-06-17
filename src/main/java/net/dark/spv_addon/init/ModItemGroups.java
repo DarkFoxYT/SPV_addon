@@ -17,6 +17,7 @@ public class ModItemGroups {
                     .displayName(Text.translatable("itemGroup.spv_addon"))
                     .icon(() -> new ItemStack(ModBlocks.HOTEL_FLOOR))
                     .entries((ctx, entries) -> {
+
                         // Blocks
                         entries.add(ModBlocks.HOTEL_FLOOR);
                         entries.add(ModBlocks.HOTEL_WALL);
@@ -36,6 +37,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.C_WALL);
                         entries.add(ModBlocks.KITTY_PLUSHIE_DEV);
                         entries.add(ModItems.TAPE_RECORDER);
+                        entries.add(ModBlocks.VENT);
+
 
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);

@@ -1,17 +1,13 @@
 package net.dark.spv_addon.client;
 
-import com.sp.SPBRevamped;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
-import com.sp.init.ModSounds;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.deferred.light.AreaLight;
-import net.dark.spv_addon.battery.BatteryManager;
-import net.dark.spv_addon.client.gui.BatteryHud;
+import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;

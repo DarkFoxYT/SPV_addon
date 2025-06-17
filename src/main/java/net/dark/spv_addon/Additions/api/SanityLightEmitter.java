@@ -1,4 +1,4 @@
-package net.dark.spv_addon.api;
+package net.dark.spv_addon.Additions.api;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
