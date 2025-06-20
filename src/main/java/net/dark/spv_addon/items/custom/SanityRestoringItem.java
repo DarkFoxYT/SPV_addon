@@ -4,6 +4,7 @@ import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.Additions.api.SanityLightStore;
+import net.dark.spv_addon.world.events.tests.DistortShaderHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,13 +19,15 @@ public class SanityRestoringItem extends Item {
     private final boolean decreaseSanity;
     private final boolean decreaseThirst;
 
-    public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange) {
-        this(settings, sanityChange, thirstChange, false, false, false);
-    }
-
-    public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange, boolean poisoned) {
-        this(settings, sanityChange, thirstChange, poisoned, false, false);
-    }
+    /**
+     *
+     * @param settings         Item settings
+     * @param sanityChange     Amount of sanity to change (positive or negative)
+     * @param thirstChange     Amount of thirst to change (positive or negative)
+     * @param poisoned         Whether the item causes poison effect
+     * @param decreaseSanity   Whether the item decreases sanity
+     * @param decreaseThirst   Whether the item decreases thirst
+     */
 
     public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange, boolean poisoned, boolean decreaseSanity, boolean decreaseThirst) {
         super(settings);
@@ -39,6 +42,7 @@ public class SanityRestoringItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
         SanityComponent sanity = InitializeComponents.SANITY.get(player);
+        DistortShaderHandler.applyDistortionPostProcess();
 
         if (!world.isClient) {
             if (thirstChange != 0) {
@@ -68,5 +72,6 @@ public class SanityRestoringItem extends Item {
         }
         }
         return TypedActionResult.success(stack, world.isClient());
+
     }
 }

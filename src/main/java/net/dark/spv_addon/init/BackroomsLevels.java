@@ -4,8 +4,6 @@ import com.sp.world.levels.BackroomsLevel;
 
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.world.levels.custom.*;
-import net.dark.spv_addon.world.levels.custom.official_levels.Level0WithCustomEvents;
-import net.dark.spv_addon.world.levels.custom.official_levels.transitions.Level2ToIkeaBackroomsLevel;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;

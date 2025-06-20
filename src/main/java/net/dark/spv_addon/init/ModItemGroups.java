@@ -19,30 +19,33 @@ public class ModItemGroups {
                     .entries((ctx, entries) -> {
 
                         // Blocks
+
+                        entries.add(ModBlocks.IKEA_SHELF);
+                        entries.add(ModBlocks.IKEA_SHELF1);
+                        entries.add(ModBlocks.IKEA_SHELF2);
+                        entries.add(ModBlocks.IKEA_ARROW);
+                        entries.add(ModBlocks.KITTY_WALL);
+                        entries.add(ModBlocks.KITTY_FLOOR);
+                        entries.add(ModBlocks.KITTY_ROOF);
+                        entries.add(ModBlocks.KITTY_PLUSHIE);
+                        entries.add(ModBlocks.KITTY_PLUSHIE1);
+                        entries.add(ModBlocks.KITTY_PLUSHIE_DEV);
+                        entries.add(ModBlocks.EXIT_SIGN);
+                        entries.add(ModBlocks.GRASS1);
+                        entries.add(ModBlocks.CROSS);
+                        entries.add(ModBlocks.C_WALL);
+                        entries.add(ModItems.TAPE_RECORDER);
+                        entries.add(ModBlocks.VENT);
                         entries.add(ModBlocks.HOTEL_FLOOR);
                         entries.add(ModBlocks.HOTEL_WALL);
                         entries.add(ModBlocks.BED1);
                         entries.add(ModBlocks.BED2);
                         entries.add(ModBlocks.TABLE);
-                        entries.add(ModBlocks.IKEA_SHELF);
-                        entries.add(ModBlocks.IKEA_SHELF1);
-                        entries.add(ModBlocks.IKEA_SHELF2);
-                        entries.add(ModBlocks.KITTY_WALL);
-                        entries.add(ModBlocks.KITTY_FLOOR);
-                        entries.add(ModBlocks.KITTY_PLUSHIE);
-                        entries.add(ModBlocks.EXIT_SIGN);
-                        entries.add(ModBlocks.KITTY_PLUSHIE1);
-                        entries.add(ModBlocks.GRASS1);
-                        entries.add(ModBlocks.CROSS);
-                        entries.add(ModBlocks.C_WALL);
-                        entries.add(ModBlocks.KITTY_PLUSHIE_DEV);
-                        entries.add(ModItems.TAPE_RECORDER);
-                        entries.add(ModBlocks.VENT);
+
 
 
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
-                        entries.add(ModItems.BATTERY_ITEM2);
                         entries.add(ModItems.ALMOND_BOTTLE);
                         entries.add(ModItems.ALMOND_DIRTY);
                         entries.add(ModItems.CANTEEN);

@@ -43,12 +43,14 @@ public class Spv_addon implements ModInitializer {
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
         LevelRunGlobalTicker.init();
-
+        TestCommand.clientTick();
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             SpvCommands.register(dispatcher);
+            TestCommand.register(dispatcher);
+
         });
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {

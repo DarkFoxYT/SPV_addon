@@ -40,7 +40,7 @@ public class GrassRenderer {
     public static final VertexFormat POSITION_NORMAL;
 
     private float getGrassHeight() {
-        return 0.5f;
+        return 0.4f;
     }
 
     public GrassRenderer() {

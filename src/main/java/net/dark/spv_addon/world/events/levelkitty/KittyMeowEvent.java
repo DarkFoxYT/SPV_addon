@@ -41,6 +41,6 @@ for (int i = 0; i < dropCount; i++) {
 
     @Override
     public int duration() {
-        return 0;
+        return 30;
     }
 }

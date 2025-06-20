@@ -8,6 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -15,15 +16,14 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CustomDeathScreen extends Screen {
     private static final Identifier BACKGROUND = new Identifier("spv_addon", "textures/gui/death_full.png");
-    // Optional scanlines
      private static final Identifier SCANLINES = new Identifier("spv_addon", "textures/gui/scanlines.png");
+    private static final Identifier DEATH_SOUND = new Identifier("spv_addon", "sounds/death_screen.ogg");
 
     private final String playerName;
     private int ticksElapsed = 0;
     private int glitchTicks = 0;
     private boolean isGlitching = false;
 
-    // Static dynamic
     private NativeImage staticImage = null;
     private NativeImageBackedTexture staticTexture = null;
     private final Identifier dynamicStaticId = new Identifier("spv_addon", "dynamic_static");
@@ -31,6 +31,7 @@ public class CustomDeathScreen extends Screen {
     public CustomDeathScreen(String playerName) {
         super(Text.empty());
         this.playerName = playerName;
+        playDeathSound();
     }
 
     @Override
@@ -42,7 +43,7 @@ public class CustomDeathScreen extends Screen {
             }
         } else {
             glitchTicks++;
-            if (glitchTicks >= 16) { // glitch lasts 16 ticks (~0.8s)
+            if (glitchTicks >= 16) {
                 MinecraftClient mc = MinecraftClient.getInstance();
                 if (mc.player != null) mc.player.requestRespawn();
                 mc.setScreen(null);
@@ -55,7 +56,6 @@ public class CustomDeathScreen extends Screen {
         return false;
     }
 
-    // Helper: Make dynamic static
     private void updateStaticTexture(int w, int h) {
         if (staticImage == null || staticImage.getWidth() != w || staticImage.getHeight() != h) {
             closeStaticImage();
@@ -64,7 +64,6 @@ public class CustomDeathScreen extends Screen {
         }
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                // Flicker: stronger on glitch
                 int val = isGlitching ? (int)(Math.random() * 255) : (int)(Math.random() * 192 + 32);
                 int color = 0xFF000000 | (val << 16) | (val << 8) | val;
                 staticImage.setColor(x, y, color);
@@ -80,7 +79,6 @@ public class CustomDeathScreen extends Screen {
         staticTexture = null;
     }
 
-    // Glitch effect
     private void startGlitch() {
         isGlitching = true;
         glitchTicks = 0;
@@ -92,14 +90,12 @@ public class CustomDeathScreen extends Screen {
         int w = mc.getWindow().getScaledWidth();
         int h = mc.getWindow().getScaledHeight();
 
-        // 1. Draw background
         RenderSystem.enableBlend();
         ctx.drawTexture(BACKGROUND, 0, 0, 0, 0, w, h, w, h);
         RenderSystem.disableBlend();
 
-        // 2. Text: bigger, centered, more spacing
         int fontHeight = mc.textRenderer.fontHeight + 8; // bigger
-        int fontScale = 2; // double size
+        int fontScale = 2;
 
         String line1 = playerName + " was";
         String line2 = "Never Found";
@@ -117,7 +113,6 @@ public class CustomDeathScreen extends Screen {
         ctx.drawText(mc.textRenderer, Text.literal(line2), x2, y2, color, false);
         ctx.getMatrices().pop();
 
-        // 3. Fade-in static overlay (200 ticks), then glitch
         float frac = Math.min(ticksElapsed / 200f, 1f);
         float flicker = (float)(Math.sin(ticksElapsed * 0.6 + Math.random()) * 0.15 + 0.85);
         float alpha = isGlitching
@@ -126,23 +121,15 @@ public class CustomDeathScreen extends Screen {
 
         updateStaticTexture(w, h);
 
-        // Static dynamique
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
         ctx.drawTexture(dynamicStaticId, 0, 0, 0, 0, w, h, w, h);
 
 
-        // Scanlines si tu veux (décommente si besoin)
          RenderSystem.setShaderColor(1f, 1f, 1f, 0.10f * alpha);
          ctx.drawTexture(SCANLINES, 0, 0, 0, 0, w, h, w, h);
 
-        // Glitch flash (flash blanc ultra rapide)
-        if (isGlitching && glitchTicks % 4 == 0) {
-            RenderSystem.setShaderColor(1f, 1f, 1f, 0.55f);
-            ctx.fill(0, 0, w, h, 0x99FFFFFF);
-        }
 
-        // Reset blend/color
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
     }
@@ -150,6 +137,20 @@ public class CustomDeathScreen extends Screen {
     @Override
     public void close() {
         super.close();
+        stopDeathSound();
         closeStaticImage();
     }
+    private void playDeathSound() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.player != null) {
+            mc.getSoundManager().play(net.minecraft.client.sound.PositionedSoundInstance.music(SoundEvent.of(DEATH_SOUND)));
+        }
+    }
+
+    private void stopDeathSound() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        mc.getSoundManager().stopSounds(DEATH_SOUND, net.minecraft.sound.SoundCategory.MUSIC);
+
+    }
 }
+

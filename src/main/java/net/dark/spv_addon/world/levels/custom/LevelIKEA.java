@@ -1,45 +1,61 @@
 package net.dark.spv_addon.world.levels.custom;
 
 import com.sp.cca_stuff.PlayerComponent;
+import com.sp.compat.modmenu.ConfigStuff;
+import com.sp.mixininterfaces.NewServerProperties;
 import com.sp.world.events.AbstractEvent;
 import com.sp.world.events.EmptyEvent;
 import com.sp.world.levels.BackroomsLevel;
+import com.sp.world.levels.custom.Level2BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LevelIKEA extends BackroomsLevel {
     public LevelIKEA() {
 
-        super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(0, 20.0, 0), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
+        super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(0, 2, 0), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
+
+        this.registerTransition((world, playerComponent, from) -> {
+            List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
+            int exitRadius = ConfigStuff.exitSpawnRadius;
+            if (world.getServer() != null && world.getServer().isDedicated()) {
+                exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
+            }
+
+            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
+                playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL_IKEA_BACKROOMS_LEVEL));
+            }
+
+            return playerList;
+        }, "level2 -> level_ikea");
     }
 
     @Override
     public void register() {
-        events.add(EmptyEvent::new);
+        events.add(HaHvavCustomEvent::new);
 
     }
 
-    @Override
-    public AbstractEvent getRandomEvent(World world) {
-        return null;
-    }
-    @Override
-    public BoolTextPair allowsTorch() {
-        return new BoolTextPair(true, Text.translatable("Flashlight on."));
-    }
 
     @Override
     public int nextEventDelay() {
         return 100;
+    }
+
+    @Override
+    public BoolTextPair allowsTorch() {
+        return new BoolTextPair(true, Text.translatable("Flashlight on."));
     }
 
     @Override
