@@ -3,7 +3,6 @@ package net.dark.spv_addon.world.events.levelkitty;
 import com.sp.world.events.AbstractEvent;
 import net.dark.spv_addon.init.ModItems;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

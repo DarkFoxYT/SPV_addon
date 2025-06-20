@@ -1,10 +1,10 @@
 package net.dark.spv_addon.init;
 
+import net.dark.spv_addon.Spv_addon;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.dark.spv_addon.Spv_addon;
 
 public class ModSounds {
     public static final SoundEvent BELLWALKER_BELL = register("entity.bellwalker.bell");

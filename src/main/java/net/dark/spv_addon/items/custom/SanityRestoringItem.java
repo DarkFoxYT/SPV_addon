@@ -1,9 +1,9 @@
 package net.dark.spv_addon.items.custom;
 
+import net.dark.spv_addon.Additions.api.SanityLightStore;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.Additions.api.SanityLightStore;
 import net.dark.spv_addon.world.events.tests.DistortShaderHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

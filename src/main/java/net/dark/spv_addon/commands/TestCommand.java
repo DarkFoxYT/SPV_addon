@@ -3,7 +3,6 @@ package net.dark.spv_addon.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.dark.spv_addon.world.events.tests.DistortShaderHandler;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;

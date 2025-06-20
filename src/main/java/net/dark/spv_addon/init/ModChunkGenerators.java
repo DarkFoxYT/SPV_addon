@@ -6,11 +6,9 @@ import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
-import net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 public class ModChunkGenerators {
     public static void register() {

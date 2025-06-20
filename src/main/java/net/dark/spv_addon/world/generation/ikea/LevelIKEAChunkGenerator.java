@@ -6,8 +6,6 @@ import com.sp.SPBRevampedClient;
 import com.sp.world.generation.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;

@@ -4,11 +4,13 @@ import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * AggroNearestPlayerGoal: cible le joueur qui parle le plus près et joue un son selon la distance.

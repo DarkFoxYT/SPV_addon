@@ -1,6 +1,5 @@
 package net.dark.spv_addon.entities.client.renderer;
 
-import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import com.sp.entity.ik.model.GeckoLib.MowzieGeoBone;
 import net.dark.spv_addon.entities.client.model.kittymodel;
 import net.dark.spv_addon.entities.custom.KittyEntity;

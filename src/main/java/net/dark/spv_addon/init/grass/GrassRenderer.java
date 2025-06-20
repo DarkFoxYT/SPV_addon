@@ -3,29 +3,28 @@ package net.dark.spv_addon.init.grass;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.sp.SPBRevampedClient;
 import com.sp.compat.modmenu.ConfigStuff;
 import com.sp.mixininterfaces.RenderIndirectExtension;
-import com.sp.world.levels.custom.Level324Backroomslevel;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.VeilRenderer;
 import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import foundry.veil.api.client.render.framebuffer.VeilFramebuffers;
 import foundry.veil.api.client.render.shader.program.ShaderProgram;
-import java.nio.ByteBuffer;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gl.VertexBuffer.Usage;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VertexFormat.DrawMode;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.joml.Vector4fc;
 import org.lwjgl.opengl.GL15C;
 import org.lwjgl.opengl.GL42C;
 import org.lwjgl.opengl.GL43C;
+
+import java.nio.ByteBuffer;
 
 public class GrassRenderer {
     VertexBuffer vertexBuffer;

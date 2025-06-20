@@ -2,6 +2,7 @@ package net.dark.spv_addon.items.custom;
 
 import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.init.ModSounds;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -9,7 +10,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class BatteryItem extends Item {
     private final int maxDurability;

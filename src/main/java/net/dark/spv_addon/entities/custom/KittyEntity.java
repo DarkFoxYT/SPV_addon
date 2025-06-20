@@ -1,25 +1,24 @@
 package net.dark.spv_addon.entities.custom;
 
 import com.sp.init.BackroomsLevels;
-import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.ModBlocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.world.World;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
 

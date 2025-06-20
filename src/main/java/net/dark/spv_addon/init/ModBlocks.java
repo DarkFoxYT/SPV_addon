@@ -1,17 +1,17 @@
 package net.dark.spv_addon.init;
 
 import com.sp.block.SprintBlockSoundGroup;
+import com.sp.block.custom.CarpetBlock;
+import com.sp.block.custom.WallBlock;
 import com.sp.block.custom.WallText;
 import net.dark.spv_addon.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
-import com.sp.block.custom.CarpetBlock;
-import com.sp.block.custom.WallBlock;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.block.Blocks;
 
 
 public class ModBlocks {

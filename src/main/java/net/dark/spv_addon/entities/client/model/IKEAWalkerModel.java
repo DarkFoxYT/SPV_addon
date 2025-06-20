@@ -2,7 +2,6 @@ package net.dark.spv_addon.entities.client.model;
 
 import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.core.animation.AnimationState;

@@ -1,15 +1,12 @@
 package net.dark.spv_addon.init;
 
 import com.sp.world.levels.BackroomsLevel;
-
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.world.levels.custom.*;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-
-import java.util.Map;
 
 public class BackroomsLevels {
     // === SPV DIMENSIONS ===

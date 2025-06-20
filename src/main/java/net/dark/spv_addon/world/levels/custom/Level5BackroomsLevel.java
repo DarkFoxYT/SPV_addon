@@ -3,9 +3,9 @@ package net.dark.spv_addon.world.levels.custom;
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.nbt.NbtCompound;
 
 public class Level5BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();

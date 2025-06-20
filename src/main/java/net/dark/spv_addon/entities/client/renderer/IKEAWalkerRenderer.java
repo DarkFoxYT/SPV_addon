@@ -2,9 +2,7 @@ package net.dark.spv_addon.entities.client.renderer;
 
 import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import com.sp.entity.ik.model.GeckoLib.MowzieGeoBone;
-import net.dark.spv_addon.entities.client.model.BellWalkerModel;
 import net.dark.spv_addon.entities.client.model.IKEAWalkerModel;
-import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;

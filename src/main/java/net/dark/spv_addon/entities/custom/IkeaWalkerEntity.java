@@ -1,24 +1,22 @@
 package net.dark.spv_addon.entities.custom;
 
 import com.sp.entity.ik.components.IKAnimatable;
-import net.dark.spv_addon.entities.ik.components.IKLegCompDark;
+import com.sp.entity.ik.parts.Segment;
 import com.sp.entity.ik.parts.ik_chains.TargetReachingIKChain;
 import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
-import com.sp.entity.ik.parts.Segment;
-import com.sp.entity.ik.model.ModelAccessor;
 import net.dark.spv_addon.entities.ik.components.IKLegCompIkeaWalker;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;

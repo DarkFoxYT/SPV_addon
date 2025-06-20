@@ -6,8 +6,8 @@ import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModEntities;
-import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.events.levelkitty.KittyMeowEvent;
+import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.world.ServerWorld;
@@ -16,7 +16,6 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class LevelKittyBackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
