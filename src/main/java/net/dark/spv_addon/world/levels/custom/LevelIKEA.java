@@ -18,9 +18,11 @@ import java.util.List;
 public class LevelIKEA extends BackroomsLevel {
     public LevelIKEA() {
 
-        super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(0, 2, 0), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
+        super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(16, 2, 16), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
 
-        this.registerTransition((world, playerComponent, from) -> {
+        com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.unregisterTransition("level2 -> poolrooms");
+
+        com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.registerTransition((world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
             int exitRadius = ConfigStuff.exitSpawnRadius;
             if (world.getServer() != null && world.getServer().isDedicated()) {

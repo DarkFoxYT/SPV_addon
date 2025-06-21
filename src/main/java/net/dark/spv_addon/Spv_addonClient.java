@@ -84,7 +84,7 @@ public class Spv_addonClient implements ClientModInitializer {
                         });
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 256));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.5F, 2.0F, 256));
                     }
 
                 });

@@ -74,7 +74,7 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
 
         int gridSize = 32;
 
-        for (int gx = 0; gx < 128; gx++) { // Génère sur une grande plage, pour l'infini, il faudrait une autre logique
+        for (int gx = 0; gx < 128; gx++) {
             for (int gz = 0; gz < 128; gz++) {
                 int px = gx * 32;
                 int pz = gz * 32;
@@ -88,12 +88,10 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
                     BlockPos pathPos = new BlockPos(px, 0, pz);
                     StructurePlacementData pathData = new StructurePlacementData()
                             .setMirror(BlockMirror.NONE)
-                                .setRotation(BlockRotation.CLOCKWISE_90)
                             .setIgnoreEntities(true);
                     optPath.get().place(world, pathPos, pathPos, pathData, random, 2);
                 }
             }
-                // Génération des salles à droite
                 int rightPx = px + 32;
                 int rightPz = pz;
             int rightChunkX = rightPx / 16;
