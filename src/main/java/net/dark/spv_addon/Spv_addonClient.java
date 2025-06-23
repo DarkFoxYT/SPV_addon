@@ -1,7 +1,10 @@
 package net.dark.spv_addon;
 
+import com.sp.render.PoolroomsDayCycle;
+import com.sp.render.PreviousUniforms;
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
+import foundry.veil.api.client.render.shader.program.ShaderProgram;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
@@ -18,6 +21,7 @@ import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
+import net.dark.spv_addon.world.events.tests.DistortShaderHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,6 +33,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -36,13 +41,16 @@ import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
 public class Spv_addonClient implements ClientModInitializer {
+    private static final Identifier EVERYTHING_SHADER = new Identifier("spb-revamped", "vhs/everything");
+    private static final Identifier VHS_POST = new Identifier("spb-revamped", "vhs");
+    private static final Identifier POST_VHS = new Identifier("spb-revamped", "vhs/vhs_post");
     private GrassRenderer grassRenderer;
 
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
 
     @Override
     public void onInitializeClient() {
-
+        DistortShaderHandler.applyDistortionPostProcess();
         BatteryHud.register();
         ThirstHud.register();
         SanityBar.register();
@@ -106,6 +114,40 @@ public class Spv_addonClient implements ClientModInitializer {
                     }
 
                     this.grassRenderer.render();
+                }
+            }
+        });
+
+        VeilEventPlatform.INSTANCE.preVeilPostProcessing((name, pipeline, context) -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            PlayerEntity player = MinecraftClient.getInstance().player;
+
+
+            if (player != null && client.world != null) {
+                if (VHS_POST.equals(name)) {
+                    ShaderProgram shaderProgram = context.getShader(POST_VHS);
+                    if (shaderProgram != null) {
+
+
+                        shaderProgram = context.getShader(EVERYTHING_SHADER);
+                        if (shaderProgram != null) {
+                            if (client.world.getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
+                                shaderProgram.setInt("FogToggle", 1);
+                            } else {
+                                shaderProgram.setInt("FogToggle", 0);
+                            }
+
+
+                            if (client.world.getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
+                                shaderProgram.setInt("TogglePuddles", 1);
+                            } else {
+                                shaderProgram.setInt("TogglePuddles", 0);
+                            }
+
+                            shaderProgram.setVector("shadowColor", PoolroomsDayCycle.getLightColor());
+                        }
+                    }
+                    PreviousUniforms.update();
                 }
             }
         });

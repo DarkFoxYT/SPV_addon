@@ -6,7 +6,6 @@ import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.commands.SpvCommands;
-import net.dark.spv_addon.commands.TestCommand;
 import net.dark.spv_addon.init.*;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
@@ -44,13 +43,11 @@ public class Spv_addon implements ModInitializer {
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
         LevelRunGlobalTicker.init();
-        TestCommand.clientTick();
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             SpvCommands.register(dispatcher);
-            TestCommand.register(dispatcher);
 
         });
 
@@ -69,7 +66,7 @@ public class Spv_addon implements ModInitializer {
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 PlayerComponent playerComponent = InitializeComponents.PLAYER.get(newPlayer);
 
-                sendBlackScreenPacket(newPlayer, 120, false, false);
+                sendBlackScreenPacket(newPlayer, 120, true, false);
                 boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
                 newPlayer.getAbilities().invulnerable = true;
                 playerComponent.setShouldRender(false);
@@ -81,13 +78,13 @@ public class Spv_addon implements ModInitializer {
                     playerComponent.sync();
                     newPlayer.getAbilities().invulnerable = backupInvulnerable;
                     executorService.shutdown();
-                }, 6000, TimeUnit.MILLISECONDS);
+                }, 600000000, TimeUnit.DAYS);
 
                 executorService.schedule(() -> {
                     playerComponent.setShouldDoStatic(false);
                     playerComponent.sync();
                     executorService.shutdown();
-                }, 8000, TimeUnit.MILLISECONDS);
+                }, 800000000, TimeUnit.DAYS);
             } catch (Exception e) {
                 LOGGER.error("Error in AFTER_RESPAWN event: ", e);
             }
