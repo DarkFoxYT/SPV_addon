@@ -1,7 +1,6 @@
 package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.blocks.TapeRecorderBlockEntity;
-import net.dark.spv_addon.blocks.TapeRecorderBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;

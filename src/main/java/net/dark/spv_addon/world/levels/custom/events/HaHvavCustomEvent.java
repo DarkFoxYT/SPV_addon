@@ -2,8 +2,8 @@ package net.dark.spv_addon.world.levels.custom.events;
 
 import com.sp.init.ModSounds;
 import com.sp.world.events.AbstractEvent;
-import net.minecraft.world.World;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 public class HaHvavCustomEvent extends AbstractEvent {
 

@@ -30,15 +30,13 @@ public class ModItems {
     public static final Item EXIT_SIGN = register("exit_sign", new BlockItem(ModBlocks.EXIT_SIGN, new FabricItemSettings()));
     public static final Item CROSS = register("cross", new BlockItem(ModBlocks.CROSS, new FabricItemSettings()));
     public static final Item GRASS1 = register("grass1", new BlockItem(ModBlocks.GRASS1, new FabricItemSettings()));
-    public static final Item FUN_FLOOR = register("fun_floor", new BlockItem(ModBlocks.FUN_FLOOR, new FabricItemSettings()));
     public static final Item TAPE_RECORDER = register("tape_recorder", new BlockItem(ModBlocks.TAPE_RECORDER, new FabricItemSettings()));
     public static final Item VENT = register("vent1", new BlockItem(ModBlocks.VENT, new FabricItemSettings()));
+    public static final Item KITTY_ROOF = register("kitty_roof", new BlockItem(ModBlocks.KITTY_ROOF, new FabricItemSettings()));
+    public static final Item IKEA_ARROW = register("ikea_arrow", new BlockItem(ModBlocks.IKEA_ARROW, new FabricItemSettings()));
 
     // Custom items
-    public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2), 25);
-    public static final Item BATTERY_ITEM2 = new BatteryItem(new Item.Settings().maxCount(2), 100);
-    public static final Item BATTERY_ITEM3 = new BatteryItem(new Item.Settings().maxCount(2), 75);
-    public static final Item BATTERY_ITEM4 = new BatteryItem(new Item.Settings().maxCount(2), 50);
+    public static final Item BATTERY_ITEM = new BatteryItem(new Item.Settings().maxCount(2), 100);
     public static final Item CANTEEN = new SanityRestoringItem(new Item.Settings().maxCount(1), 10, 50, false, true, false);
     public static final Item ALMOND_BOTTLE = new SanityRestoringItem(new Item.Settings().maxCount(1), 25, 10, false, false, false);
     public static final Item ALMOND_DIRTY = new SanityRestoringItem(new Item.Settings().maxCount(1), 2, 3, true, false, true);
@@ -49,9 +47,6 @@ public class ModItems {
 
     public static void registerItems() {
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item"), BATTERY_ITEM);
-        Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item2"), BATTERY_ITEM2);
-        Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item3"), BATTERY_ITEM3);
-        Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item4"), BATTERY_ITEM4);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "canteen"), CANTEEN);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_dirty"), ALMOND_DIRTY);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "almond_water"), ALMOND_BOTTLE);

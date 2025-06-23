@@ -3,7 +3,7 @@ package net.dark.spv_addon.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
-import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;

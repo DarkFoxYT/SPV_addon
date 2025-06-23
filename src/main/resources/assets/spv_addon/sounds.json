@@ -9,6 +9,11 @@
       { "name": "spv_addon:stuff/207_ambiance", "stream": false }
     ]
   },
+  "death_screen": {
+    "sounds": [
+      { "name": "spv_addon:death_screen", "stream": false }
+    ]
+  },
   "entity.bellwalker.carp": {
     "sounds": [
       { "name": "spv_addon:entity/bellwalker/carp", "stream": false }
@@ -27,6 +32,16 @@
   "stuff.elevator": {
     "sounds": [
       { "name": "spv_addon:stuff/elevator", "stream": false }
+    ]
+  },
+  "stuff.intercom_custom1": {
+    "sounds": [
+      { "name": "spv_addon:stuff/intercom_custom1", "stream": false }
+    ]
+  },
+  "stuff.intercom_custom2": {
+    "sounds": [
+      { "name": "spv_addon:stuff/intercom_custom2", "stream": false }
     ]
   },
   "tapes.tape1": {

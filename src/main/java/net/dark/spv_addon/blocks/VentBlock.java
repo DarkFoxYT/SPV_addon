@@ -2,7 +2,7 @@ package net.dark.spv_addon.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -12,7 +12,6 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +20,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -30,7 +28,6 @@ public class VentBlock extends Block {
     public static final BooleanProperty OPEN = BooleanProperty.of("open");
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    // Collisions (profondeur sur 15-16)
     private static final VoxelShape SHAPE_CLOSED = VoxelShapes.union(
             VoxelShapes.cuboid(15/16.0, 1/16.0, 15/16.0, 16/16.0, 15/16.0, 16/16.0),
             VoxelShapes.cuboid(0/16.0, 0/16.0, 15/16.0, 16/16.0, 1/16.0, 16/16.0),

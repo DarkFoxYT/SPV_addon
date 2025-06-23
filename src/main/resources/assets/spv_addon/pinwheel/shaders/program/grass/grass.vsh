@@ -77,7 +77,7 @@ void main() {
     localPos = (pos - cameraPos) + offset;
 
 
-    float windStrength = 1.5;
+    float windStrength = 0.25;
 
 
     vec3 worldPos = localPos + VeilCamera.CameraPosition;

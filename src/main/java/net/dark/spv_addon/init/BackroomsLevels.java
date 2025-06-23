@@ -1,15 +1,12 @@
 package net.dark.spv_addon.init;
 
 import com.sp.world.levels.BackroomsLevel;
-
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.world.levels.custom.*;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-
-import java.util.Map;
 
 public class BackroomsLevels {
     // === SPV DIMENSIONS ===
@@ -31,12 +28,14 @@ public class BackroomsLevels {
     public static final BackroomsLevel LEVEL_KITTY_BACKROOMS_LEVEL = new LevelKittyBackroomsLevel();
     public static final BackroomsLevel LEVEL207_BACKROOMS_LEVEL = new Level207BackroomsLevel();
 
+
     public static void init() {
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL5_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVELRUN_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_IKEA_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_KITTY_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL207_BACKROOMS_LEVEL);
+
 
         LEVEL5_BACKROOMS_LEVEL.register();
         LEVELRUN_BACKROOMS_LEVEL.register();

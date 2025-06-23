@@ -4,8 +4,8 @@ import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
+import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
-import net.dark.spv_addon.client.FocusHandler;
 import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.client.gui.SanityBar;
 import net.dark.spv_addon.client.gui.ThirstHud;
@@ -17,7 +17,6 @@ import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
-import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -47,7 +46,6 @@ public class Spv_addonClient implements ClientModInitializer {
         BatteryHud.register();
         ThirstHud.register();
         SanityBar.register();
-        FocusHandler.register();
         ThirstManager.register();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> flashlightRenderer.tick(client.getTickDelta()));
@@ -86,7 +84,7 @@ public class Spv_addonClient implements ClientModInitializer {
                         });
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.35F, 2.0F, 256));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.5F, 2.0F, 256));
                     }
 
                 });

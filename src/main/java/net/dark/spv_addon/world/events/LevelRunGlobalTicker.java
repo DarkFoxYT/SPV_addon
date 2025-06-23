@@ -15,13 +15,12 @@ import net.minecraft.world.World;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.HashSet;
 
 import static com.sp.init.BackroomsLevels.*;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {
-    private static final boolean IS_DEV = false; // Passe à true pour le mode dev
+    private static final boolean IS_DEV = false;
     private static int globalTimerTicks = -1;
     private static boolean alreadyActivated = false;
     private static final int TICKS_PER_MIN = 20 * 60;
@@ -51,9 +50,9 @@ public class LevelRunGlobalTicker {
         if (!alreadyActivated && anyPlayerInBackrooms) {
             int delay;
             if (IS_DEV) {
-                delay = TICKS_PER_MIN; // 1 minute en dev
+                delay = TICKS_PER_MIN;
             } else {
-                delay = (10 * TICKS_PER_MIN) + new Random().nextInt(11 * TICKS_PER_MIN); // 10-20 minutes
+                delay = (10 * TICKS_PER_MIN) + new Random().nextInt(11 * TICKS_PER_MIN);
             }
             globalTimerTicks = delay;
             alreadyActivated = true;
@@ -78,7 +77,6 @@ public class LevelRunGlobalTicker {
             }
         }
 
-        // Reset activation if plus aucun joueur dans les backrooms
         if (alreadyActivated && !anyPlayerInBackrooms) {
             alreadyActivated = false;
                 globalTimerTicks = -1;
@@ -86,7 +84,6 @@ public class LevelRunGlobalTicker {
         }
 
     private static boolean isInAnyBackroomsLevel(ServerPlayerEntity player) {
-        // Adapter selon la logique de tes world keys
         RegistryKey<World> key = player.getWorld().getRegistryKey();
         return com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.contains(key)
                 && !key.equals(LEVELRUN_WORLD_KEY)

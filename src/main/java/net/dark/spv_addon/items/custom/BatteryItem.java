@@ -1,7 +1,8 @@
 package net.dark.spv_addon.items.custom;
 
-import net.dark.spv_addon.battery.BatteryManager;
+import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.init.ModSounds;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -9,16 +10,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class BatteryItem extends Item {
-    private final int chargeAmount;
+    private final int maxDurability;
     private static final int FLASHLIGHT_DISABLE_TICKS = 4 * 20;
     private static final String NBT_RECHARGE_TICKS = "RechargeTicks";
 
-    public BatteryItem(Settings settings, int chargeAmount) {
-        super(settings);
-        this.chargeAmount = chargeAmount;
+    public BatteryItem(Settings settings, int maxDurability) {
+        super(settings.maxDamage(maxDurability));
+        this.maxDurability = maxDurability;
     }
 
     @Override
@@ -28,7 +28,6 @@ public class BatteryItem extends Item {
             playBatterySound(world, user);
 
             BatteryManager.setBattery(user.getUuid(), 0);
-            stack.decrement(1);
             user.sendMessage(Text.literal("Changing Battery"), true);
 
             NbtCompound nbt = stack.getOrCreateNbt();
@@ -48,11 +47,13 @@ public class BatteryItem extends Item {
                 if (ticks > 0) {
                     nbt.putInt(NBT_RECHARGE_TICKS, ticks - 1);
                 } else {
-                    int added = Math.min(chargeAmount, 100);
+                    int currentDurability = maxDurability - stack.getDamage();
+                    int added = Math.min(currentDurability, 100);
                     int current = BatteryManager.getBattery(player.getUuid());
                     BatteryManager.setBattery(player.getUuid(), Math.min(current + added, 100));
                     player.sendMessage(Text.literal("Battery Changed"), true);
                     nbt.remove(NBT_RECHARGE_TICKS);
+                    stack.decrement(1);
                 }
             }
         }

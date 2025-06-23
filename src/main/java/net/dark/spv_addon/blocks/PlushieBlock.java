@@ -1,9 +1,8 @@
 package net.dark.spv_addon.blocks;
 
-import net.dark.spv_addon.registry.SanityLightStore;
+import net.dark.spv_addon.Additions.api.SanityLightStore;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.EntityShapeContext;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;

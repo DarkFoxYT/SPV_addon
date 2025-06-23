@@ -1,10 +1,10 @@
 package net.dark.spv_addon.init;
 
+import net.dark.spv_addon.Spv_addon;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.dark.spv_addon.Spv_addon;
 
 public class ModSounds {
     public static final SoundEvent BELLWALKER_BELL = register("entity.bellwalker.bell");
@@ -13,6 +13,8 @@ public class ModSounds {
     public static final SoundEvent BELLWALKER_CARP = register("entity.bellwalker.carp");
     public static final SoundEvent DONG = register("stuff.belldong");
     public static final SoundEvent ELEV = register("stuff.elevator");
+    public static final SoundEvent IC1 = register("stuff.intercom_custom1");
+    public static final SoundEvent IC2 = register("stuff.intercom_custom2");
 
 
     public static final SoundEvent TAPE1 = register("tapes.tape1");

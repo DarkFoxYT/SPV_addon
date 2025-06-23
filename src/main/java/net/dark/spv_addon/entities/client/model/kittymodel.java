@@ -1,12 +1,10 @@
 package net.dark.spv_addon.entities.client.model;
 
-import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.loading.json.raw.Bone;
 import software.bernie.geckolib.model.GeoModel;
 
 public class kittymodel extends GeoModel<KittyEntity> {

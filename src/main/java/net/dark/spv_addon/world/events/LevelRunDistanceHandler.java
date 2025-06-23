@@ -1,10 +1,10 @@
 package net.dark.spv_addon.world.events;
 
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 import java.util.Random;
 

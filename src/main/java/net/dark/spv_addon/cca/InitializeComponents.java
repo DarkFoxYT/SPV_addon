@@ -12,8 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.util.UUID;
-
 public class InitializeComponents implements EntityComponentInitializer {
 
     public static final ComponentKey<BellWalkerComponent> BELL_WALKER =

@@ -2,7 +2,7 @@
 package net.dark.spv_addon.mixins.blocks;
 
 import com.sp.block.custom.CeilingLight;
-import net.dark.spv_addon.api.SanityLightEmitter;
+import net.dark.spv_addon.Additions.api.SanityLightEmitter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;

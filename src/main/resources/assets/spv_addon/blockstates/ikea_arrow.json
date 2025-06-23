@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "spv_addon:block/ikea_arrow", "y": 180 },
+    "facing=east":  { "model": "spv_addon:block/ikea_arrow", "y": 270 },
+    "facing=south": { "model": "spv_addon:block/ikea_arrow", "y": 0 },
+    "facing=west":  { "model": "spv_addon:block/ikea_arrow", "y": 90 }
+  }
+}

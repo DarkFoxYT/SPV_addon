@@ -1,21 +1,20 @@
 package net.dark.spv_addon.entities.client.renderer;
 
+import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
 import com.sp.entity.ik.model.GeckoLib.MowzieGeoBone;
 import net.dark.spv_addon.entities.client.model.BellWalkerModel;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
-import com.sp.entity.ik.model.GeckoLib.GeoModelAccessor;
-
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import software.bernie.geckolib.util.RenderUtils;
 
 public class BellWalkerRenderer extends DynamicGeoEntityRenderer<BellWalkerEntity> {
