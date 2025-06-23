@@ -42,27 +42,22 @@ public abstract class PlayerTickMixin {
             boolean inField = world.getRegistryKey().equals(BackroomsLevels.INFINITE_FIELD_WORLD_KEY);
             boolean inKitty = world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY);
 
-// ======= NO DRAIN AT ALL IN LEVELS =======
             if (inPool) {
-                // PAS DE DRAIN
                 return;
             }
             if (in207) {
-                // PAS DE DRAIN
                 return;
             }
             if (inField) {
-                // PAS DE DRAIN
                 return;
             }
             if (inKitty) {
-                // PAS DE DRAIN
                 return;
             }
 
             boolean nearSanityLight = false;
 
-            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 3, 10)) {
+            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 5, 10)) {
                 if (world.getBlockState(pos).isIn(SANITY_LIGHT_TAG)) {
                     if (pos.getSquaredDistance(playerPos) <= 100) {
                         nearSanityLight = true;
@@ -79,12 +74,10 @@ public abstract class PlayerTickMixin {
 
                 boolean active = true;
 
-                if (state.getProperties().contains(Properties.LIT)) {
-                    active = state.get(Properties.LIT);
-                } else if (state.getProperties().contains(BooleanProperty.of("on"))) {
-                    active = state.get(BooleanProperty.of("on"));
-                } else if (state.getProperties().contains(BooleanProperty.of("red_light"))) {
+                if (state.getProperties().contains(BooleanProperty.of("red_light"))) {
                     active = state.get(BooleanProperty.of("red_light"));
+                } else if (state.getProperties().contains(BooleanProperty.of("stopped"))) {
+                    active = state.get(BooleanProperty.of("stopped"));
                 }
 
                 if (active && pos.getSquaredDistance(playerPos) <= 100) {
@@ -97,5 +90,6 @@ public abstract class PlayerTickMixin {
             if (!nearSanityLight) {
                 sanity.decreaseSanity(1);
             }
-        } }
+        }
+    }
 }

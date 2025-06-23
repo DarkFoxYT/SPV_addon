@@ -20,4 +20,8 @@ public class MixinMinecraftClient {
             ci.cancel();
         }
     }
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void onTick(CallbackInfo ci) {
+        net.dark.spv_addon.world.events.tests.DistortShaderHandler.applyDistortionPostProcess();
+    }
 }

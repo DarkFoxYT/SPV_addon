@@ -2,6 +2,7 @@ package net.dark.spv_addon.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -19,8 +20,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
-
 public class TableBlock extends Block {
+    public enum Part implements net.minecraft.util.StringIdentifiable {
+        HEAD, FOOT;
+
+        @Override
+        public String asString() {
+            return name().toLowerCase();
+        }
+    }
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
 
@@ -33,13 +41,15 @@ public class TableBlock extends Block {
     private static final VoxelShape SHAPE = VoxelShapes.union(TOP, LEG1, LEG2, LEG3, LEG4);
     private static final VoxelShape SHAPE_EMPTY = VoxelShapes.empty();
 
+
+
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
 
     static {
         ROTATED_SHAPES.put(Direction.NORTH, SHAPE);
-        ROTATED_SHAPES.put(Direction.SOUTH, rotateShape180(SHAPE));
-        ROTATED_SHAPES.put(Direction.WEST, rotateShape90(SHAPE));
-        ROTATED_SHAPES.put(Direction.EAST, rotateShape270(SHAPE));
+        ROTATED_SHAPES.put(Direction.SOUTH, rotateShape180Foot(SHAPE));
+        ROTATED_SHAPES.put(Direction.WEST, rotateShape90Foot(SHAPE));
+        ROTATED_SHAPES.put(Direction.EAST, rotateShape270Foot(SHAPE));
     }
 
     public TableBlock(Settings settings) {
@@ -65,15 +75,6 @@ public class TableBlock extends Block {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable net.minecraft.entity.LivingEntity placer, net.minecraft.item.ItemStack itemStack) {
-        if (state.get(PART) == Part.FOOT) {
-            BlockPos headPos = pos.offset(state.get(FACING));
-            BlockState headState = world.getBlockState(headPos);
-            if (headState.isAir()) {
-                world.setBlockState(headPos, state.with(PART, Part.HEAD), 3);
-            } else if (headState.getBlock() != this || headState.get(PART) != Part.HEAD) {
-                world.setBlockState(pos, state.with(PART, Part.HEAD), 3);
-            }
-        }
     }
 
     private static VoxelShape rotateShape180(VoxelShape shape) {
@@ -86,21 +87,43 @@ public class TableBlock extends Block {
         return buffer[0];
     }
 
-    private static VoxelShape rotateShape90(VoxelShape shape) {
-        VoxelShape[] buffer = { VoxelShapes.empty() };
+    private static VoxelShape rotateShape180Foot(VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double newMinX = 1 - maxX;
+            double newMaxX = 1 - minX;
+            double newMinZ = 1 - maxZ;
+            double newMaxZ = 1 - minZ;
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    minZ, minY, 1 - maxX, maxZ, maxY, 1 - minX
+                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
             ));
         });
         return buffer[0];
     }
 
-    private static VoxelShape rotateShape270(VoxelShape shape) {
-        VoxelShape[] buffer = { VoxelShapes.empty() };
+    private static VoxelShape rotateShape90Foot(VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double newMinX = minZ;
+            double newMaxX = maxZ;
+            double newMinZ = 1 - maxX;
+            double newMaxZ = 1 - minX;
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
+                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
+            ));
+        });
+        return buffer[0];
+    }
+
+    private static VoxelShape rotateShape270Foot(VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double newMinX = 1 - maxZ;
+            double newMaxX = 1 - minZ;
+            double newMinZ = minX;
+            double newMaxZ = maxX;
+            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
+                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
             ));
         });
         return buffer[0];
@@ -108,12 +131,14 @@ public class TableBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-        return state.get(PART) == Part.HEAD ? SHAPE_EMPTY : ROTATED_SHAPES.get(state.get(FACING));
+        if (state.get(PART) == Part.HEAD) return SHAPE_EMPTY;
+        return ROTATED_SHAPES.get(state.get(FACING));
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-        return state.get(PART) == Part.HEAD ? SHAPE_EMPTY : ROTATED_SHAPES.get(state.get(FACING));
+        if (state.get(PART) == Part.HEAD) return SHAPE_EMPTY;
+        return ROTATED_SHAPES.get(state.get(FACING));
     }
 
     @Override
@@ -124,21 +149,5 @@ public class TableBlock extends Block {
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
-
-    public enum Part implements net.minecraft.util.StringIdentifiable {
-        HEAD("head"),
-        FOOT("foot");
-
-        private final String name;
-
-        Part(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
     }
 }

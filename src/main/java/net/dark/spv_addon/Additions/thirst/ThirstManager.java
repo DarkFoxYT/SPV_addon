@@ -1,6 +1,7 @@
 package net.dark.spv_addon.Additions.thirst;
 
 import net.dark.spv_addon.cca.InitializeComponents;
+import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
 import net.dark.spv_addon.init.CustomDamageSources;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -14,6 +15,8 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.Random;
 
 public class ThirstManager {
     public static boolean enabled = true;
@@ -42,8 +45,9 @@ public class ThirstManager {
         comp.setThirst(thirst);
 
         if (thirst <= 25) {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, INTERVAL_TICKS, 0, true, false));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, INTERVAL_TICKS, 0, true, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, INTERVAL_TICKS, 1, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, INTERVAL_TICKS, 0, false, false));
+            if (tickCounter % (20 * 5) == 0) InitializeComponents.SANITY.get(player).decreaseSanity(1);
         }
 
         if (thirst == 0) {
@@ -52,8 +56,11 @@ public class ThirstManager {
                     .get(RegistryKeys.DAMAGE_TYPE)
                     .entryOf(CustomDamageSources.THIRST_DAMAGE_ID);
 
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, INTERVAL_TICKS, 1, false, false));
 
-            player.damage(new DamageSource(entry), 1.0f);
+            if (tickCounter % 20 == 0) InitializeComponents.SANITY.get(player).decreaseSanity(1);
+            if (tickCounter % (20 * 2) == 0) InitializeComponents.FLASHLIGHT_BATTERY.get(player).drain(1);
+            player.damage(new DamageSource(entry), 4.0f);
         }
 
     }

@@ -24,9 +24,9 @@ public class FlashlightBatteryEvents {
                 }
 
                 int ticks = tickCounter.getOrDefault(id, 0) + 1;
-                if (ticks >= 600) { // every 30s
+                if (ticks >= 200) { // every 5 seconds
                     if (BatteryManager.isBatteryEnabled()) {
-                        BatteryManager.drainBattery(id, 1);  // ← back to 2‑arg drainBattery
+                        BatteryManager.drainBattery(id, 1);
                     }
                     tickCounter.put(id, 0);
                 } else {
