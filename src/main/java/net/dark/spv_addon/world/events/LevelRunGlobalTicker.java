@@ -1,15 +1,13 @@
 package net.dark.spv_addon.world.events;
 
 import net.dark.spv_addon.init.BackroomsLevels;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
+import net.dark.spv_addon.world.levels.custom.LevelRUNBackroomsLevel;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
@@ -20,12 +18,11 @@ import static com.sp.init.BackroomsLevels.*;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {
-    private static final boolean IS_DEV = false;
+    private static final boolean IS_DEV = true;
     private static int globalTimerTicks = -1;
     private static boolean alreadyActivated = false;
     private static final int TICKS_PER_MIN = 20 * 60;
     private static final Set<ServerPlayerEntity> alreadyTeleported = new HashSet<>();
-    private static final TagKey<Item> CUTE_TAG = TagKey.of(Registries.ITEM.getKey(), new Identifier("spv_addon", "cute_item"));
 
     public static void init() {
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(LevelRunGlobalTicker::onServerTick);
@@ -38,12 +35,11 @@ public class LevelRunGlobalTicker {
 
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             RegistryKey<World> key = player.getWorld().getRegistryKey();
-            if (key.equals(LEVEL0_WORLD_KEY) || key.equals(LEVEL1_WORLD_KEY) || key.equals(LEVEL2_WORLD_KEY) || key.equals(LEVEL324_WORLD_KEY) || key.equals(POOLROOMS_WORLD_KEY) || key.equals(LEVEL324_WORLD_KEY) ) {
+            if (key.equals(LEVEL0_WORLD_KEY) || key.equals(LEVEL1_WORLD_KEY) || key.equals(LEVEL2_WORLD_KEY) || key.equals(LEVEL324_WORLD_KEY) || key.equals(POOLROOMS_WORLD_KEY) || key.equals(INFINITE_FIELD_WORLD_KEY) ) {
                 anyPlayerInBackrooms = true;
                 playersInBackrooms.add(player);
-                if (hasCuteItem(player)) {
-                    playersWithCute.add(player);
-                }
+                playersWithCute.add(player);
+
             }
         }
 
@@ -52,7 +48,7 @@ public class LevelRunGlobalTicker {
             if (IS_DEV) {
                 delay = TICKS_PER_MIN;
             } else {
-                delay = (10 * TICKS_PER_MIN) + new Random().nextInt(11 * TICKS_PER_MIN);
+                delay = (5 * TICKS_PER_MIN) + new Random().nextInt(6 * TICKS_PER_MIN);
             }
             globalTimerTicks = delay;
             alreadyActivated = true;
@@ -79,26 +75,10 @@ public class LevelRunGlobalTicker {
 
         if (alreadyActivated && !anyPlayerInBackrooms) {
             alreadyActivated = false;
-                globalTimerTicks = -1;
-            }
+            globalTimerTicks = -1;
         }
-
-    private static boolean isInAnyBackroomsLevel(ServerPlayerEntity player) {
-        RegistryKey<World> key = player.getWorld().getRegistryKey();
-        return com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.contains(key)
-                && !key.equals(LEVELRUN_WORLD_KEY)
-                && !key.equals(BackroomsLevels.LEVEL_KITTY_WORLD_KEY)
-                && !key.equals(BackroomsLevels.LEVEL_IKEA_WORLD_KEY);
     }
 
-    private static boolean hasCuteItem(ServerPlayerEntity player) {
-        for (ItemStack stack : player.getInventory().main) {
-            if (!stack.isEmpty() && stack.isIn(CUTE_TAG)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private static void noclipPlayerToLevelRun(ServerPlayerEntity player) {
         com.sp.SPBRevamped.sendBlackScreenPacket(player, 60, true, false);

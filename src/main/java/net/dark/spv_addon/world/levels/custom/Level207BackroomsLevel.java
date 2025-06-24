@@ -19,6 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.WorldEvents;
 
 import java.util.*;
 
@@ -192,7 +193,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                 Level207AmbienceEvent ambienceEvent = new Level207AmbienceEvent();
                 ambienceEvent.init(crossDimensionTeleport.world());
             }
-    }
+        }
 
     @Override
         public int getTransitionDuration () {

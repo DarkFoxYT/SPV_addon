@@ -7,13 +7,13 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class kittymodel extends GeoModel<KittyEntity> {
+public class cameraEntityModel extends GeoModel<KittyEntity> {
 	private static final Identifier MODEL = new Identifier(Spv_addon.MOD_ID,
-			"geo/entity/kitty.geo.json");
+			"geo/entity/cam.geo.json");
 	private static final Identifier TEXTURE = new Identifier(Spv_addon.MOD_ID,
-			"textures/entity/kitty/kitty.png");
+			"textures/entity/cam/cam.png");
 	private static final Identifier ANIMATION = new Identifier(Spv_addon.MOD_ID,
-			"animation/kitty.animation.json");
+			"animation/cam.animation.json");
 
 	@Override
 	public Identifier getModelResource(KittyEntity object) {
@@ -30,5 +30,13 @@ public class kittymodel extends GeoModel<KittyEntity> {
 		return ANIMATION;
 	}
 
-
+	@Override
+	public void setCustomAnimations(KittyEntity entity, long uniqueID, AnimationState<KittyEntity> animationState) {
+		super.setCustomAnimations(entity, uniqueID, animationState);
+		CoreGeoBone head = getAnimationProcessor().getBone("head");
+		if (head != null) {
+			head.setRotY(entity.headYaw * ((float)Math.PI / 180F));
+			head.setRotX(entity.headPitch * ((float)Math.PI / 180F));
+		}
+	}
 }

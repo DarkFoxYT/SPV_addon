@@ -42,8 +42,8 @@ public class ThirstManager {
         comp.setThirst(thirst);
 
         if (thirst <= 25) {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, INTERVAL_TICKS, 1, false, false));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, INTERVAL_TICKS, 0, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, INTERVAL_TICKS, 1, true, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, INTERVAL_TICKS, 0, true, false));
             if (tickCounter % (20 * 5) == 0) InitializeComponents.SANITY.get(player).decreaseSanity(1);
         }
 
@@ -53,10 +53,9 @@ public class ThirstManager {
                     .get(RegistryKeys.DAMAGE_TYPE)
                     .entryOf(CustomDamageSources.THIRST_DAMAGE_ID);
 
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, INTERVAL_TICKS, 1, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, INTERVAL_TICKS, 1, true, false));
 
-            if (tickCounter % 20 == 0) InitializeComponents.SANITY.get(player).decreaseSanity(1);
-            if (tickCounter % (20 * 2) == 0) InitializeComponents.FLASHLIGHT_BATTERY.get(player).drain(1);
+            if (tickCounter % (20 * 5) == 0) InitializeComponents.SANITY.get(player).decreaseSanity(5);
             player.damage(new DamageSource(entry), 4.0f);
         }
 

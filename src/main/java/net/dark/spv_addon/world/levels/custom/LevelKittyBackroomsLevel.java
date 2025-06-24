@@ -1,5 +1,6 @@
 package net.dark.spv_addon.world.levels.custom;
 
+import com.sp.SPBRevamped;
 import com.sp.compat.modmenu.ConfigStuff;
 import com.sp.mixininterfaces.NewServerProperties;
 import com.sp.world.levels.BackroomsLevel;
@@ -11,6 +12,7 @@ import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -18,6 +20,9 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class LevelKittyBackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
@@ -59,6 +64,10 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         ensureSingleKitty(world);
     }
 
+    @Override
+    public boolean rendersSky() {
+        return false;
+    }
 
     @Override
     public int nextEventDelay() {
@@ -89,8 +98,28 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     }
 
     @Override
-    public boolean transitionOut(CrossDimensionTeleport teleport) {
-        return teleport.playerComponent().player.isSneaking();
+    public boolean transitionOut(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
+        if (crossDimensionTeleport.world().isClient()) {
+            return true;
+        } else {
+            if (crossDimensionTeleport.playerComponent().getTeleportingTimer() == -1) {
+
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                executorService.schedule(() -> {
+                    crossDimensionTeleport.playerComponent().setShouldGlitch(true);
+                    crossDimensionTeleport.playerComponent().setTeleportingTimer(0);
+                    crossDimensionTeleport.playerComponent().sync();
+                    executorService.shutdown();
+                }, 4500L, TimeUnit.MILLISECONDS);
+                executorService.schedule(() -> {
+                    SPBRevamped.sendBlackScreenPacket((ServerPlayerEntity)crossDimensionTeleport.playerComponent().player, 20, true, false);
+                    executorService.shutdown();
+                }, 5800L, TimeUnit.MILLISECONDS);
+
+            }
+
+            return true;
+        }
     }
 
     @Override
@@ -100,7 +129,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public int getTransitionDuration() {
-        return 40;
+        return 120;
     }
 
 }

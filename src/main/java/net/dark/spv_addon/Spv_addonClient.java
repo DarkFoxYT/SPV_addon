@@ -12,6 +12,7 @@ import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.gui.BatteryHud;
 import net.dark.spv_addon.client.gui.SanityBar;
 import net.dark.spv_addon.client.gui.ThirstHud;
+import net.dark.spv_addon.commands.WindowCutsceneCommand;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.IKEAWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
@@ -26,6 +27,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -50,7 +52,14 @@ public class Spv_addonClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        DistortShaderHandler.applyDistortionPostProcess();
+        // Enregistrer la commande
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
+                WindowCutsceneCommand.register(dispatcher));
+
+        // Enregistrer le tick event
+        ClientTickEvents.END_CLIENT_TICK.register(client ->
+                WindowCutsceneCommand.tick());
+
         BatteryHud.register();
         ThirstHud.register();
         SanityBar.register();
