@@ -1,7 +1,10 @@
 package net.dark.spv_addon.entities.custom;
 
+import com.sp.cca_stuff.InitializeComponents;
 import com.sp.init.BackroomsLevels;
+import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.ModBlocks;
+import net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -11,6 +14,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
@@ -141,6 +145,8 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
         }
     }
 
+
+
     @Override
     public float getHeadYaw() {
         return this.headYaw;
@@ -159,40 +165,35 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
         if (!player.getWorld().isClient && stack.isOf(ModBlocks.KITTY_PLUSHIE1.asItem())) {
-            if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
-                serverPlayer.teleport(
-                        serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
-                        serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
-                        serverPlayer.getYaw(), serverPlayer.getPitch()
-                );
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.teleport(serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
+                        15, 90, 15,
+                        serverPlayer.getYaw(), -90);
                 return ActionResult.success(true);
             }
         }
 
-        if (!player.getWorld().isClient) {
-            if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
-                if (serverPlayer.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
-                    var level = (net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel)
-                            net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL;
-                    var playerComponent = com.sp.cca_stuff.InitializeComponents.PLAYER.get(serverPlayer);
-                    var teleport = new com.sp.world.levels.BackroomsLevel.CrossDimensionTeleport(
-                            serverPlayer.getWorld(),
-                            playerComponent,
-                            level.getSpawnPos(),
-                            net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL,
-                            BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
-                    );
-                    if (level.transitionOut(teleport)) {
-                        serverPlayer.teleport(
-                                serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
-                                serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
-                                serverPlayer.getYaw(), serverPlayer.getPitch()
-                        );
-                        return ActionResult.success(true);
-                    }
+        if (!player.getWorld().isClient && player instanceof ServerPlayerEntity serverPlayer) {
+            if (serverPlayer.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+                var level = (LevelKittyBackroomsLevel) net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL;
+                var pc = InitializeComponents.PLAYER.get(serverPlayer);
+                var tp = new BackroomsLevel.CrossDimensionTeleport(
+                        serverPlayer.getWorld(),
+                        pc,
+                        level.getSpawnPos(),
+                        net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL,
+                        BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
+                );
+
+                if (level.transitionOut(tp)) {
+                    serverPlayer.teleport(serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
+                            15, 90, 15,
+                            serverPlayer.getYaw(), -90);
+                    return ActionResult.success(true);
                 }
             }
         }
+
         return super.interactMob(player, hand);
     }
 }

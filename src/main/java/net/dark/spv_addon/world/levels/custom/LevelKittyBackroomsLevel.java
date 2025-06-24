@@ -8,9 +8,11 @@ import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.world.events.levelkitty.KittyMeowEvent;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
@@ -45,6 +47,12 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     public void register() {
 
         events.add(KittyMeowEvent::new);
+
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            if (world.getRegistryKey().equals(BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
+                ensureSingleKitty(world);
+            }
+        });
     }
 
     public void tick(net.minecraft.server.world.ServerWorld world) {
@@ -62,14 +70,19 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     }
 
     public static void ensureSingleKitty(ServerWorld world) {
-        if (!kittySpawned) {
-            KittyEntity kitty = new KittyEntity(ModEntities.KITTY, world);
-            kitty.refreshPositionAndAngles(15, 2, 18, 0, 0);
-            world.spawnEntity(kitty);
-            System.out.println("Kitty spawned at: " + kitty.getPos());
-            kittySpawned = true;
-        }
+        if (kittySpawned) return;
+
+        BlockPos spawnPos = new BlockPos(15, 2, 18);
+        if (!world.isChunkLoaded(spawnPos)) return;
+
+        KittyEntity kitty = new KittyEntity(ModEntities.KITTY, world);
+        kitty.refreshPositionAndAngles(spawnPos, 0.0F, 0.0F);
+        world.spawnEntity(kitty);
+        kittySpawned = true;
+
+        System.out.println("Spawned kitty at " + spawnPos);
     }
+
 
     @Override
     public void readFromNbt(NbtCompound nbt) {

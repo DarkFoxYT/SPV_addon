@@ -5,7 +5,9 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level1BackroomsLevel;
+import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
 import net.dark.spv_addon.world.events.level207.Level207MoveTracker;
@@ -13,6 +15,7 @@ import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -22,9 +25,8 @@ import java.util.*;
 public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
-    private int STEPS_BEFORE_WARP = 300 + random.nextInt(701); // nombre de blocs à parcourir avant warp (300 à 1000)
+    private int STEPS_BEFORE_WARP = 300 + random.nextInt(701);
     private final Map<UUID, Integer> stepsWalked = new HashMap<>();
-    private static final int STEPS_BEFORE_BELLWALKER = 100;
 
 
     public Level207BackroomsLevel() {
@@ -63,18 +65,41 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         }
     }
 
+    private void spawnBellWalkersAround(PlayerEntity player) {
+        if (!(player.getWorld() instanceof ServerWorld world)) return;
+
+        for (int i = 0; i < 3; i++) {
+            double offsetX = random.nextBetween(-50, 50);
+            double offsetZ = random.nextBetween(-50, 50);
+            double spawnX = player.getX() + offsetX;
+            double spawnZ = player.getZ() + offsetZ;
+            double spawnY = player.getY();
+
+            BellWalkerEntity bellWalker = new BellWalkerEntity(ModEntities.SIX_LEG_ENTITY, world);
+            bellWalker.refreshPositionAndAngles(spawnX, spawnY, spawnZ, 0, 0);
+            world.spawnEntity(bellWalker);
+        }
+    }
+
+
     public void onPlayerMove(PlayerEntity player, Vec3d oldPos, Vec3d newPos) {
         if (!player.isOnGround()) return;
+
         int steps = (int) oldPos.distanceTo(newPos);
         if (steps <= 0) return;
+
         UUID uuid = player.getUuid();
         stepsWalked.put(uuid, stepsWalked.getOrDefault(uuid, 0) + steps);
 
-
+        // Vérifie si le joueur a marché assez pour déclencher un événement
         if (stepsWalked.get(uuid) >= STEPS_BEFORE_WARP) {
             stepsWalked.put(uuid, 0);
             PlayerComponent pc = InitializeComponents.PLAYER.get(player);
 
+            // Spawn des Bell Walkers
+            spawnBellWalkersAround(player);
+
+            // Téléportation vers POOLROOMS
             pc.setShouldNoClip(true);
             pc.sync();
 
@@ -85,6 +110,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                     BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
                     com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
             );
+
             this.transitionOut(teleport);
 
             player.getServer().execute(() -> {
@@ -93,10 +119,35 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                 pc.sync();
             });
 
-            // Redéfinir un nouveau seuil aléatoire pour le prochain warp
+            // Réinitialisation du seuil
             STEPS_BEFORE_WARP = 300 + random.nextInt(701);
         }
+
+        // Téléportation vers un autre niveau si le joueur tombe sous Y=30
+        if (player.getY() < 30 && player instanceof ServerPlayerEntity serverPlayer) {
+            PlayerComponent pc = InitializeComponents.PLAYER.get(serverPlayer);
+
+            pc.setShouldNoClip(true);
+            pc.sync();
+
+            BackroomsLevel.CrossDimensionTeleport teleport = new BackroomsLevel.CrossDimensionTeleport(
+                    player.getWorld(),
+                    pc,
+                    new Vec3d(10, 66, 10), // coord vers le niveau suivant
+                    BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
+                    com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
+            );
+
+            this.transitionOut(teleport);
+
+            player.getServer().execute(() -> {
+                try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+                pc.setShouldNoClip(false);
+                pc.sync();
+            });
+        }
     }
+
 
 
 

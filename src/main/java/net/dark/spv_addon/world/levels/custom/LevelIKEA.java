@@ -30,11 +30,11 @@ public class LevelIKEA extends BackroomsLevel {
             }
 
             if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
-                playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL_IKEA_BACKROOMS_LEVEL));
+                playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL207_BACKROOMS_LEVEL));
             }
 
             return playerList;
-        }, "level2 -> level_ikea");
+        }, "level2 -> level207");
     }
 
     @Override

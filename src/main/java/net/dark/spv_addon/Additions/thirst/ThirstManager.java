@@ -1,7 +1,6 @@
 package net.dark.spv_addon.Additions.thirst;
 
 import net.dark.spv_addon.cca.InitializeComponents;
-import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
 import net.dark.spv_addon.init.CustomDamageSources;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -15,8 +14,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.Random;
 
 public class ThirstManager {
     public static boolean enabled = true;

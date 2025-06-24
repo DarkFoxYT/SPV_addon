@@ -26,6 +26,8 @@ import java.util.Map;
 public class PlushieBlock extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
+
+
     private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
             2, 0, 2,
             14, 10, 14

@@ -29,19 +29,31 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
 
     public void tick(ServerWorld world) {
         smilerSpawnTick++;
-        if (smilerSpawnTick >= SMILER_SPAWN_INTERVAL) {
-            smilerSpawnTick = 0;
-            int count = 2 + world.random.nextInt(3);
-            for (int i = 0; i < count; i++) {
-                double x = 10 + world.random.nextDouble() * (world.getWorldBorder().getSize() - 20);
-                double y = 1;
-                double z = 10 + world.random.nextDouble() * (world.getWorldBorder().getSize() - 20);
+        if (smilerSpawnTick < SMILER_SPAWN_INTERVAL) return;
+
+        smilerSpawnTick = 0;
+
+        int spawnRadius = 15;
+        int smilersPerPlayer = 2 + world.random.nextInt(3);
+
+        world.getPlayers().forEach(player -> {
+            for (int i = 0; i < smilersPerPlayer; i++) {
+                double offsetX = random.nextBetween(-spawnRadius, spawnRadius);
+                double offsetZ = random.nextBetween(-spawnRadius, spawnRadius);
+                double spawnX = player.getX() + offsetX;
+                double spawnZ = player.getZ() + offsetZ;
+                double spawnY = player.getY();
+
+                // Évite de spawner dans les murs
+                if (!world.getBlockState(player.getBlockPos()).isAir()) continue;
+
                 SmilerEntity smiler = new SmilerEntity(ModEntities.SMILER_ENTITY, world);
-                smiler.refreshPositionAndAngles(x, y, z, world.random.nextFloat() * 360F, 0);
+                smiler.refreshPositionAndAngles(spawnX, spawnY, spawnZ, random.nextFloat() * 360F, 0);
                 world.spawnEntity(smiler);
             }
-        }
+        });
     }
+
 
     @Override
     public int nextEventDelay() {
