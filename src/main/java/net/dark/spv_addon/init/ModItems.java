@@ -33,6 +33,8 @@ public class ModItems {
     public static final Item TAPE_RECORDER = register("tape_recorder", new BlockItem(ModBlocks.TAPE_RECORDER, new FabricItemSettings()));
     public static final Item VENT = register("vent1", new BlockItem(ModBlocks.VENT, new FabricItemSettings()));
     public static final Item KITTY_ROOF = register("kitty_roof", new BlockItem(ModBlocks.KITTY_ROOF, new FabricItemSettings()));
+    public static final Item KITTY_LAMP = register("kitty_lamp", new BlockItem(ModBlocks.KITTY_LAMP, new FabricItemSettings()));
+    public static final Item KITTY_LIGHT = register("kitty_light", new BlockItem(ModBlocks.KITTY_LIGHT, new FabricItemSettings()));
     public static final Item IKEA_ARROW = register("ikea_arrow", new BlockItem(ModBlocks.IKEA_ARROW, new FabricItemSettings()));
 
     // Custom items

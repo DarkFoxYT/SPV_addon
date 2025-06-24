@@ -5,9 +5,12 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +25,16 @@ public class Kittylamp extends BlockWithEntity {
 
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new KittyLampEntity(pos, state);
+    }
+
+    public void onInteract(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) {
+            boolean stopped = !state.get(STOPPED);
+            world.setBlockState(pos, state.with(STOPPED, stopped));
+            if (world.getBlockEntity(pos) instanceof KittyLampEntity lampEntity) {
+                lampEntity.on = stopped;
+            }
+        }
     }
 
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {

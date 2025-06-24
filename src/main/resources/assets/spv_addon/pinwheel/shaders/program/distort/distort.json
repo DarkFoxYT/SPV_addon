@@ -1,4 +1,17 @@
 {
-  "vertex": "spv_addon:distort/distort",
-  "fragment": "spv_addon:distort/distort"
+  "targets": ["swap"],
+  "passes": [
+    {
+      "name": "distort",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "auxtargets": [],
+      "shaders": {
+        "fragment": "distort.fsh"
+      },
+      "uniforms": [
+        { "name": "Time", "type": "float" }
+      ]
+    }
+  ]
 }

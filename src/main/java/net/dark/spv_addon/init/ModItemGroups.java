@@ -15,7 +15,7 @@ public class ModItemGroups {
             new Identifier(Spv_addon.MOD_ID, "spv_addon"),
             FabricItemGroup.builder()
                     .displayName(Text.translatable("itemGroup.spv_addon"))
-                    .icon(() -> new ItemStack(ModBlocks.HOTEL_FLOOR))
+                    .icon(() -> new ItemStack(ModBlocks.KITTY_PLUSHIE_DEV))
                     .entries((ctx, entries) -> {
 
                         // Blocks
@@ -27,6 +27,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.KITTY_WALL);
                         entries.add(ModBlocks.KITTY_FLOOR);
                         entries.add(ModBlocks.KITTY_ROOF);
+                        entries.add(ModBlocks.KITTY_LAMP);
+                        entries.add(ModBlocks.KITTY_LIGHT);
                         entries.add(ModBlocks.KITTY_PLUSHIE);
                         entries.add(ModBlocks.KITTY_PLUSHIE1);
                         entries.add(ModBlocks.KITTY_PLUSHIE_DEV);

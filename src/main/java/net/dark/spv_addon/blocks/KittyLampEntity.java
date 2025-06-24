@@ -43,7 +43,7 @@ public class KittyLampEntity extends BlockEntity {
                 this.brightness = 2.58F;
                 this.angle = 60.4F;
                 this.light = new AreaLight();
-                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((AreaLight)this.light.setBrightness(this.brightness).setSize(0.9, (double)0.0F).setAngle((float)Math.toRadians((double)this.angle)).setOrientation((new Quaternionf()).rotateXYZ((float)Math.toRadians((double)-90.0F), 0.0F, 0.0F)).setPosition(new Vector3d(position.x, position.y, position.z))).setDistance(15.0F));
+                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((AreaLight)this.light.setBrightness(this.brightness).setSize(0.9, (double)0.0F).setAngle((float)Math.toRadians((double)this.angle)).setOrientation((new Quaternionf()).rotateXYZ((float)Math.toRadians((double)-90.0F), 0.0F, 0.0F)).setColor(205,0,255).setPosition(new Vector3d(position.x, position.y, position.z))).setDistance(15.0F));
             }
         }
     }

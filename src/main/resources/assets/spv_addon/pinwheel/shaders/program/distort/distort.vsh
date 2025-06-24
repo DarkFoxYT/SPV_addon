@@ -1,19 +1,16 @@
-#version 120
 
-attribute vec2 inPosition;
-attribute vec2 inTexCoord0;
+#version 150
 
-varying vec2 passTexCoord;
-varying float glitchOffset;
-
-uniform float time;
-
-float rand(vec2 co){
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
+uniform sampler2D DiffuseSampler;
+uniform float Time;
+in vec2 texCoord;
+out vec4 fragColor;
 
 void main() {
-    gl_Position = vec4(inPosition, 0.0, 1.0);
-    passTexCoord = inTexCoord0;
-    glitchOffset = rand(inTexCoord0 + time);
+    float offset = 0.005 * sin(Time * 5.0);
+    float r = texture(DiffuseSampler, texCoord + vec2(-offset, 0.0)).r;
+    float g = texture(DiffuseSampler, texCoord).g;
+    float b = texture(DiffuseSampler, texCoord + vec2(offset, 0.0)).b;
+    float edge = abs(r - b) > 0.1 ? 1.0 : 0.0;
+    fragColor = vec4(r + edge, g, b + edge, 1.0);
 }
