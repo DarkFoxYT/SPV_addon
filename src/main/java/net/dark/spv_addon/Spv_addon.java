@@ -75,7 +75,7 @@ public class Spv_addon implements ModInitializer {
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 PlayerComponent playerComponent = InitializeComponents.PLAYER.get(newPlayer);
 
-                sendBlackScreenPacket(newPlayer, 120, true, false);
+                sendBlackScreenPacket(newPlayer, 500, true, false);
                 boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
                 newPlayer.getAbilities().invulnerable = true;
                 playerComponent.setShouldRender(false);

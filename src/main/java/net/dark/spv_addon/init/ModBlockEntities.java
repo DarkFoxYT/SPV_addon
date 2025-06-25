@@ -26,7 +26,7 @@ public class ModBlockEntities {
         );
         KITTY_LIGHT_BLOCK_ENTITY = Registry.register(
                 Registries.BLOCK_ENTITY_TYPE,
-                new Identifier("spv_addon", "kitty_lamp"),
-                BlockEntityType.Builder.create(KittyLightBlockEntity::new, ModBlocks.KITTY_LAMP).build(null)
+                new Identifier("spv_addon", "kitty_light"),
+                BlockEntityType.Builder.create(KittyLightBlockEntity::new, ModBlocks.KITTY_LIGHT).build(null)
         );
 }}

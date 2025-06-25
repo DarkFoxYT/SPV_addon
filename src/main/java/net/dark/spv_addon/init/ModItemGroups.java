@@ -43,6 +43,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.BED1);
                         entries.add(ModBlocks.BED2);
                         entries.add(ModBlocks.TABLE);
+                        entries.add(ModBlocks.RUN_ROOF);
 
 
 

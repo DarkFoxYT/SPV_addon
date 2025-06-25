@@ -140,8 +140,8 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
             double dist = Math.sqrt(dx * dx + dz * dz);
             float targetYaw = (float)(Math.toDegrees(Math.atan2(dx, dz)));
             float targetPitch = (float)(Math.atan2(dy, dist) * (180F / Math.PI));
-            this.headYaw += MathHelper.wrapDegrees(targetYaw - this.headYaw) * 0.2F;
-            this.headPitch += (targetPitch - this.headPitch) * 0.2F;
+            this.headYaw += MathHelper.wrapDegrees(targetYaw + this.headYaw) * 0.2F;
+            this.headPitch += (targetPitch + this.headPitch) * 0.2F;
         }
     }
 
@@ -164,13 +164,9 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (!player.getWorld().isClient && stack.isOf(ModBlocks.KITTY_PLUSHIE1.asItem())) {
-            if (player instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.teleport(serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
-                        15, 90, 15,
-                        serverPlayer.getYaw(), -90);
-                return ActionResult.success(true);
-            }
+
+        if (!stack.isOf(ModBlocks.KITTY_PLUSHIE1.asItem())) {
+            return super.interactMob(player, hand);
         }
 
         if (!player.getWorld().isClient && player instanceof ServerPlayerEntity serverPlayer) {
@@ -186,9 +182,11 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
                 );
 
                 if (level.transitionOut(tp)) {
-                    serverPlayer.teleport(serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
+                    serverPlayer.teleport(
+                            serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
                             15, 90, 15,
-                            serverPlayer.getYaw(), -90);
+                            serverPlayer.getYaw(), -90
+                    );
                     return ActionResult.success(true);
                 }
             }

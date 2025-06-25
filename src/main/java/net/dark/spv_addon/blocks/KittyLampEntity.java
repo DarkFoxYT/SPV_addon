@@ -2,6 +2,7 @@ package net.dark.spv_addon.blocks;
 
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.deferred.light.AreaLight;
+import foundry.veil.api.client.render.deferred.light.PointLight;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,7 +14,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
 public class KittyLampEntity extends BlockEntity {
-    AreaLight light;
+    PointLight light;
     float brightness;
     float angle;
     int ticks;
@@ -39,11 +40,10 @@ public class KittyLampEntity extends BlockEntity {
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world.isClient) {
             if (this.light == null) {
-                Vec3d position = pos.toCenterPos().add((double)-0.5F, -0.06, (double)0.0F);
-                this.brightness = 2.58F;
-                this.angle = 60.4F;
-                this.light = new AreaLight();
-                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((AreaLight)this.light.setBrightness(this.brightness).setSize(0.9, (double)0.0F).setAngle((float)Math.toRadians((double)this.angle)).setOrientation((new Quaternionf()).rotateXYZ((float)Math.toRadians((double)-90.0F), 0.0F, 0.0F)).setColor(205,0,255).setPosition(new Vector3d(position.x, position.y, position.z))).setDistance(15.0F));
+                Vec3d position = pos.toCenterPos().add((double)0, 0, (double)0);
+                this.brightness = 1F;
+                this.light = new PointLight();
+                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((PointLight)this.light.setBrightness(this.brightness).setColor(1,0,1).setRadius(13).setPosition(new Vector3d(position.x, position.y, position.z))));
             }
         }
     }

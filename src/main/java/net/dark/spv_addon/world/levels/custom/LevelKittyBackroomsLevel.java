@@ -29,7 +29,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     private static boolean kittySpawned = false;
 
     public LevelKittyBackroomsLevel() {
-        super("level_kitty", KittyChunkGenerator.CODEC, new Vec3d(20, 1, 15), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
+        super("level_kitty", KittyChunkGenerator.CODEC, new Vec3d(21, 2, 13), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
 
         this.registerTransition((world, playerComponent, from) -> {
             List<CrossDimensionTeleport> playerList = new ArrayList();
@@ -64,10 +64,6 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         ensureSingleKitty(world);
     }
 
-    @Override
-    public boolean rendersSky() {
-        return false;
-    }
 
     @Override
     public int nextEventDelay() {
@@ -99,27 +95,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public boolean transitionOut(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
-        if (crossDimensionTeleport.world().isClient()) {
-            return true;
-        } else {
-            if (crossDimensionTeleport.playerComponent().getTeleportingTimer() == -1) {
-
-                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-                executorService.schedule(() -> {
-                    crossDimensionTeleport.playerComponent().setShouldGlitch(true);
-                    crossDimensionTeleport.playerComponent().setTeleportingTimer(0);
-                    crossDimensionTeleport.playerComponent().sync();
-                    executorService.shutdown();
-                }, 4500L, TimeUnit.MILLISECONDS);
-                executorService.schedule(() -> {
-                    SPBRevamped.sendBlackScreenPacket((ServerPlayerEntity)crossDimensionTeleport.playerComponent().player, 20, true, false);
-                    executorService.shutdown();
-                }, 5800L, TimeUnit.MILLISECONDS);
-
-            }
-
-            return true;
-        }
+        return true;
     }
 
     @Override
@@ -129,7 +105,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public int getTransitionDuration() {
-        return 120;
+        return 10;
     }
 
 }

@@ -5,6 +5,9 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level1BackroomsLevel;
+import foundry.veil.api.client.render.VeilRenderSystem;
+import foundry.veil.api.client.render.deferred.light.DirectionalLight;
+import foundry.veil.api.client.render.deferred.light.PointLight;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModEntities;
@@ -12,23 +15,28 @@ import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
 import net.dark.spv_addon.world.events.level207.Level207MoveTracker;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
+import org.joml.Vector3d;
 
 import java.util.*;
 
 public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
-
+    DirectionalLight light;
+    float brightness;
     private int STEPS_BEFORE_WARP = 300 + random.nextInt(701);
     private final Map<UUID, Integer> stepsWalked = new HashMap<>();
-
+    int tick;
 
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
@@ -158,6 +166,16 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         Level207MoveTracker.register(this);
         events.add(Level207BellWalkerEvent::new);
 
+    }
+
+    public void tick(World world, BlockPos pos, BlockState state) {
+        if (world.isClient) {
+            if (this.light == null) {
+                this.brightness = 1F;
+                this.light = new DirectionalLight();
+                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((DirectionalLight)this.light.setBrightness(this.brightness).setColor(0.28F,0.28F,0.28F)));
+            }
+        }
     }
 
 

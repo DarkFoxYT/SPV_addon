@@ -18,7 +18,7 @@ import static com.sp.init.BackroomsLevels.*;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {
-    private static final boolean IS_DEV = true;
+    private static final boolean IS_DEV = false;
     private static int globalTimerTicks = -1;
     private static boolean alreadyActivated = false;
     private static final int TICKS_PER_MIN = 20 * 60;
@@ -35,7 +35,7 @@ public class LevelRunGlobalTicker {
 
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             RegistryKey<World> key = player.getWorld().getRegistryKey();
-            if (key.equals(LEVEL0_WORLD_KEY) || key.equals(LEVEL1_WORLD_KEY) || key.equals(LEVEL2_WORLD_KEY) || key.equals(LEVEL324_WORLD_KEY) || key.equals(POOLROOMS_WORLD_KEY) || key.equals(INFINITE_FIELD_WORLD_KEY) ) {
+            if (key.equals(LEVEL0_WORLD_KEY) || key.equals(LEVEL1_WORLD_KEY) ) {
                 anyPlayerInBackrooms = true;
                 playersInBackrooms.add(player);
                 playersWithCute.add(player);
@@ -95,7 +95,7 @@ public class LevelRunGlobalTicker {
         player.getServer().execute(() -> {
             ServerWorld kittyWorld = player.getServer().getWorld(BackroomsLevels.LEVEL_KITTY_WORLD_KEY);
             if (kittyWorld != null) {
-                player.teleport(kittyWorld, 20, 1, 15, player.getYaw(), player.getPitch());
+                player.teleport(kittyWorld, 21, 2, 13, 0, -90);
             }
         });
     }
