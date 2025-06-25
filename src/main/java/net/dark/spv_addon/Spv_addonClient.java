@@ -22,7 +22,6 @@ import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
-import net.dark.spv_addon.world.events.tests.DistortShaderHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

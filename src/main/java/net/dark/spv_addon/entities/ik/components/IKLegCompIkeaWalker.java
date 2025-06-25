@@ -4,7 +4,6 @@ package net.dark.spv_addon.entities.ik.components;
 import com.sp.entity.ik.components.IKAnimatable;
 import com.sp.entity.ik.model.BoneAccessor;
 import com.sp.entity.ik.model.ModelAccessor;
-import com.sp.entity.ik.parts.ik_chains.EntityLeg;
 import com.sp.entity.ik.parts.ik_chains.IKChain;
 import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
 import net.minecraft.client.render.RenderLayer;
@@ -20,7 +19,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IKLegCompIkeaWalker<C extends IKChain, E extends IKAnimatable<E>>

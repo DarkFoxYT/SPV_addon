@@ -1,7 +1,6 @@
 package net.dark.spv_addon.blocks;
 
 import foundry.veil.api.client.render.VeilRenderSystem;
-import foundry.veil.api.client.render.deferred.light.AreaLight;
 import foundry.veil.api.client.render.deferred.light.PointLight;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.minecraft.block.BlockState;
@@ -10,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
 public class KittyLampEntity extends BlockEntity {

@@ -7,7 +7,6 @@ import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level1BackroomsLevel;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.deferred.light.DirectionalLight;
-import foundry.veil.api.client.render.deferred.light.PointLight;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModEntities;
@@ -25,8 +24,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
-import org.joml.Vector3d;
 
 import java.util.*;
 

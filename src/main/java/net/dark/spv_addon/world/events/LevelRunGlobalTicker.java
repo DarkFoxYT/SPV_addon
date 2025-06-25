@@ -1,20 +1,18 @@
 package net.dark.spv_addon.world.events;
 
 import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.world.levels.custom.LevelRUNBackroomsLevel;
-import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import static com.sp.init.BackroomsLevels.*;
+import static com.sp.init.BackroomsLevels.LEVEL0_WORLD_KEY;
+import static com.sp.init.BackroomsLevels.LEVEL1_WORLD_KEY;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {

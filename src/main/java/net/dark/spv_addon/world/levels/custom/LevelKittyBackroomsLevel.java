@@ -1,6 +1,5 @@
 package net.dark.spv_addon.world.levels.custom;
 
-import com.sp.SPBRevamped;
 import com.sp.compat.modmenu.ConfigStuff;
 import com.sp.mixininterfaces.NewServerProperties;
 import com.sp.world.levels.BackroomsLevel;
@@ -12,7 +11,6 @@ import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -20,9 +18,6 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class LevelKittyBackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
