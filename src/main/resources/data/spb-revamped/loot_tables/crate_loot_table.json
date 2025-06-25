@@ -1,48 +1,46 @@
 {
   "pools": [
     {
-      "rolls": { "min": 1, "max": 2 },
-      "bonus_rolls": 1,
+      "rolls": {
+        "min": 1,
+        "max": 5
+      },
+      "bonus_rolls": 2,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "spb-revamped:backshroom",
           "weight": 3,
           "functions": [
-            { "function": "minecraft:set_count", "count": { "min": 0, "max": 2 }, "add": true }
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 0,
+                "max": 2
+              },
+              "add": true
+            }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "spv_addon:battery_item",
-          "weight": 14,
-          "functions": [
-            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 }, "add": true }
-          ]
+          "weight": 5
         },
         {
           "type": "minecraft:item",
           "name": "spv_addon:almond_dirty",
-          "weight": 5,
-          "functions": [
-            { "function": "minecraft:set_nbt", "tag": "{Poisoned:1b}" }
-          ]
+          "weight": 5
         },
         {
           "type": "minecraft:item",
           "name": "spv_addon:almond_water",
-          "weight": 2,
-          "functions": [
-            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 }, "add": true }
-          ]
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "spv_addon:canteen",
-          "weight": 2,
-          "functions": [
-            { "function": "minecraft:set_count", "count": { "min": 1, "max": 1 }, "add": true }
-          ]
+          "weight": 2.5
         },
         {
           "type": "minecraft:item",
@@ -52,34 +50,8 @@
         {
           "type": "minecraft:item",
           "name": "spv_addon:kitty_plushie",
-          "weight": 0.1,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "spv_addon:kitty_plushie1",
-          "weight": 0.05,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": 1
-            }
-          ]
-        },
-      {
-        "type": "minecraft:item",
-        "name": "spv_addon:kitty_plushie_dev",
-        "weight": 0.01,
-          "functions": [
-            { "function": "minecraft:set_count", "count": 1 }
-          ]
+          "weight": 2
         }
-
       ]
     }
   ]

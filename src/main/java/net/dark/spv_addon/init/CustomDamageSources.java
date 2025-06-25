@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 public class CustomDamageSources {
     public static final RegistryKey<DamageType> THIRST_DAMAGE_ID =
             RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("spv_addon", "thirst"));
+    public static final RegistryKey<DamageType> DISTORTION_DAMAGE_ID =
+            RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("spv_addon", "distortion"));
 
     public static DamageSource of(World world, RegistryKey<DamageType> key){
         return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key));

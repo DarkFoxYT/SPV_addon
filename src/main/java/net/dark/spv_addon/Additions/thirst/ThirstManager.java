@@ -60,11 +60,6 @@ public class ThirstManager {
         }
 
     }
-
-    public static int getThirst(ServerPlayerEntity player) {
-        return InitializeComponents.THIRST.get(player).getThirst();
-    }
-
     public static void setThirst(ServerPlayerEntity player, int value) {
         InitializeComponents.THIRST.get(player).setThirst(value);
     }

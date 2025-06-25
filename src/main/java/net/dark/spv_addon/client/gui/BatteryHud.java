@@ -16,10 +16,8 @@ import static net.dark.spv_addon.Spv_addon.MOD_ID;
 public class BatteryHud implements HudRenderCallback {
     private static final Identifier BATTERY_1 = new Identifier(MOD_ID, "textures/gui/battery1.png");
     private static final Identifier BATTERY_2 = new Identifier(MOD_ID, "textures/gui/battery2.png");
-    // Les textures sont 66x44 px (batterie vide et pleine)
     private static final int BAR_W = 44, BAR_H = 44;
-    private static final float SCALE = 1.0f;
-    private static final int X_MARGIN = 16, Y_MARGIN = 40;
+    private static final float SCALE = 0.8f;
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -40,6 +38,7 @@ public class BatteryHud implements HudRenderCallback {
         int sw = client.getWindow().getScaledWidth();
         int x = sw - (int)(BAR_W * SCALE) - 16;
         int y = 16;
+
 
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);

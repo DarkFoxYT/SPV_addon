@@ -1,6 +1,7 @@
 package net.dark.spv_addon.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.dark.spv_addon.init.ModSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -17,8 +18,6 @@ import net.minecraft.util.Identifier;
 public class CustomDeathScreen extends Screen {
     private static final Identifier BACKGROUND = new Identifier("spv_addon", "textures/gui/death_full.png");
      private static final Identifier SCANLINES = new Identifier("spv_addon", "textures/gui/scanlines.png");
-    private static final Identifier DEATH_SOUND = new Identifier("spv_addon", "sounds/death_screen.ogg");
-
     private final String playerName;
     private int ticksElapsed = 0;
     private int glitchTicks = 0;
@@ -143,13 +142,13 @@ public class CustomDeathScreen extends Screen {
     private void playDeathSound() {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.player != null) {
-            mc.getSoundManager().play(net.minecraft.client.sound.PositionedSoundInstance.music(SoundEvent.of(DEATH_SOUND)));
+            mc.getSoundManager().play(net.minecraft.client.sound.PositionedSoundInstance.music(SoundEvent.of(ModSounds.DEATH_SOUND.getId())));
         }
     }
 
     private void stopDeathSound() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        mc.getSoundManager().stopSounds(DEATH_SOUND, net.minecraft.sound.SoundCategory.MUSIC);
+        mc.getSoundManager().stopSounds(ModSounds.DEATH_SOUND.getId(), net.minecraft.sound.SoundCategory.MUSIC);
 
     }
 }

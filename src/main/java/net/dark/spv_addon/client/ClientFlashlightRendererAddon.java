@@ -5,9 +5,13 @@ import com.sp.cca_stuff.PlayerComponent;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.deferred.light.AreaLight;
 import net.dark.spv_addon.Additions.battery.BatteryManager;
+import net.dark.spv_addon.init.CustomDamageSources;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
@@ -39,9 +43,7 @@ public class ClientFlashlightRendererAddon {
                 continue;
             }
 
-            // Flicker à 20 de sanity (aléatoire, mais reste souvent allumé puis clignote rapidement par moments)
             if (sanity <= 20) {
-                // 80% du temps, la lampe reste allumée normalement
                 if (client.world.getRandom().nextFloat() > 0.135f) {
                     if (!comp.isFlashLightOn()) comp.setFlashLightOn(true);
                     updateLight(player, tickDelta);
@@ -65,7 +67,10 @@ public class ClientFlashlightRendererAddon {
                     comp.setShouldGlitch(true);
                     comp.justChanged();
                     if (!comp.shouldInflictGlitchDamage) {
-                        comp.shouldInflictGlitchDamage = true;
+                        RegistryEntry<DamageType> entry = player.getWorld()
+                                .getRegistryManager()
+                                .get(RegistryKeys.DAMAGE_TYPE)
+                                .entryOf(CustomDamageSources.DISTORTION_DAMAGE_ID);
                     }
                 }
             } else {
@@ -120,15 +125,6 @@ public class ClientFlashlightRendererAddon {
             for (AreaLight light : lights) {
                 VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().removeLight(light);
             }
-        }
-    }
-
-    public void updateBattery(PlayerEntity player, int newBatteryValue) {
-        UUID uuid = player.getUuid();
-        int battery = BatteryManager.getBattery(uuid);
-        if (battery != newBatteryValue) {
-            System.out.println("Battery at " + battery + "% for " + player.getName().getString());
-            player.sendMessage(Text.literal("Battery at " + battery + "%"), true);
         }
     }
 }
