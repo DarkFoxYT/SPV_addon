@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.events;
+package net.dark.spv_addon.world.events.level207;
 
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.minecraft.block.Blocks;
@@ -9,10 +9,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class RedWoolTeleporter {
+public class WoolTeleporter207 {
 
     public static final RegistryKey<World> TARGET_WORLD = com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY;
-    public static final RegistryKey<World> SOURCE_WORLD1 = BackroomsLevels.LEVELRUN_WORLD_KEY;
+    public static final RegistryKey<World> SOURCE_WORLD1 = BackroomsLevels.LEVEL207_WORLD_KEY;
 
     public static void tickPlayer(ServerPlayerEntity player) {
         if (!player.getWorld().getRegistryKey().equals(SOURCE_WORLD1)) return;

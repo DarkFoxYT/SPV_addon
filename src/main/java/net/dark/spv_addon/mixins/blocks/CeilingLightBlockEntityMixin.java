@@ -18,11 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CeilingLightBlockEntity.class)
 public abstract class CeilingLightBlockEntityMixin {
 
-    @Shadow private AreaLight light;
+    @Shadow
+    AreaLight light;
 
-    @Shadow private float brightness;
+    @Shadow
+    float brightness;
 
-    @Shadow private float angle;
+    @Shadow
+    float angle;
 
     /**
      * Injects additional logic into the tick method at the tail end.

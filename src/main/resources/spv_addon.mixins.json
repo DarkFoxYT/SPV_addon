@@ -7,6 +7,7 @@
     "PlayerDeathMixin",
     "PlayerEntityMixin",
     "PlayerTickMixin",
+    "TitleTextMixin",
     "blocks.CeilingLightBlockEntityMixin",
     "blocks.CeilingLightMixin",
     "blocks.ClientWrapperMixin",

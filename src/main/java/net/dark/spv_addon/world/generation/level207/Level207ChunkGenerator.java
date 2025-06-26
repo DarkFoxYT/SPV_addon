@@ -6,8 +6,10 @@ import com.sp.SPBRevampedClient;
 import com.sp.world.generation.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.StructureTemplateManager;
@@ -82,6 +84,8 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/grave" + variant);
             }
 
+
+
             MinecraftServer server = world.getServer();
             if (server == null) return;
             StructureTemplateManager mgr = server.getStructureTemplateManager();
@@ -101,6 +105,43 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
             optTpl.get().place(world, basePos, basePos, placeData, random, 2);
         }
     }
+
+
+    private void tryPlaceExitNearPlayer(PlayerEntity player) {
+        if (!(player.getWorld() instanceof ServerWorld world)) return;
+
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
+
+        StructureTemplateManager mgr = server.getStructureTemplateManager();
+        Identifier exitId = new Identifier(Spv_addon.MOD_ID, "level207/exit");
+        Optional<StructureTemplate> optTpl = mgr.getTemplate(exitId);
+        if (optTpl.isEmpty()) return;
+
+        // Recherche du offset vertical via lime wool (comme RUN)
+        StructureTemplate template = optTpl.get();
+        int yOffset = 0;
+        for (StructureTemplate.StructureBlockInfo info : template.getInfosForBlock(BlockPos.ORIGIN, new StructurePlacementData(), Blocks.LIME_WOOL)) {
+            if (info.state().isOf(Blocks.LIME_WOOL)) {
+                yOffset = info.pos().getY() + 1;
+                break;
+            }
+        }
+
+        // Position d’apparition autour du joueur
+        int radius = 20;
+        int px = (int) player.getX() + random.nextBetween(-radius, radius);
+        int pz = (int) player.getZ() + random.nextBetween(-radius, radius);
+        BlockPos basePos = new BlockPos(px, 65 - yOffset, pz);
+
+        StructurePlacementData placeData = new StructurePlacementData()
+                .setMirror(BlockMirror.NONE)
+                .setRotation(BlockRotation.NONE)
+                .setIgnoreEntities(true);
+
+        template.place(world, basePos, basePos, placeData, random, 2);
+    }
+
 
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,

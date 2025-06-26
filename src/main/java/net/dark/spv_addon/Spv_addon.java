@@ -57,6 +57,7 @@ public class Spv_addon implements ModInitializer {
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 RedWoolTeleporter.tickPlayer(player);
+                RedWoolTeleporter.tickPlayer(player);
             }
         });
 
