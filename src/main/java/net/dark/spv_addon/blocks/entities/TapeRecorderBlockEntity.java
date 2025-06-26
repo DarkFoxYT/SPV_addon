@@ -1,4 +1,4 @@
-package net.dark.spv_addon.blocks;
+package net.dark.spv_addon.blocks.entities;
 
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.minecraft.block.BlockState;

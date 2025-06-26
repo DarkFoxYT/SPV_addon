@@ -1,8 +1,8 @@
 package net.dark.spv_addon.init;
 
-import net.dark.spv_addon.blocks.KittyLampEntity;
-import net.dark.spv_addon.blocks.KittyLightBlockEntity;
-import net.dark.spv_addon.blocks.TapeRecorderBlockEntity;
+import net.dark.spv_addon.blocks.entities.KittyLampEntity;
+import net.dark.spv_addon.blocks.entities.KittyLightBlockEntity;
+import net.dark.spv_addon.blocks.entities.TapeRecorderBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;

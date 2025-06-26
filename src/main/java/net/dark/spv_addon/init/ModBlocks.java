@@ -4,6 +4,8 @@ import com.sp.block.SprintBlockSoundGroup;
 import com.sp.block.custom.CarpetBlock;
 import com.sp.block.custom.WallBlock;
 import com.sp.block.custom.WallText;
+import com.sp.block.entity.CeilingLightBlockEntity;
+import com.sp.block.entity.FluorescentLightBlockEntity;
 import net.dark.spv_addon.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -16,11 +18,11 @@ import net.minecraft.util.Identifier;
 
 public class ModBlocks {
     public static final Block HOTEL_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
+    public static final Block RUN_ROOF = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block C_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block KITTY_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_ROOF = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
-    public static final Block RUN_ROOF = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block GRASS1 = new Block(FabricBlockSettings.copyOf(Blocks.DIRT).strength(-1.0F).noBlockBreakParticles().sounds(SprintBlockSoundGroup.GRASS2));
     public static final Block HOTEL_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block IKEA_SHELF = new ShelfBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
@@ -28,7 +30,7 @@ public class ModBlocks {
     public static final Block IKEA_SHELF2 = new ShelfBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.COPPER).dropsNothing().nonOpaque());
     public static final Block KITTY_PLUSHIE = new PlushieBlock(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_LAMP = new Kittylamp(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
-    public static final Block KITTY_LIGHT = new Kittylamp(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
+    public static final Block KITTY_LIGHT = new KittyLightBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
     public static final Block KITTY_PLUSHIE1 = new PlushieBlock(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_PLUSHIE_DEV = new PlushieBlock_bonk(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block CROSS = new CrossBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
@@ -43,11 +45,10 @@ public class ModBlocks {
     public static final Block BED2 = new BedBlock2(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
 
 
-
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);
-        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "run_roof"), RUN_ROOF);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_lamp"), KITTY_LAMP);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "run_roof"), RUN_ROOF);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_light"), KITTY_LIGHT);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "c_wall"), C_WALL);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "grass1"), GRASS1);

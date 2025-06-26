@@ -1,5 +1,6 @@
 package net.dark.spv_addon.blocks;
 
+import net.dark.spv_addon.blocks.entities.TapeRecorderBlockEntity;
 import net.dark.spv_addon.items.custom.TapeItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;

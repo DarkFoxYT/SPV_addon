@@ -1,6 +1,7 @@
-package net.dark.spv_addon.blocks;
+package net.dark.spv_addon.blocks.entities;
 
 import com.sp.block.custom.FluorescentLightBlock;
+import com.sp.clientWrapper.ClientWrapper;
 import com.sp.init.BackroomsLevels;
 import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level0BackroomsLevel;

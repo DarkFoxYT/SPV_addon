@@ -70,7 +70,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
         } else if (cx == exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/exit");
         } else if (cx < exitChunk) {
-            int hallwayType = random.nextBetween(1, 5);
+            int hallwayType = random.nextBetween(1, 8);
             roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway" + hallwayType);
         } else {
             return;

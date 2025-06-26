@@ -1,5 +1,6 @@
 package net.dark.spv_addon.blocks;
 
+import net.dark.spv_addon.blocks.entities.KittyLampEntity;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,6 +13,7 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,9 +34,14 @@ public class Kittylamp extends BlockWithEntity {
             boolean stopped = !state.get(STOPPED);
             world.setBlockState(pos, state.with(STOPPED, stopped));
             if (world.getBlockEntity(pos) instanceof KittyLampEntity lampEntity) {
-                lampEntity.on = stopped;
+                lampEntity.markRemoved();
             }
         }
+    }
+
+    @Override
+    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
+        return true;
     }
 
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {

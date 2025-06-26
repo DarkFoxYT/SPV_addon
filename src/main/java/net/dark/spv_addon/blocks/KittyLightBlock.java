@@ -1,6 +1,7 @@
 
 package net.dark.spv_addon.blocks;
 
+import net.dark.spv_addon.blocks.entities.KittyLightBlockEntity;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

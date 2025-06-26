@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "spv_addon:block/kitty_lamp" }
+    "": {
+      "model": "spv_addon:block/kitty_lamp"
+    }
   }
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/block",
   "textures": {
-    "all": "spv_addon:block/kitty_lamp"
+    "particle": "spv_addon:block/kitty_lamp"
   }
 }

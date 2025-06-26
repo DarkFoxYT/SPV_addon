@@ -7,7 +7,9 @@
     "PlayerDeathMixin",
     "PlayerEntityMixin",
     "PlayerTickMixin",
+    "blocks.CeilingLightBlockEntityMixin",
     "blocks.CeilingLightMixin",
+    "blocks.ClientWrapperMixin",
     "blocks.EmergencyLightBlockMixin"
   ],
   "injectors": {

@@ -4,7 +4,6 @@ import net.dark.spv_addon.Additions.api.SanityLightStore;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.world.events.tests.DistortShaderHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,7 +41,6 @@ public class SanityRestoringItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
         SanityComponent sanity = InitializeComponents.SANITY.get(player);
-        DistortShaderHandler.applyDistortionPostProcess();
 
         if (!world.isClient) {
             if (thirstChange != 0) {
