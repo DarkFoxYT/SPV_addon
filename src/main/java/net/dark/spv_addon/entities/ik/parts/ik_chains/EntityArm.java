@@ -24,7 +24,7 @@ public class EntityArm extends AngleConstraintIKChain {
     }
 
     public Vec3d getReferencePoint() {
-        Vec3d referencePoint = MathUtil.getFlatRotationVector((double)(this.entity.getBodyYaw()));
+        Vec3d referencePoint = MathUtil.getFlatRotationVector(this.entity.getBodyYaw());
         return this.getFirst().getPosition().add(referencePoint.multiply(100.0));
     }
 

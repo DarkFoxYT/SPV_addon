@@ -1,7 +1,6 @@
 package net.dark.spv_addon.world.generation.run;
 
 
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevampedClient;
@@ -117,30 +116,43 @@ public final class RunChunkGenerator extends ChunkGenerator {
                 int px = bx + 8 * i;
                 int pz = bz + 8 * j;
                 BlockPos roofPos = new BlockPos(px, roofY, pz);
-                    roofTpl.get().place(world, roofPos, roofPos, roofData, random, 16);
-                }
+                roofTpl.get().place(world, roofPos, roofPos, roofData, random, 16);
             }
         }
+    }
 
 
-    @Override protected Codec<? extends ChunkGenerator> getCodec() { return CODEC; }
+    @Override
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
+    }
 
 
-    @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
-                                                            NoiseConfig noiseConfig,
-                                                            StructureAccessor structureAccessor,
-                                                            Chunk chunk) {
+    @Override
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
+                                                  NoiseConfig noiseConfig,
+                                                  StructureAccessor structureAccessor,
+                                                  Chunk chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 
 
-    @Override public int getSeaLevel() { return 0; }
+    @Override
+    public int getSeaLevel() {
+        return 0;
+    }
 
 
-    @Override public int getMinimumY() { return 0; }
+    @Override
+    public int getMinimumY() {
+        return 0;
+    }
 
 
-    @Override public int getWorldHeight() { return 256; }
+    @Override
+    public int getWorldHeight() {
+        return 256;
+    }
 
 
     @Override
@@ -162,21 +174,29 @@ public final class RunChunkGenerator extends ChunkGenerator {
         return new VerticalBlockSample(0, states);
     }
 
-    @Override public void carve(ChunkRegion region, long seed,
-                                NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
-                                StructureAccessor structAcc, Chunk chunk,
-                                GenerationStep.Carver carverStep) {}
+    @Override
+    public void carve(ChunkRegion region, long seed,
+                      NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
+                      StructureAccessor structAcc, Chunk chunk,
+                      GenerationStep.Carver carverStep) {
+    }
 
-    @Override public void buildSurface(ChunkRegion region,
-                                       StructureAccessor structAcc,
-                                       NoiseConfig noiseConfig,
-                                       Chunk chunk) {}
+    @Override
+    public void buildSurface(ChunkRegion region,
+                             StructureAccessor structAcc,
+                             NoiseConfig noiseConfig,
+                             Chunk chunk) {
+    }
 
 
-    @Override public void populateEntities(ChunkRegion region) {}
+    @Override
+    public void populateEntities(ChunkRegion region) {
+    }
 
 
-    @Override public void getDebugHudText(java.util.List<String> text,
-                                          NoiseConfig noiseConfig,
-                                          BlockPos pos) {}
+    @Override
+    public void getDebugHudText(java.util.List<String> text,
+                                NoiseConfig noiseConfig,
+                                BlockPos pos) {
+    }
 }

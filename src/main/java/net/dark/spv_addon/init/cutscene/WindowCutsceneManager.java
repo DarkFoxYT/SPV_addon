@@ -14,13 +14,13 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 
 public class WindowCutsceneManager {
-    private long startTime;
     private final int duration = 2500;
+    private final MinecraftClient client = MinecraftClient.getInstance();
+    private long startTime;
     private Path cameraPathPos;
     private Path cameraPathRotX;
     private Path cameraPathRotY;
     private Path cameraPathRotZ;
-    private final MinecraftClient client = MinecraftClient.getInstance();
     private Entity camera = null;
     private Vec3d startPos;
     private Vec3d endPos;
@@ -59,12 +59,12 @@ public class WindowCutsceneManager {
             this.camera.remove(RemovalReason.DISCARDED);
         }
         this.camera = new ItemEntity(client.world, startPos.x, startPos.y, startPos.z, ItemStack.EMPTY);
-        this.camera.refreshPositionAndAngles(startPos.x, startPos.y, startPos.z, (float)startRot.y, (float)startRot.x);
+        this.camera.refreshPositionAndAngles(startPos.x, startPos.y, startPos.z, (float) startRot.y, (float) startRot.x);
     }
 
     public void tick() {
         if (client.player == null || client.world == null || this.camera == null) return;
-        float timer = (float)(System.currentTimeMillis() - this.startTime) / (float)this.duration;
+        float timer = (float) (System.currentTimeMillis() - this.startTime) / (float) this.duration;
         timer = MathHelper.clamp(timer, 0.0F, 0.9999F);
 
         double interp = timer;
@@ -92,7 +92,7 @@ public class WindowCutsceneManager {
                 MathHelper.lerp(interp, prevRot.z, nextRot.z)
         );
 
-        this.camera.refreshPositionAndAngles(pos.x, pos.y, pos.z, (float)rot.y, (float)rot.x);
+        this.camera.refreshPositionAndAngles(pos.x, pos.y, pos.z, (float) rot.y, (float) rot.x);
         this.client.cameraEntity = this.camera;
     }
 
@@ -107,7 +107,7 @@ public class WindowCutsceneManager {
     }
 
     public boolean isFinished() {
-        float timer = (float)(System.currentTimeMillis() - this.startTime) / (float)this.duration;
+        float timer = (float) (System.currentTimeMillis() - this.startTime) / (float) this.duration;
         return timer >= 1.0F;
     }
 }

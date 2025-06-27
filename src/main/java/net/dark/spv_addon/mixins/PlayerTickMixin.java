@@ -19,10 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerTickMixin {
-    private int tickCounter = 0;
-
     private static final TagKey<Block> SANITY_LIGHT_TAG =
             TagKey.of(Registries.BLOCK.getKey(), new Identifier("spv_addon", "sanity_lights"));
+    private int tickCounter = 0;
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {

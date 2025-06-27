@@ -57,6 +57,7 @@ public class ModItems {
 
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "tape1"), TAPE1);
     }
+
     private static Item register(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier("spv_addon", name), item);
     }

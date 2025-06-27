@@ -46,7 +46,6 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUN_ROOF);
 
 
-
                         // Items
                         entries.add(ModItems.BATTERY_ITEM);
                         entries.add(ModItems.ALMOND_BOTTLE);

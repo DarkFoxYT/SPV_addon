@@ -29,4 +29,5 @@ public class ModBlockEntities {
                 new Identifier("spv_addon", "kitty_light"),
                 BlockEntityType.Builder.create(KittyLightBlockEntity::new, ModBlocks.KITTY_LIGHT).build(null)
         );
-}}
+    }
+}

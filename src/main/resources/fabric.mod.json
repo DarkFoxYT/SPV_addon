@@ -4,12 +4,11 @@
   "version": "1.0.0 - BETA 1",
   "name": "The Volatile Addon",
   "description": "Adds a bunch of stuff to space potatoes found footage mod",
-    "icon": "Volatileicon.png",
+  "icon": "Volatileicon.png",
   "authors": [
     "DarkFox Studios"
   ],
   "accessWidener": "spv_addon.accesswidener",
-
   "entrypoints": {
     "main": [
       "net.dark.spv_addon.Spv_addon"
@@ -32,15 +31,11 @@
       "spv_addon:sanity",
       "spv_addon:run_timer",
       "spv_addon:death_teleport"
-
     ]
   },
-
-
   "mixins": [
     "spv_addon.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "fabric-api": "*",

@@ -38,11 +38,11 @@ import java.util.*;
 
 public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
+    private final Map<UUID, Integer> stepsWalked = new HashMap<>();
     DirectionalLight light;
     float brightness;
-    private int STEPS_BEFORE_WARP = 300 + random.nextInt(701);
-    private final Map<UUID, Integer> stepsWalked = new HashMap<>();
     int tick;
+    private int STEPS_BEFORE_WARP = 300 + random.nextInt(701);
     private boolean exitPlaced = false;
 
     public Level207BackroomsLevel() {
@@ -50,16 +50,16 @@ public class Level207BackroomsLevel extends BackroomsLevel {
         this.registerTransition((world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
             if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= 12.0F && playerComponent.player.isOnGround()) {
-                for(PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
+                for (PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
                     PlayerComponent otherPlayerComponent = InitializeComponents.PLAYER.get(player);
                     double playerY = player.getPos().getY();
                     if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY && playerY == 60.0 && player.isOnGround()) {
                         playerList.add(new BackroomsLevel.CrossDimensionTeleport(
-                            player.getWorld(),
-                            otherPlayerComponent,
-                            this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()),
-                            BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
-                            com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
+                                player.getWorld(),
+                                otherPlayerComponent,
+                                this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()),
+                                BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
+                                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
                         ));
                     }
                 }
@@ -75,7 +75,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             int chunkZ = chunkPos.getStartZ();
             double playerX = player.getPos().x;
             double playerZ = player.getPos().z;
-            return new Vec3d(playerX - (double)chunkX - (double)1.0F, player.getPos().y + (double)8.0F, playerZ - (double)chunkZ);
+            return new Vec3d(playerX - (double) chunkX - (double) 1.0F, player.getPos().y + (double) 8.0F, playerZ - (double) chunkZ);
         } else {
             return this.getSpawnPos();
         }
@@ -132,7 +132,10 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             this.transitionOut(teleport);
 
             player.getServer().execute(() -> {
-                try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ignored) {
+                }
                 pc.setShouldNoClip(false);
                 pc.sync();
             });
@@ -159,7 +162,10 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             this.transitionOut(teleport);
 
             player.getServer().execute(() -> {
-                try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ignored) {
+                }
                 pc.setShouldNoClip(false);
                 pc.sync();
             });
@@ -200,8 +206,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     }
 
 
-
-
     @Override
     public void register() {
         Level207MoveTracker.register(this);
@@ -214,12 +218,10 @@ public class Level207BackroomsLevel extends BackroomsLevel {
             if (this.light == null) {
                 this.brightness = 1F;
                 this.light = new DirectionalLight();
-                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((DirectionalLight)this.light.setBrightness(this.brightness).setColor(0.28F,0.28F,0.28F)));
+                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(this.light.setBrightness(this.brightness).setColor(0.28F, 0.28F, 0.28F));
             }
         }
     }
-
-
 
 
     @Override
@@ -239,7 +241,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     public boolean transitionOut(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
         if (!crossDimensionTeleport.world().isClient() && !crossDimensionTeleport.playerComponent().isTeleporting()) {
-            SPBRevamped.sendLevelTransitionLightsOutPacket((ServerPlayerEntity)crossDimensionTeleport.playerComponent().player, 80);
+            SPBRevamped.sendLevelTransitionLightsOutPacket((ServerPlayerEntity) crossDimensionTeleport.playerComponent().player, 80);
         }
 
         return crossDimensionTeleport.playerComponent().player.isOnGround();
@@ -265,7 +267,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     }
 
     @Override
-        public int getTransitionDuration () {
-            return 30;
-        }
+    public int getTransitionDuration() {
+        return 30;
     }
+}

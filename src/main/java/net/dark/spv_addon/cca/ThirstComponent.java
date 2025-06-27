@@ -14,8 +14,8 @@ public class ThirstComponent implements ComponentV3, AutoSyncedComponent {
 
 
     private static final int MAX_THIRST = 100;
-    private int thirst = MAX_THIRST;
     private final PlayerEntity player;
+    private int thirst = MAX_THIRST;
 
     public ThirstComponent(PlayerEntity player) {
         this.player = player;

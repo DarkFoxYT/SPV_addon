@@ -16,8 +16,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class ThirstManager {
-    public static boolean enabled = true;
     private static final int INTERVAL_TICKS = 20 * 10;
+    public static boolean enabled = true;
     private static int tickCounter = 0;
 
     public static void register() {
@@ -60,6 +60,7 @@ public class ThirstManager {
         }
 
     }
+
     public static void setThirst(ServerPlayerEntity player, int value) {
         InitializeComponents.THIRST.get(player).setThirst(value);
     }

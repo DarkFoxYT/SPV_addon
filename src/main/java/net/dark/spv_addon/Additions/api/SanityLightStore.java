@@ -34,8 +34,8 @@ public class SanityLightStore {
         BlockPos playerPos = player.getBlockPos();
         return REGISTERED_LIGHT_BLOCKS.stream()
                 .anyMatch(lightSource -> lightSource.getSquaredDistance(playerPos) < RADIUS_SQ);
-            }
-        }
+    }
+}
 
 /* (pour blocs personnalisés si besoin)
 @Override

@@ -12,10 +12,12 @@ public class BellWalkerComponent implements AutoSyncedComponent {
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {  }
+    public void readFromNbt(NbtCompound tag) {
+    }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {  }
+    public void writeToNbt(NbtCompound tag) {
+    }
 
     public void sync() {
         InitializeComponents.BELL_WALKER.sync(entity);

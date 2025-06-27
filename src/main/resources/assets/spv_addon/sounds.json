@@ -1,57 +1,90 @@
 {
   "entity.bellwalker.bell": {
     "sounds": [
-      { "name": "spv_addon:entity/bellwalker/bell", "stream": false }
+      {
+        "name": "spv_addon:entity/bellwalker/bell",
+        "stream": false
+      }
     ]
   },
   "stuff.207_ambiance": {
     "sounds": [
-      { "name": "spv_addon:stuff/207_ambiance", "stream": false }
+      {
+        "name": "spv_addon:stuff/207_ambiance",
+        "stream": false
+      }
     ]
   },
   "death_screen": {
     "sounds": [
-      { "name": "spv_addon:death_screen", "stream": false }
+      {
+        "name": "spv_addon:death_screen",
+        "stream": false
+      }
     ]
   },
   "entity.bellwalker.carp": {
     "sounds": [
-      { "name": "spv_addon:entity/bellwalker/carp", "stream": false }
+      {
+        "name": "spv_addon:entity/bellwalker/carp",
+        "stream": false
+      }
     ]
   },
   "stuff.belldong": {
     "sounds": [
-      { "name": "spv_addon:stuff/belldong", "stream": false }
+      {
+        "name": "spv_addon:stuff/belldong",
+        "stream": false
+      }
     ]
   },
   "stuff.bonk": {
     "sounds": [
-      { "name": "spv_addon:stuff/bonk", "stream": false }
+      {
+        "name": "spv_addon:stuff/bonk",
+        "stream": false
+      }
     ]
   },
   "stuff.elevator": {
     "sounds": [
-      { "name": "spv_addon:stuff/elevator", "stream": false }
+      {
+        "name": "spv_addon:stuff/elevator",
+        "stream": false
+      }
     ]
   },
   "stuff.intercom_custom1": {
     "sounds": [
-      { "name": "spv_addon:stuff/intercom_custom1", "stream": false }
+      {
+        "name": "spv_addon:stuff/intercom_custom1",
+        "stream": false
+      }
     ]
   },
   "stuff.intercom_custom2": {
     "sounds": [
-      { "name": "spv_addon:stuff/intercom_custom2", "stream": false }
+      {
+        "name": "spv_addon:stuff/intercom_custom2",
+        "stream": false
+      }
     ]
   },
   "tapes.tape1": {
     "sounds": [
-      { "name": "spv_addon:tapes/tape1", "stream": false }
+      {
+        "name": "spv_addon:tapes/tape1",
+        "stream": false
+      }
     ]
   },
   "tapes.tape2": {
     "sounds": [
-      { "name": "spv_addon:tapes/tape2", "stream": false }
+      {
+        "name": "spv_addon:tapes/tape2",
+        "stream": false
+      }
     ]
   }
 }

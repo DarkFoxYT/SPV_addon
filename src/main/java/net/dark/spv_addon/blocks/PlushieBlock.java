@@ -27,7 +27,6 @@ public class PlushieBlock extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
 
-
     private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
             2, 0, 2,
             14, 10, 14
@@ -44,10 +43,11 @@ public class PlushieBlock extends HorizontalFacingBlock {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
+
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
         if (dir == Direction.NORTH) return shape;
 
-        VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
         int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
 
         for (int i = 0; i < times; ++i) {
@@ -61,6 +61,7 @@ public class PlushieBlock extends HorizontalFacingBlock {
         }
         return buffer[0];
     }
+
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (!world.isClient) {
@@ -76,32 +77,33 @@ public class PlushieBlock extends HorizontalFacingBlock {
         super.onBroken(world, pos, state);
     }
 
-        @Override
-        public BlockState getPlacementState(ItemPlacementContext ctx) {
-            return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-        }
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    }
 
-        @Override
-        protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-            builder.add(FACING);
-        }
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
 
-        @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-            return ROTATED_SHAPES.get(state.get(FACING));
-        }
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+        return ROTATED_SHAPES.get(state.get(FACING));
+    }
 
-        @Override
-        public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-            return ROTATED_SHAPES.get(state.get(FACING));
-        }
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+        return ROTATED_SHAPES.get(state.get(FACING));
+    }
 
-        @Override
-        public BlockState rotate(BlockState state, BlockRotation rotation) {
-            return state.with(FACING, rotation.rotate(state.get(FACING)));
-        }
-        @Override
-        public BlockState mirror(BlockState state, BlockMirror mirror) {
-            return state.rotate(mirror.getRotation(state.get(FACING)));
-        }
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
 }

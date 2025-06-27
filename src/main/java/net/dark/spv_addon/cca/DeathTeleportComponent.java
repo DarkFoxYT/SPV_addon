@@ -25,9 +25,9 @@ public class DeathTeleportComponent implements Component, AutoSyncedComponent {
             ServerWorld level207 = player.getServer().getWorld(BackroomsLevels.LEVEL207_WORLD_KEY);
             if (level207 != null) {
                 Vec3d spawn = new Vec3d(16, 66, 16);
-                  for (ServerPlayerEntity p : player.getServer().getPlayerManager().getPlayerList()) {
+                for (ServerPlayerEntity p : player.getServer().getPlayerManager().getPlayerList()) {
                     p.teleport(level207, spawn.x, spawn.y, spawn.z, p.getYaw(), p.getPitch());
-                 }
+                }
             }
         }
     }

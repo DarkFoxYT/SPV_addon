@@ -36,10 +36,11 @@ public class ExitSignBlock extends Block {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
+
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
         if (dir == Direction.NORTH) return shape;
 
-        VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
         int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
 
         for (int i = 0; i < times; ++i) {
@@ -53,6 +54,7 @@ public class ExitSignBlock extends Block {
         }
         return buffer[0];
     }
+
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
@@ -77,6 +79,7 @@ public class ExitSignBlock extends Block {
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
+
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));

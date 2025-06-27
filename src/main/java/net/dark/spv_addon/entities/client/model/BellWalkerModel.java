@@ -8,31 +8,31 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class BellWalkerModel extends GeoModel<BellWalkerEntity> {
-	private static final Identifier MODEL = new Identifier(Spv_addon.MOD_ID,
-			"geo/entity/the_bell_walker.geo.json");
-	private static final Identifier TEXTURE = new Identifier(Spv_addon.MOD_ID,
-			"textures/entity/bellwalker/the_bell_walker.png");
-	private static final Identifier ANIMATION = new Identifier(Spv_addon.MOD_ID,
-			"animation/bell_walker.animation.json");
+    private static final Identifier MODEL = new Identifier(Spv_addon.MOD_ID,
+            "geo/entity/the_bell_walker.geo.json");
+    private static final Identifier TEXTURE = new Identifier(Spv_addon.MOD_ID,
+            "textures/entity/bellwalker/the_bell_walker.png");
+    private static final Identifier ANIMATION = new Identifier(Spv_addon.MOD_ID,
+            "animation/bell_walker.animation.json");
 
-	@Override
-	public Identifier getModelResource(BellWalkerEntity object) {
-		return MODEL;
-	}
+    @Override
+    public Identifier getModelResource(BellWalkerEntity object) {
+        return MODEL;
+    }
 
-	@Override
-	public Identifier getTextureResource(BellWalkerEntity object) {
-		return TEXTURE;
-	}
+    @Override
+    public Identifier getTextureResource(BellWalkerEntity object) {
+        return TEXTURE;
+    }
 
-	@Override
-	public Identifier getAnimationResource(BellWalkerEntity animatable) {
-		return ANIMATION;
-	}
+    @Override
+    public Identifier getAnimationResource(BellWalkerEntity animatable) {
+        return ANIMATION;
+    }
 
-	@Override
-	public void setCustomAnimations(BellWalkerEntity animatable, long instanceId, AnimationState<BellWalkerEntity> state) {
-		super.setCustomAnimations(animatable, instanceId, state);
-		animatable.tickComponentsClient(animatable, new GeoModelAccessor(this));
-	}
+    @Override
+    public void setCustomAnimations(BellWalkerEntity animatable, long instanceId, AnimationState<BellWalkerEntity> state) {
+        super.setCustomAnimations(animatable, instanceId, state);
+        animatable.tickComponentsClient(animatable, new GeoModelAccessor(this));
+    }
 }

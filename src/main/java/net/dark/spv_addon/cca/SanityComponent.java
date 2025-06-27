@@ -13,7 +13,6 @@ public class SanityComponent implements ComponentV3, AutoSyncedComponent {
             ComponentRegistry.getOrCreate(new Identifier("spv_addon", "sanity"), SanityComponent.class);
 
 
-
     private final PlayerEntity player;
     private int sanityLevel = 100;
 

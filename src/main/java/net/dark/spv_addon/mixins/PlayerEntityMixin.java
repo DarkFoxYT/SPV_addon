@@ -12,7 +12,7 @@ public class PlayerEntityMixin {
 
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void onTickMovement(CallbackInfo ci) {
-        PlayerEntity player = (PlayerEntity)(Object)this;
+        PlayerEntity player = (PlayerEntity) (Object) this;
         if (!player.isSpectator() && player.isAlive()) {
             boolean madeNoise = player.getVelocity().lengthSquared() > 0.1
                     || player.isSprinting()

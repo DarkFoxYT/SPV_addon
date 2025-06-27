@@ -34,7 +34,7 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
         // Jambes
         List<ServerLimb> legEndpoints = List.of(
-                new ServerLimb(0.12, 0.0,  0.1),
+                new ServerLimb(0.12, 0.0, 0.1),
                 new ServerLimb(-0.12, 0.0, 0.1)
         );
         IKLegCompIkeaWalker.LegSetting legSetting = new IKLegCompIkeaWalker.LegSetting.Builder()
@@ -94,6 +94,14 @@ public class IkeaWalkerEntity extends PathAwareEntity
         );
     }
 
+    public static DefaultAttributeContainer.Builder createAttributes() {
+        return MobEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 400.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 50.0);
+    }
+
     @Override
     protected void initGoals() {
         if (this.getWorld().isDay()) {
@@ -104,14 +112,6 @@ public class IkeaWalkerEntity extends PathAwareEntity
         }
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 400.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 50.0);
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -120,17 +120,17 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
         // Attirer vers le joueur tenant un os
         this.getWorld().getPlayers().stream()
-            .filter(player -> player.getMainHandStack().getItem().toString().toLowerCase().contains("bone"))
-            .findFirst()
-            .ifPresent(player -> {
-                double dx = player.getX() - this.getX();
-                double dz = player.getZ() - this.getZ();
-                double distance = Math.sqrt(dx * dx + dz * dz);
-                if (distance > 2.0) { // Garde une petite distance
-                    double speed = 0.5;
-                    this.getNavigation().startMovingTo(player, speed);
-                }
-            });
+                .filter(player -> player.getMainHandStack().getItem().toString().toLowerCase().contains("bone"))
+                .findFirst()
+                .ifPresent(player -> {
+                    double dx = player.getX() - this.getX();
+                    double dz = player.getZ() - this.getZ();
+                    double distance = Math.sqrt(dx * dx + dz * dz);
+                    if (distance > 2.0) { // Garde une petite distance
+                        double speed = 0.5;
+                        this.getNavigation().startMovingTo(player, speed);
+                    }
+                });
     }
 
     @Override

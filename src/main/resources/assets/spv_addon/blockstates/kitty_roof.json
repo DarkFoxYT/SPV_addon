@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "spv_addon:block/kitty_roof" }
+    "": {
+      "model": "spv_addon:block/kitty_roof"
+    }
   }
 }

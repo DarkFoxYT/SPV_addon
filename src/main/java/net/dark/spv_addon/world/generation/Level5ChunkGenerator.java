@@ -176,8 +176,6 @@ public class Level5ChunkGenerator extends ChunkGenerator {
     }
 
 
-
-
     private void placeRoofs(StructureWorldAccess world, int x, int z, Random random, StructureTemplateManager manager, BlockPos.Mutable pos) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
@@ -194,11 +192,17 @@ public class Level5ChunkGenerator extends ChunkGenerator {
         }
     }
 
+    private StructurePlacementData defaultPlacement() {
+        return new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
+    }
+
+    private StructurePlacementData randomRotation() {
+        StructurePlacementData data = new StructurePlacementData().setMirror(BlockMirror.NONE).setIgnoreEntities(true);
+        data.setRotation(Random.create().nextBetween(1, 2) == 1 ? BlockRotation.NONE : BlockRotation.CLOCKWISE_90);
+        return data;
+    }
+
     public class Level5RoomRegistry {
-        public enum RoomType { GUESTROOM, HALLWAY, JUNCTION, LOBBY, MEGAROOM, ROOF, STAIRS, STORAGE, TRAP }
-
-        public record RoomEntry(RoomType type, Identifier id, int sizeX, int sizeZ) {}
-
         private static final List<RoomEntry> registeredRooms = new ArrayList<>();
 
         public static void register(RoomType type, Identifier id, int sizeX, int sizeZ) {
@@ -213,15 +217,10 @@ public class Level5ChunkGenerator extends ChunkGenerator {
             List<RoomEntry> list = getRooms(type);
             return list.isEmpty() ? null : list.get(random.nextInt(list.size()));
         }
-    }
 
-    private StructurePlacementData defaultPlacement() {
-        return new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);
-    }
+        public enum RoomType {GUESTROOM, HALLWAY, JUNCTION, LOBBY, MEGAROOM, ROOF, STAIRS, STORAGE, TRAP}
 
-    private StructurePlacementData randomRotation() {
-        StructurePlacementData data = new StructurePlacementData().setMirror(BlockMirror.NONE).setIgnoreEntities(true);
-        data.setRotation(Random.create().nextBetween(1, 2) == 1 ? BlockRotation.NONE : BlockRotation.CLOCKWISE_90);
-        return data;
+        public record RoomEntry(RoomType type, Identifier id, int sizeX, int sizeZ) {
+        }
     }
 }

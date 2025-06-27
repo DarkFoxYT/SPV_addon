@@ -34,8 +34,6 @@ public class Spv_addon implements ModInitializer {
     @Override
     public void onInitialize() {
 
-
-
         ModBlockEntities.register();
         ThirstManager.register();
         FlashlightBatteryEvents.register();
@@ -69,7 +67,7 @@ public class Spv_addon implements ModInitializer {
         });
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-            if(!com.sp.init.BackroomsLevels.isInBackrooms(oldPlayer.getWorld().getRegistryKey())) {
+            if (!com.sp.init.BackroomsLevels.isInBackrooms(oldPlayer.getWorld().getRegistryKey())) {
                 return;
             }
             try {

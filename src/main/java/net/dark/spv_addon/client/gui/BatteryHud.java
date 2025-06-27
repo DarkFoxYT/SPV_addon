@@ -19,6 +19,10 @@ public class BatteryHud implements HudRenderCallback {
     private static final int BAR_W = 44, BAR_H = 44;
     private static final float SCALE = 0.8f;
 
+    public static void register() {
+        HudRenderCallback.EVENT.register(new BatteryHud());
+    }
+
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -36,7 +40,7 @@ public class BatteryHud implements HudRenderCallback {
         float alpha = (level <= 15) ? getPulseAlpha() : 1f;
 
         int sw = client.getWindow().getScaledWidth();
-        int x = sw - (int)(BAR_W * SCALE) - 16;
+        int x = sw - (int) (BAR_W * SCALE) - 16;
         int y = 16;
 
 
@@ -59,18 +63,14 @@ public class BatteryHud implements HudRenderCallback {
 
         String txt = level + "%";
         int tw = client.textRenderer.getWidth(txt);
-        int tx = x + (int)(BAR_W * SCALE) / 2 - tw / 2;
-        int ty = y + (int)(BAR_H * SCALE) + 2;
+        int tx = x + (int) (BAR_W * SCALE) / 2 - tw / 2;
+        int ty = y + (int) (BAR_H * SCALE) + 2;
         dc.drawText(client.textRenderer, txt, tx, ty, 0xFFFFFF, true);
     }
 
     private float getPulseAlpha() {
         double t = Util.getMeasuringTimeMs() / 600.0;
         double sway = (Math.sin(t) + 1.0) / 2.0;
-        return 0.3f + (float)(sway * 0.7f);
-    }
-
-    public static void register() {
-        HudRenderCallback.EVENT.register(new BatteryHud());
+        return 0.3f + (float) (sway * 0.7f);
     }
 }

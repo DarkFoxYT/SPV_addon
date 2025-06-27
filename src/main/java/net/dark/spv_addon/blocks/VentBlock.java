@@ -29,17 +29,17 @@ public class VentBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private static final VoxelShape SHAPE_CLOSED = VoxelShapes.union(
-            VoxelShapes.cuboid(15/16.0, 1/16.0, 15/16.0, 16/16.0, 15/16.0, 16/16.0),
-            VoxelShapes.cuboid(0/16.0, 0/16.0, 15/16.0, 16/16.0, 1/16.0, 16/16.0),
-            VoxelShapes.cuboid(0/16.0, 15/16.0, 15/16.0, 16/16.0, 16/16.0, 16/16.0),
-            VoxelShapes.cuboid(0/16.0, 1/16.0, 15/16.0, 1/16.0, 15/16.0, 16/16.0),
-            VoxelShapes.cuboid(1/16.0, 1/16.0, 15.25/16.0, 15/16.0, 15/16.0, 15.75/16.0)
+            VoxelShapes.cuboid(15 / 16.0, 1 / 16.0, 15 / 16.0, 16 / 16.0, 15 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 0 / 16.0, 15 / 16.0, 16 / 16.0, 1 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 15 / 16.0, 15 / 16.0, 16 / 16.0, 16 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 1 / 16.0, 15 / 16.0, 1 / 16.0, 15 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(1 / 16.0, 1 / 16.0, 15.25 / 16.0, 15 / 16.0, 15 / 16.0, 15.75 / 16.0)
     );
     private static final VoxelShape SHAPE_OPEN = VoxelShapes.union(
-            VoxelShapes.cuboid(15/16.0, 1/16.0, 15/16.0, 16/16.0, 15/16.0, 16/16.0),
-            VoxelShapes.cuboid(0/16.0, 0/16.0, 15/16.0, 16/16.0, 1/16.0, 16/16.0),
-            VoxelShapes.cuboid(0/16.0, 15/16.0, 15/16.0, 16/16.0, 16/16.0, 16/16.0),
-        VoxelShapes.cuboid(0/16.0, 1/16.0, 15/16.0, 1/16.0, 15/16.0, 16/16.0)
+            VoxelShapes.cuboid(15 / 16.0, 1 / 16.0, 15 / 16.0, 16 / 16.0, 15 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 0 / 16.0, 15 / 16.0, 16 / 16.0, 1 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 15 / 16.0, 15 / 16.0, 16 / 16.0, 16 / 16.0, 16 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 1 / 16.0, 15 / 16.0, 1 / 16.0, 15 / 16.0, 16 / 16.0)
     );
 
     private static final Map<Direction, VoxelShape> ROTATED_CLOSED = new EnumMap<>(Direction.class);
@@ -59,24 +59,12 @@ public class VentBlock extends Block {
                 .with(FACING, Direction.SOUTH));
     }
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(OPEN, FACING);
-    }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState()
-                .with(FACING, ctx.getHorizontalPlayerFacing().getOpposite())
-                .with(OPEN, false);
-    }
-
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
         switch (dir) {
             case NORTH:
                 return shape;
             case SOUTH: {
-                VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
+                VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
                 shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
                     buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
                             1 - maxX, minY, 1 - maxZ, 1 - minX, maxY, 1 - minZ
@@ -85,7 +73,7 @@ public class VentBlock extends Block {
                 return buffer[0];
             }
             case WEST: {
-                VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
+                VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
                 shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
                     buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
                             minZ, minY, 1 - maxX, maxZ, maxY, 1 - minX
@@ -94,7 +82,7 @@ public class VentBlock extends Block {
                 return buffer[0];
             }
             case EAST: {
-                VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
+                VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
                 shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
                     buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
                             1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
@@ -105,6 +93,18 @@ public class VentBlock extends Block {
             default:
                 return shape;
         }
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(OPEN, FACING);
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return getDefaultState()
+                .with(FACING, ctx.getHorizontalPlayerFacing().getOpposite())
+                .with(OPEN, false);
     }
 
     @Override

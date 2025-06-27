@@ -1,4 +1,3 @@
-
 package net.dark.spv_addon.blocks;
 
 import net.dark.spv_addon.blocks.entities.KittyLightBlockEntity;
@@ -24,11 +23,11 @@ public class KittyLightBlock extends BlockWithEntity {
 
     public KittyLightBlock(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)((BlockState)this.getDefaultState().with(BLACKOUT, false)).with(ON, true)).with(COPY, false));
+        this.setDefaultState(this.getDefaultState().with(BLACKOUT, false).with(ON, true).with(COPY, false));
     }
 
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)((BlockState)((BlockState)this.getDefaultState().with(BLACKOUT, false)).with(ON, true)).with(COPY, false);
+        return this.getDefaultState().with(BLACKOUT, false).with(ON, true).with(COPY, false);
     }
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
@@ -40,7 +39,7 @@ public class KittyLightBlock extends BlockWithEntity {
     }
 
     public BlockRenderType getRenderType(BlockState state) {
-        return !(Boolean)state.get(BLACKOUT) && (Boolean)state.get(ON) ? BlockRenderType.INVISIBLE : BlockRenderType.MODEL;
+        return !(Boolean) state.get(BLACKOUT) && state.get(ON) ? BlockRenderType.INVISIBLE : BlockRenderType.MODEL;
     }
 
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
@@ -52,6 +51,6 @@ public class KittyLightBlock extends BlockWithEntity {
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{ON, COPY, BLACKOUT});
+        builder.add(ON, COPY, BLACKOUT);
     }
 }

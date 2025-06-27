@@ -12,8 +12,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
 public class LevelRUNBackroomsLevel extends BackroomsLevel {
-    private final Random random = Random.create();
     private static final int SMILER_SPAWN_INTERVAL = 40;
+    private final Random random = Random.create();
     private int smilerSpawnTick = 0;
 
     public LevelRUNBackroomsLevel() {

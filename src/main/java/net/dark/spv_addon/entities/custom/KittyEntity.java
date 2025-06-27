@@ -26,14 +26,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
 
+    private static final int AGGRO_TICKS = 3600;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float headYaw = 0.0F;
     public float headPitch = 0.0F;
-
     private int followTicks = 0;
     private boolean isAggressive = false;
     private PlayerEntity targetPlayer = null;
-    private static final int AGGRO_TICKS = 3600;
 
     public KittyEntity(EntityType<? extends KittyEntity> type, World world) {
         super(type, world);
@@ -46,12 +45,24 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 40000.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0);
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1000.0);
     }
 
     public double getSize() {
         return 2.8;
     }
+
+    @Override
+    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+        return false;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(net.minecraft.entity.damage.DamageSource damageSource) {
+        return true;
+    }
+
 
     @Override
     protected void initGoals() {
@@ -75,73 +86,57 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
         super.tick();
 
         if (!this.getWorld().isClient) {
-            double range = 64.0;
-            PlayerEntity nearest = null;
-            double nearestDist = Double.MAX_VALUE;
-            boolean isSeen = false;
+            PlayerEntity closest = null;
+            double minDist = Double.MAX_VALUE;
 
             for (PlayerEntity player : this.getWorld().getPlayers()) {
                 double dist = this.squaredDistanceTo(player);
-                if (dist <= range * range) {
-                    if (player.canSee(this)) {
-                        isSeen = true;
-                        break;
-                    }
-                    if (dist < nearestDist) {
-                        nearest = player;
-                        nearestDist = dist;
-                    }
+                if (dist < minDist) {
+                    closest = player;
+                    minDist = dist;
                 }
             }
 
-            if (!isSeen && nearest != null) {
-                double px = nearest.getX() + (this.random.nextDouble() - 0.5) * 2.5;
-                double py = nearest.getY();
-                double pz = nearest.getZ() + (this.random.nextDouble() - 0.5) * 2.5;
-                this.requestTeleport(px, py, pz);
-                this.setYaw(nearest.getYaw());
-                this.setHeadYaw(nearest.getYaw());
-                this.setBodyYaw(nearest.getYaw());
-                this.headYaw = nearest.getYaw();
-            }
-        }
+            if (closest != null && minDist < 256) {
+                if (targetPlayer == closest) {
+                    followTicks++;
+                } else {
+                    targetPlayer = closest;
+                    followTicks = 0;
+                    isAggressive = false;
+                }
 
-        PlayerEntity closest = null;
-        double minDist = Double.MAX_VALUE;
-        for (PlayerEntity player : this.getWorld().getPlayers()) {
-            double dist = this.squaredDistanceTo(player);
-            if (dist < minDist) {
-                closest = player;
-                minDist = dist;
-            }
-        }
+                if (followTicks > AGGRO_TICKS) {
+                    isAggressive = true;
+                }
 
-        if (closest != null && minDist < 16 * 16) {
-            if (targetPlayer == closest) {
-                followTicks++;
+                // Rotate body toward player
+                this.lookAtEntity(closest, 30.0f, 30.0f);
+
+                // Calculate yaw and pitch for head rotation
+                double dx = closest.getX() - this.getX();
+                double dz = closest.getZ() - this.getZ();
+                double dy = closest.getEyeY() - this.getEyeY();
+                double distXZ = Math.sqrt(dx * dx + dz * dz);
+
+                float targetHeadYaw = (float) Math.toDegrees(Math.atan2(dx, dz)) - this.bodyYaw;
+                float targetHeadPitch = (float) Math.toDegrees(Math.atan2(dy, distXZ));
+
+                // Clamp angles to prevent spinning
+                targetHeadYaw = MathHelper.clamp(targetHeadYaw, -45f, 45f);
+                targetHeadPitch = MathHelper.clamp(targetHeadPitch, -30f, 30f);
+
+                // Smooth interpolation
+                this.headYaw += (targetHeadYaw - this.headYaw) * 0.1f;
+                this.headPitch += (targetHeadPitch - this.headPitch) * 0.1f;
             } else {
-                targetPlayer = closest;
                 followTicks = 0;
                 isAggressive = false;
-            }
-            if (followTicks > AGGRO_TICKS) {
-                isAggressive = true;
-            }
-        } else {
-            followTicks = 0;
-            isAggressive = false;
-            targetPlayer = null;
-        }
+                targetPlayer = null;
 
-        if (closest != null) {
-            double dx = closest.getX() - this.getX();
-            double dy = closest.getEyeY() - this.getEyeY();
-            double dz = closest.getZ() - this.getZ();
-            double dist = Math.sqrt(dx * dx + dz * dz);
-            float targetYaw = (float)(Math.toDegrees(Math.atan2(dx, dz)));
-            float targetPitch = (float)(Math.atan2(dy, dist) * (180F / Math.PI));
-            this.headYaw += MathHelper.wrapDegrees(targetYaw + this.headYaw) * 0.2F;
-            this.headPitch += (targetPitch + this.headPitch) * 0.2F;
+                this.headYaw *= 0.8f; // Gradually center when idle
+                this.headPitch *= 0.8f;
+            }
         }
     }
 
@@ -157,9 +152,19 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
         return this.headPitch;
     }
 
-    @Override public AnimatableInstanceCache getAnimatableInstanceCache() { return cache; }
-    @Override public double getTick(Object o) { return age; }
-    @Override public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object o) {
+        return age;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+    }
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {

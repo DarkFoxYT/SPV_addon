@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:air",
+    "spb_revamped:new_stairs",
+    "spb_revamped:emergency_light",
+    "spb_revamped:big_pipe",
+    "spb_revamped:big_pipe_middle",
+    "spb_revamped:small_pipe_set",
+    "spb_revamped:thin_pipe",
+    "spb_revamped:thin_pipe_corner",
+    "spb_revamped:pipe",
+    "spb_revamped:pipe_middle",
+    "spb_revamped:power_pole",
+    "spb_revamped:pipe_corner",
+    "spb_revamped:chain_fence",
+    "spv_addon:kitty_plushie",
+    "spv_addon:kitty_plushie1",
+    "spv_addon:kitty_plushie_dev",
+    "spv_addon:cross",
+    "spv_addon:ikea_shelf",
+    "spv_addon:ikea_shelf1",
+    "spv_addon:ikea_shelf2",
+    "spv_addon:table",
+    "spv_addon:bed1",
+    "spv_addon:bed2",
+    "spv_addon:tape_recorder",
+    "spv_addon:exit_sign"
+  ]
+}

@@ -1,7 +1,6 @@
 package net.dark.spv_addon.blocks.entities;
 
 import com.sp.block.custom.FluorescentLightBlock;
-import com.sp.clientWrapper.ClientWrapper;
 import com.sp.init.BackroomsLevels;
 import com.sp.world.levels.BackroomsLevel;
 import com.sp.world.levels.custom.Level0BackroomsLevel;
@@ -17,13 +16,13 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 public class KittyLightBlockEntity extends BlockEntity {
+    public final int randInt;
     public BlockState currentState;
     public Random random = Random.create();
     public java.util.Random random1 = new java.util.Random();
     public boolean playingSound = false;
     public PointLight pointLight;
     public boolean prevOn;
-    public final int randInt;
     public int ticks = 0;
 
     public KittyLightBlockEntity(BlockPos pos, BlockState state) {
@@ -68,40 +67,39 @@ public class KittyLightBlockEntity extends BlockEntity {
 
                 if (northOWest != 0) {
                     if (northOWest == 1) {
-                        world.setBlockState(pos, (BlockState)northState.with(FluorescentLightBlock.COPY, true));
+                        world.setBlockState(pos, northState.with(FluorescentLightBlock.COPY, true));
                     } else {
-                        world.setBlockState(pos, (BlockState)westState.with(FluorescentLightBlock.COPY, true));
+                        world.setBlockState(pos, westState.with(FluorescentLightBlock.COPY, true));
                     }
                 } else {
-                    if ((Boolean)state.get(FluorescentLightBlock.COPY)) {
-                        world.setBlockState(pos, (BlockState)ModBlocks.KITTY_LIGHT.getDefaultState().with(FluorescentLightBlock.COPY, false));
+                    if (state.get(FluorescentLightBlock.COPY)) {
+                        world.setBlockState(pos, ModBlocks.KITTY_LIGHT.getDefaultState().with(FluorescentLightBlock.COPY, false));
                     }
 
                     BackroomsLevel var8 = BackroomsLevels.getLevel(this.getWorld());
-                    if (!(var8 instanceof Level0BackroomsLevel)) {
+                    if (!(var8 instanceof Level0BackroomsLevel level)) {
                         return;
                     }
 
-                    Level0BackroomsLevel level = (Level0BackroomsLevel)var8;
                     if (level.getLightState() == Level0BackroomsLevel.LightState.BLACKOUT) {
-                        world.setBlockState(pos, (BlockState)world.getBlockState(pos).with(FluorescentLightBlock.BLACKOUT, true));
+                        world.setBlockState(pos, world.getBlockState(pos).with(FluorescentLightBlock.BLACKOUT, true));
                     }
 
-                    if (level.getLightState() != Level0BackroomsLevel.LightState.ON && (Boolean)state.get(FluorescentLightBlock.ON)) {
-                        world.setBlockState(pos, (BlockState)world.getBlockState(pos).with(FluorescentLightBlock.ON, false));
+                    if (level.getLightState() != Level0BackroomsLevel.LightState.ON && state.get(FluorescentLightBlock.ON)) {
+                        world.setBlockState(pos, world.getBlockState(pos).with(FluorescentLightBlock.ON, false));
                     }
 
-                    if (level.getLightState() == Level0BackroomsLevel.LightState.FLICKER && !(Boolean)state.get(FluorescentLightBlock.BLACKOUT)) {
+                    if (level.getLightState() == Level0BackroomsLevel.LightState.FLICKER && !(Boolean) state.get(FluorescentLightBlock.BLACKOUT)) {
                         if (this.ticks % this.randInt == 0) {
                             boolean i = this.random.nextBoolean();
                             if (i) {
-                                world.setBlockState(pos, (BlockState)world.getBlockState(pos).with(FluorescentLightBlock.ON, true));
+                                world.setBlockState(pos, world.getBlockState(pos).with(FluorescentLightBlock.ON, true));
                             } else {
-                                world.setBlockState(pos, (BlockState)world.getBlockState(pos).with(FluorescentLightBlock.ON, false));
+                                world.setBlockState(pos, world.getBlockState(pos).with(FluorescentLightBlock.ON, false));
                             }
                         }
-                    } else if (!(Boolean)state.get(FluorescentLightBlock.ON) && level.getLightState() == Level0BackroomsLevel.LightState.ON) {
-                        world.setBlockState(pos, (BlockState)world.getBlockState(pos).with(FluorescentLightBlock.ON, true));
+                    } else if (!(Boolean) state.get(FluorescentLightBlock.ON) && level.getLightState() == Level0BackroomsLevel.LightState.ON) {
+                        world.setBlockState(pos, world.getBlockState(pos).with(FluorescentLightBlock.ON, true));
                     }
                 }
             }
@@ -110,7 +108,7 @@ public class KittyLightBlockEntity extends BlockEntity {
                 this.ticks = 1;
             }
 
-            this.prevOn = (Boolean)world.getBlockState(pos).get(FluorescentLightBlock.ON);
+            this.prevOn = world.getBlockState(pos).get(FluorescentLightBlock.ON);
         }
     }
 

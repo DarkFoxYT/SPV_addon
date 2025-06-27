@@ -19,13 +19,13 @@ import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
+import net.dark.spv_addon.entities.custom.StalkerEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -33,7 +33,6 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -45,17 +44,15 @@ public class Spv_addonClient implements ClientModInitializer {
     private static final Identifier EVERYTHING_SHADER = new Identifier("spb-revamped", "vhs/everything");
     private static final Identifier VHS_POST = new Identifier("spb-revamped", "vhs");
     private static final Identifier POST_VHS = new Identifier("spb-revamped", "vhs/vhs_post");
-    private GrassRenderer grassRenderer;
-
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
+    private GrassRenderer grassRenderer;
 
     @Override
     public void onInitializeClient() {
-        // Enregistrer la commande
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
                 WindowCutsceneCommand.register(dispatcher));
 
-        // Enregistrer le tick event
+
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WindowCutsceneCommand.tick());
 
@@ -72,17 +69,18 @@ public class Spv_addonClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.KITTY, KittyRenderer::new);
         FabricDefaultAttributeRegistry.register(ModEntities.IKEA_WALKER, IkeaWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.IKEA_WALKER, IKEAWalkerRenderer::new);
+        FabricDefaultAttributeRegistry.register(ModEntities.STALKER_ENTITY, StalkerEntity.createAttributes());
 
 
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KITTY_PLUSHIE, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.EXIT_SIGN, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TABLE, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BED1, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BED2, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF1, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF2, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KITTY_PLUSHIE1, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KITTY_PLUSHIE, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.EXIT_SIGN, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TABLE, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BED1, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BED2, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF1, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.IKEA_SHELF2, RenderLayer.getTranslucent());
+        //BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KITTY_PLUSHIE1, RenderLayer.getTranslucent());
 
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
@@ -91,11 +89,16 @@ public class Spv_addonClient implements ClientModInitializer {
                     public Identifier getFabricId() {
                         return new Identifier("spv_addon", "after_resources");
                     }
+
                     @Override
                     public void reload(ResourceManager manager) {
 
                         BlockIdMap.registerBlockID(blockIdMap -> {
-                        blockIdMap.put(ModBlocks.KITTY_FLOOR, 45);
+                            blockIdMap.put(ModBlocks.KITTY_FLOOR, 45);
+                            blockIdMap.put(ModBlocks.KITTY_PLUSHIE, 46);
+                            blockIdMap.put(ModBlocks.KITTY_PLUSHIE1, 47);
+                            blockIdMap.put(ModBlocks.KITTY_PLUSHIE_DEV, 48);
+                            blockIdMap.put(ModBlocks.VENT, 49);
 
                         });
 
@@ -107,7 +110,7 @@ public class Spv_addonClient implements ClientModInitializer {
 
 
         VeilEventPlatform.INSTANCE.onVeilRenderTypeStageRender((stage, levelRenderer, bufferSource, poseStack, projectionMatrix, renderTick, partialTicks, camera, frustum) -> {
-                        MinecraftClient client = MinecraftClient.getInstance();
+            MinecraftClient client = MinecraftClient.getInstance();
             World clientWorld = client.world;
             if (clientWorld != null) {
 

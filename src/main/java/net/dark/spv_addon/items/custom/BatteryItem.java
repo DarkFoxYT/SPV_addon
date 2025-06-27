@@ -12,9 +12,9 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class BatteryItem extends Item {
-    private final int maxDurability;
     private static final int FLASHLIGHT_DISABLE_TICKS = 4 * 20;
     private static final String NBT_RECHARGE_TICKS = "RechargeTicks";
+    private final int maxDurability;
 
     public BatteryItem(Settings settings, int maxDurability) {
         super(settings.maxDamage(maxDurability));

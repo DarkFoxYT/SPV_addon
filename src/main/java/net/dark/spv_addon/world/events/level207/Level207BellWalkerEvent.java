@@ -10,10 +10,10 @@ import net.minecraft.world.World;
 
 public class Level207BellWalkerEvent extends AbstractEvent {
     private static final int EVENT_DELAY_TICKS = 20 * 60 * 3; // 3 minutes
+    private final Random random = Random.create();
     private int ticks = 0;
     private ServerWorld world;
     private Vec3d spawnPos;
-    private final Random random = Random.create();
 
     public Level207BellWalkerEvent() {
         // Constructeur par défaut

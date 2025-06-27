@@ -1,4 +1,3 @@
-
 package net.dark.spv_addon.mixins.blocks;
 
 import com.sp.block.custom.CeilingLight;

@@ -6,8 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface SanityLightEmitter {
-    int sPV_addon$getSanityRadius(World world, BlockPos pos);
-
     static boolean isPlayerNearSanityLight(World world, BlockPos playerPos) {
         int checkRadius = 16;
         int verticalMargin = 5;
@@ -33,4 +31,6 @@ public interface SanityLightEmitter {
         }
         return false;
     }
+
+    int sPV_addon$getSanityRadius(World world, BlockPos pos);
 }

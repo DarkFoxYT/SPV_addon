@@ -17,15 +17,14 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CustomDeathScreen extends Screen {
     private static final Identifier BACKGROUND = new Identifier("spv_addon", "textures/gui/death_full.png");
-     private static final Identifier SCANLINES = new Identifier("spv_addon", "textures/gui/scanlines.png");
+    private static final Identifier SCANLINES = new Identifier("spv_addon", "textures/gui/scanlines.png");
     private final String playerName;
+    private final Identifier dynamicStaticId = new Identifier("spv_addon", "dynamic_static");
     private int ticksElapsed = 0;
     private int glitchTicks = 0;
     private boolean isGlitching = false;
-
     private NativeImage staticImage = null;
     private NativeImageBackedTexture staticTexture = null;
-    private final Identifier dynamicStaticId = new Identifier("spv_addon", "dynamic_static");
 
     public CustomDeathScreen(String playerName) {
         super(Text.empty());
@@ -63,7 +62,7 @@ public class CustomDeathScreen extends Screen {
         }
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                int val = isGlitching ? (int)(Math.random() * 255) : (int)(Math.random() * 192 + 32);
+                int val = isGlitching ? (int) (Math.random() * 255) : (int) (Math.random() * 192 + 32);
                 int color = 0xFF000000 | (val << 16) | (val << 8) | val;
                 staticImage.setColor(x, y, color);
             }
@@ -113,9 +112,9 @@ public class CustomDeathScreen extends Screen {
         ctx.getMatrices().pop();
 
         float frac = Math.min(ticksElapsed / 200f, 1f);
-        float flicker = (float)(Math.sin(ticksElapsed * 0.6 + Math.random()) * 0.15 + 0.85);
+        float flicker = (float) (Math.sin(ticksElapsed * 0.6 + Math.random()) * 0.15 + 0.85);
         float alpha = isGlitching
-                ? (float)(Math.random() * 0.7 + 0.3f) // during glitch, static jumps up
+                ? (float) (Math.random() * 0.7 + 0.3f) // during glitch, static jumps up
                 : frac * flicker;
 
         updateStaticTexture(w, h);
@@ -125,8 +124,8 @@ public class CustomDeathScreen extends Screen {
         ctx.drawTexture(dynamicStaticId, 0, 0, 0, 0, w, h, w, h);
 
 
-         RenderSystem.setShaderColor(1f, 1f, 1f, 0.10f * alpha);
-         ctx.drawTexture(SCANLINES, 0, 0, 0, 0, w, h, w, h);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 0.10f * alpha);
+        ctx.drawTexture(SCANLINES, 0, 0, 0, 0, w, h, w, h);
 
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -139,6 +138,7 @@ public class CustomDeathScreen extends Screen {
         stopDeathSound();
         closeStaticImage();
     }
+
     private void playDeathSound() {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.player != null) {

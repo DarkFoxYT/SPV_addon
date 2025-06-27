@@ -9,10 +9,8 @@ import net.dark.spv_addon.init.CustomDamageSources;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 
@@ -94,7 +92,7 @@ public class ClientFlashlightRendererAddon {
         Vec3d pos = player.getCameraPosVec(tickDelta);
         Quaternionf rot = new Quaternionf()
                 .rotateXYZ((float) -Math.toRadians(player.getPitch(tickDelta)),
-                        (float)  Math.toRadians(player.getYaw(tickDelta)), 0f);
+                        (float) Math.toRadians(player.getYaw(tickDelta)), 0f);
 
         List<AreaLight> lights = lightMap.computeIfAbsent(uuid, id -> {
             AreaLight l1 = new AreaLight().setBrightness(1f).setDistance(25f)

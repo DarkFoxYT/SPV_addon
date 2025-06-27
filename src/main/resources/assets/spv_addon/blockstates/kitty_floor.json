@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "spv_addon:block/kitty_floor" }
+    "": {
+      "model": "spv_addon:block/kitty_floor"
+    }
   }
 }

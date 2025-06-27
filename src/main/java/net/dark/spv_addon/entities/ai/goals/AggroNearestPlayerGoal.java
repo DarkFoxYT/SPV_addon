@@ -16,15 +16,14 @@ import java.util.List;
  * AggroNearestPlayerGoal: cible le joueur qui parle le plus près et joue un son selon la distance.
  */
 public class AggroNearestPlayerGoal extends Goal {
+    private static final int MIN_SOUND_DELAY = 5;   // délai min (proche)
+    private static final int MAX_SOUND_DELAY = 40;  // délai max (loin)
     private final BellWalkerEntity mob;
     private final double maxRange;
     private final double aggroSpeed;
     private double originalSpeed;
     private int soundCooldown;
     private PlayerEntity lastTarget;
-
-    private static final int MIN_SOUND_DELAY = 5;   // délai min (proche)
-    private static final int MAX_SOUND_DELAY = 40;  // délai max (loin)
 
     public AggroNearestPlayerGoal(BellWalkerEntity mob, double maxRange, double aggroSpeed) {
         this.mob = mob;
@@ -82,7 +81,7 @@ public class AggroNearestPlayerGoal extends Goal {
     private int calculateSoundDelay(double squaredDistance) {
         double distance = Math.sqrt(squaredDistance);
         double ratio = Math.min(distance / maxRange, 1.0);
-        return (int)(MIN_SOUND_DELAY + (MAX_SOUND_DELAY - MIN_SOUND_DELAY) * ratio);
+        return (int) (MIN_SOUND_DELAY + (MAX_SOUND_DELAY - MIN_SOUND_DELAY) * ratio);
     }
 
     @Override

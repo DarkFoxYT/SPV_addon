@@ -37,12 +37,13 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
+
     // Rotates a VoxelShape for each direction
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
         // No rotation for NORTH
         if (dir == Direction.NORTH) return shape;
 
-        VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
         int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
 
         for (int i = 0; i < times; ++i) {
@@ -57,51 +58,53 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
         }
         return buffer[0];
     }
+
     // Placement
-        @Override
-        public BlockState getPlacementState(ItemPlacementContext ctx) {
-            return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-        }
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    }
 
-        // Properties
-        @Override
-        protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-            builder.add(FACING);
-        }
+    // Properties
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
 
-        // Outline shape (what you see)
-        @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-            return ROTATED_SHAPES.get(state.get(FACING));
-        }
+    // Outline shape (what you see)
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+        return ROTATED_SHAPES.get(state.get(FACING));
+    }
 
-        // Collision shape (what you bump into)
-        @Override
-        public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
-            return ROTATED_SHAPES.get(state.get(FACING));
-        }
+    // Collision shape (what you bump into)
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+        return ROTATED_SHAPES.get(state.get(FACING));
+    }
 
-        // Rotation and mirror for blockstates (for structure placing etc)
-        @Override
-        public BlockState rotate(BlockState state, BlockRotation rotation) {
-            return state.with(FACING, rotation.rotate(state.get(FACING)));
-        }
-        @Override
-        public BlockState mirror(BlockState state, BlockMirror mirror) {
-            return state.rotate(mirror.getRotation(state.get(FACING)));
-        }
+    // Rotation and mirror for blockstates (for structure placing etc)
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
 
     // Ajout : jouer un son quand on fait un clic droit sur le bloc
     @Override
     public net.minecraft.util.ActionResult onUse(BlockState state, net.minecraft.world.World world, BlockPos pos, net.minecraft.entity.player.PlayerEntity player, net.minecraft.util.Hand hand, net.minecraft.util.hit.BlockHitResult hit) {
         if (!world.isClient) {
             world.playSound(
-                null, // joueur source (null = tout le monde entend)
-                pos,
-                net.dark.spv_addon.init.ModSounds.BONK,
-                net.minecraft.sound.SoundCategory.BLOCKS,
-                1.0f,
-                1.0f
+                    null, // joueur source (null = tout le monde entend)
+                    pos,
+                    net.dark.spv_addon.init.ModSounds.BONK,
+                    net.minecraft.sound.SoundCategory.BLOCKS,
+                    1.0f,
+                    1.0f
             );
         }
         return net.minecraft.util.ActionResult.SUCCESS;

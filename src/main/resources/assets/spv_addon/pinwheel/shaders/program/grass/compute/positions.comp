@@ -52,7 +52,7 @@ void main() {
 
 
     vec3 cameraPos = VeilCamera.CameraPosition;
-    vec3 player = vec3(floor(cameraPos.x),0,floor(cameraPos.z));
+    vec3 player = vec3(floor(cameraPos.x), 0, floor(cameraPos.z));
     float cameraX = mod(cameraPos.x, 1);
     float cameraZ = mod(cameraPos.z, 1);
     cameraPos.xz = vec2(cameraX, cameraZ);

@@ -30,9 +30,9 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
     private final List<ServerLimb> endPoints;
     private final List<Vec3d> bases;
     private final List<LegSetting> settings;
+    private final List<Double> stepProgress = new ArrayList<>();
     private int stillStandCounter = 0;
     private Vec3d armTarget = null;
-    private final List<Double> stepProgress = new ArrayList<>();
 
     @SafeVarargs
     public IKLegCompDark(List<LegSetting> settings, List<ServerLimb> endpoints, C... limbs) {
@@ -42,10 +42,6 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
         this.settings = settings;
         Arrays.stream(limbs).forEach(limb -> this.bases.add(Vec3d.ZERO));
         for (int i = 0; i < endpoints.size(); i++) stepProgress.add(0.0);
-    }
-
-    public void setArmTarget(double x, double y, double z) {
-        this.armTarget = new Vec3d(x, y, z);
     }
 
     private static boolean hasMovedOverLastTick(PathAwareEntity entity) {
@@ -65,6 +61,10 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
                         entity
                 )
         );
+    }
+
+    public void setArmTarget(double x, double y, double z) {
+        this.armTarget = new Vec3d(x, y, z);
     }
 
     // Empêche la jambe d'aller dans un mur (collision latérale)

@@ -16,7 +16,7 @@ public class BellWalkerActiveTarget extends ActiveTargetGoal<PlayerEntity> {
 
     @Override
     public boolean canStart() {
-        if(!this.component.isInTrueForm() && !this.component.shouldBeginReveal()) {
+        if (!this.component.isInTrueForm() && !this.component.shouldBeginReveal()) {
             return super.canStart();
         }
 

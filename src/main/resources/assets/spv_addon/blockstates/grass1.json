@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "spv_addon:block/grass1" }
+    "": {
+      "model": "spv_addon:block/grass1"
+    }
   }
 }

@@ -22,7 +22,7 @@ public class Kittylamp extends BlockWithEntity {
 
     public Kittylamp(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)this.getDefaultState().with(STOPPED, false));
+        this.setDefaultState(this.getDefaultState().with(STOPPED, false));
     }
 
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
@@ -53,6 +53,6 @@ public class Kittylamp extends BlockWithEntity {
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{STOPPED});
+        builder.add(STOPPED);
     }
 }

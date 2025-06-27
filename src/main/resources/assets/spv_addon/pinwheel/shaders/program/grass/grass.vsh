@@ -26,7 +26,7 @@ uint triple32(uint x) {
 }
 
 float hash(uint x){
-    return float( triple32(x) ) / float( 0xffffffffU );
+    return float(triple32(x)) / float(0xffffffffU);
 }
 
 float hash12(vec2 p){

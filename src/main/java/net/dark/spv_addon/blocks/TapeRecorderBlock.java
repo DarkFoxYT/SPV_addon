@@ -35,23 +35,24 @@ public class TapeRecorderBlock extends Block implements BlockEntityProvider {
 
     // Construction de la forme de collision à partir du modèle Blockbench
     private static final VoxelShape SHAPE = VoxelShapes.union(
-            VoxelShapes.cuboid(3/16.0, -0.2/16.0, 2.8/16.0, 4/16.0, 2.8/16.0, 15/16.0),
-            VoxelShapes.cuboid(12/16.0, -0.2/16.0, 2.8/16.0, 13/16.0, 2.8/16.0, 15/16.0),
-            VoxelShapes.cuboid(4/16.0, -0.2/16.0, 2.9/16.0, 12/16.0, 0.8/16.0, 15/16.0),
-            VoxelShapes.cuboid(4/16.0, 0.8/16.0, 10.9/16.0, 12/16.0, 2.9/16.0, 15/16.0),
-            VoxelShapes.cuboid(4/16.0, 0.8/16.0, 2.8/16.0, 12/16.0, 2.9/16.0, 5/16.0),
-            VoxelShapes.cuboid(3/16.0, -0.2/16.0, 2/16.0, 13/16.0, 2/16.0, 3/16.0),
-            VoxelShapes.cuboid(3/16.0, 1.2/16.0, 1.8/16.0, 13/16.0, 2.4/16.0, 2.8/16.0),
-            VoxelShapes.cuboid(11/16.0, 1/16.0, 2.1/16.0, 12/16.0, 3/16.0, 3.9/16.0),
-            VoxelShapes.cuboid(9/16.0, 1/16.0, 2.1/16.0, 10/16.0, 3/16.0, 3.9/16.0),
-            VoxelShapes.cuboid(6/16.0, 1/16.0, 2.1/16.0, 7/16.0, 3/16.0, 3.9/16.0),
-            VoxelShapes.cuboid(4/16.0, 1/16.0, 2.1/16.0, 5/16.0, 3/16.0, 3.9/16.0),
-            VoxelShapes.cuboid(3.5/16.0, 2.6/16.0, 5/16.0, 12.5/16.0, 3.1/16.0, 11.4/16.0),
-            VoxelShapes.cuboid(4.05/16.0, -0.1/16.0, 5.25/16.0, 11.95/16.0, 0.7/16.0, 10.75/16.0)
+            VoxelShapes.cuboid(3 / 16.0, -0.2 / 16.0, 2.8 / 16.0, 4 / 16.0, 2.8 / 16.0, 15 / 16.0),
+            VoxelShapes.cuboid(12 / 16.0, -0.2 / 16.0, 2.8 / 16.0, 13 / 16.0, 2.8 / 16.0, 15 / 16.0),
+            VoxelShapes.cuboid(4 / 16.0, -0.2 / 16.0, 2.9 / 16.0, 12 / 16.0, 0.8 / 16.0, 15 / 16.0),
+            VoxelShapes.cuboid(4 / 16.0, 0.8 / 16.0, 10.9 / 16.0, 12 / 16.0, 2.9 / 16.0, 15 / 16.0),
+            VoxelShapes.cuboid(4 / 16.0, 0.8 / 16.0, 2.8 / 16.0, 12 / 16.0, 2.9 / 16.0, 5 / 16.0),
+            VoxelShapes.cuboid(3 / 16.0, -0.2 / 16.0, 2 / 16.0, 13 / 16.0, 2 / 16.0, 3 / 16.0),
+            VoxelShapes.cuboid(3 / 16.0, 1.2 / 16.0, 1.8 / 16.0, 13 / 16.0, 2.4 / 16.0, 2.8 / 16.0),
+            VoxelShapes.cuboid(11 / 16.0, 1 / 16.0, 2.1 / 16.0, 12 / 16.0, 3 / 16.0, 3.9 / 16.0),
+            VoxelShapes.cuboid(9 / 16.0, 1 / 16.0, 2.1 / 16.0, 10 / 16.0, 3 / 16.0, 3.9 / 16.0),
+            VoxelShapes.cuboid(6 / 16.0, 1 / 16.0, 2.1 / 16.0, 7 / 16.0, 3 / 16.0, 3.9 / 16.0),
+            VoxelShapes.cuboid(4 / 16.0, 1 / 16.0, 2.1 / 16.0, 5 / 16.0, 3 / 16.0, 3.9 / 16.0),
+            VoxelShapes.cuboid(3.5 / 16.0, 2.6 / 16.0, 5 / 16.0, 12.5 / 16.0, 3.1 / 16.0, 11.4 / 16.0),
+            VoxelShapes.cuboid(4.05 / 16.0, -0.1 / 16.0, 5.25 / 16.0, 11.95 / 16.0, 0.7 / 16.0, 10.75 / 16.0)
     );
 
     // Gestion de la rotation comme CrossBlock
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
+
     static {
         for (Direction dir : Direction.Type.HORIZONTAL) {
             ROTATED_SHAPES.put(dir, rotateShape(SHAPE, dir));
@@ -63,6 +64,26 @@ public class TapeRecorderBlock extends Block implements BlockEntityProvider {
         setDefaultState(this.stateManager.getDefaultState()
                 .with(PLAYING, false)
                 .with(FACING, Direction.NORTH));
+    }
+
+    private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
+
+        if (dir == Direction.NORTH) return shape;
+
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+        int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
+
+        for (int i = 0; i < times; ++i) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+                // 90 deg Y rotation: (x, z) -> (1-z, x)
+                buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
+                        1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
+                ));
+            });
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
+        }
+        return buffer[0];
     }
 
     @Override
@@ -80,26 +101,6 @@ public class TapeRecorderBlock extends Block implements BlockEntityProvider {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new TapeRecorderBlockEntity(pos, state);
-    }
-
-    private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
-
-        if (dir == Direction.NORTH) return shape;
-
-        VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
-        int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
-
-        for (int i = 0; i < times; ++i) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                // 90 deg Y rotation: (x, z) -> (1-z, x)
-                buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
-                        1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
-                ));
-            });
-            buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
-        }
-        return buffer[0];
     }
 
     @Override

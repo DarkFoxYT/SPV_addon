@@ -12,7 +12,7 @@ public class HaHvavCustomEvent extends AbstractEvent {
         Random random = Random.create();
         boolean far = random.nextBoolean();
 
-        if(far){
+        if (far) {
             playDistantSound(world, ModSounds.AMBIENCE);
         } else {
             playSound(world, ModSounds.CARPET_RUN);

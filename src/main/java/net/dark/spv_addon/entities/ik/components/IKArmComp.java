@@ -27,8 +27,8 @@ public class IKArmComp<C extends IKChain, E extends IKAnimatable<E>>
     private final List<ServerLimb> endPoints;
     private final List<Vec3d> bases;
     private final List<LegSetting> settings;
-    private int stillStandCounter = 0;
     private final List<Double> stepProgress = new ArrayList<>();
+    private int stillStandCounter = 0;
 
     @SafeVarargs
     public IKArmComp(List<LegSetting> settings, List<ServerLimb> endpoints, C... limbs) {
@@ -150,7 +150,7 @@ public class IKArmComp<C extends IKChain, E extends IKAnimatable<E>>
                 BoneAccessor segAcc = segBone.get();
                 segAcc.moveTo(start, end, entity);
 
-                BoneAccessor armSegmentAccessor = (BoneAccessor) model.getBone("seg" + (k + 1) + "_arm" + (i + 1)).get();
+                BoneAccessor armSegmentAccessor = model.getBone("seg" + (k + 1) + "_arm" + (i + 1)).get();
                 Vec3d modelPosWorldSpace = limbChain.getJoints().get(k);
                 Vec3d targetVecWorldSpace = limbChain.getJoints().get(k + 1);
 

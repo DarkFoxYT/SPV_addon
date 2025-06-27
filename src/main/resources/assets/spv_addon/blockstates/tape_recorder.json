@@ -1,13 +1,34 @@
 {
   "variants": {
-    "facing=north,playing=false": { "model": "spv_addon:block/tape_recorder", "y": 180 },
-    "facing=south,playing=false": { "model": "spv_addon:block/tape_recorder" },
-    "facing=west,playing=false": { "model": "spv_addon:block/tape_recorder", "y": 90 },
-    "facing=east,playing=false": { "model": "spv_addon:block/tape_recorder", "y": 270 },
-
-    "facing=north,playing=true": { "model": "spv_addon:block/tape_recorder_playing", "y": 180 },
-    "facing=south,playing=true": { "model": "spv_addon:block/tape_recorder_playing" },
-    "facing=west,playing=true": { "model": "spv_addon:block/tape_recorder_playing", "y": 90 },
-    "facing=east,playing=true": { "model": "spv_addon:block/tape_recorder_playing", "y": 270 }
+    "facing=north,playing=false": {
+      "model": "spv_addon:block/tape_recorder",
+      "y": 180
+    },
+    "facing=south,playing=false": {
+      "model": "spv_addon:block/tape_recorder"
+    },
+    "facing=west,playing=false": {
+      "model": "spv_addon:block/tape_recorder",
+      "y": 90
+    },
+    "facing=east,playing=false": {
+      "model": "spv_addon:block/tape_recorder",
+      "y": 270
+    },
+    "facing=north,playing=true": {
+      "model": "spv_addon:block/tape_recorder_playing",
+      "y": 180
+    },
+    "facing=south,playing=true": {
+      "model": "spv_addon:block/tape_recorder_playing"
+    },
+    "facing=west,playing=true": {
+      "model": "spv_addon:block/tape_recorder_playing",
+      "y": 90
+    },
+    "facing=east,playing=true": {
+      "model": "spv_addon:block/tape_recorder_playing",
+      "y": 270
+    }
   }
 }

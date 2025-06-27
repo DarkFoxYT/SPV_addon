@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelKittyBackroomsLevel extends BackroomsLevel {
-    private final Random random = Random.create();
     private static boolean kittySpawned = false;
+    private final Random random = Random.create();
 
     public LevelKittyBackroomsLevel() {
         super("level_kitty", KittyChunkGenerator.CODEC, new Vec3d(21, 2, 13), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
@@ -30,10 +30,10 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
             List<CrossDimensionTeleport> playerList = new ArrayList();
             int exitRadius = ConfigStuff.exitSpawnRadius;
             if (world.getServer() != null && world.getServer().isDedicated()) {
-                exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
+                exitRadius = ((NewServerProperties) ((MinecraftDedicatedServer) world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof LevelKittyBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+            if (from instanceof LevelKittyBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double) exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
                 playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL, com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL));
             }
 
@@ -41,7 +41,19 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         }, "kitty -> poolrooms");
     }
 
+    public static void ensureSingleKitty(ServerWorld world) {
+        if (kittySpawned) return;
 
+        BlockPos spawnPos = new BlockPos(15, 2, 18);
+        if (!world.isChunkLoaded(spawnPos)) return;
+
+        KittyEntity kitty = new KittyEntity(ModEntities.KITTY, world);
+        kitty.refreshPositionAndAngles(spawnPos, 0.0F, 0.0F);
+        world.spawnEntity(kitty);
+        kittySpawned = true;
+
+        System.out.println("Spawned kitty at " + spawnPos);
+    }
 
     @Override
     public void register() {
@@ -59,7 +71,6 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         ensureSingleKitty(world);
     }
 
-
     @Override
     public int nextEventDelay() {
         return this.random.nextBetween(100, 1000);
@@ -68,21 +79,6 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     @Override
     public void writeToNbt(NbtCompound nbt) {
     }
-
-    public static void ensureSingleKitty(ServerWorld world) {
-        if (kittySpawned) return;
-
-        BlockPos spawnPos = new BlockPos(15, 2, 18);
-        if (!world.isChunkLoaded(spawnPos)) return;
-
-        KittyEntity kitty = new KittyEntity(ModEntities.KITTY, world);
-        kitty.refreshPositionAndAngles(spawnPos, 0.0F, 0.0F);
-        world.spawnEntity(kitty);
-        kittySpawned = true;
-
-        System.out.println("Spawned kitty at " + spawnPos);
-    }
-
 
     @Override
     public void readFromNbt(NbtCompound nbt) {

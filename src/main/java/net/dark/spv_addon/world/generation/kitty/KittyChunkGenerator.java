@@ -46,11 +46,6 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final Random random = Random.create();
 
-    @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
-        return CODEC;
-    }
-
     public KittyChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
         this.settings = settings;
@@ -67,6 +62,10 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         });
     }
 
+    @Override
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
+    }
 
     @Override
     public void generate(StructureWorldAccess world, Chunk chunk) {
@@ -141,16 +140,28 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         }
     }
 
-    @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
-                                                            NoiseConfig noiseConfig,
-                                                            StructureAccessor structureAccessor,
-                                                            Chunk chunk) {
+    @Override
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
+                                                  NoiseConfig noiseConfig,
+                                                  StructureAccessor structureAccessor,
+                                                  Chunk chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 
-    @Override public int getSeaLevel() { return 0; }
-    @Override public int getMinimumY() { return 0; }
-    @Override public int getWorldHeight() { return 256; }
+    @Override
+    public int getSeaLevel() {
+        return 0;
+    }
+
+    @Override
+    public int getMinimumY() {
+        return 0;
+    }
+
+    @Override
+    public int getWorldHeight() {
+        return 256;
+    }
 
     @Override
     public int getHeight(int x, int z, net.minecraft.world.Heightmap.Type type,
@@ -170,18 +181,27 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
         return new VerticalBlockSample(0, states);
     }
 
-    @Override public void carve(ChunkRegion region, long seed,
-                                NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
-                                StructureAccessor structAcc, Chunk chunk,
-                                GenerationStep.Carver carverStep) {}
+    @Override
+    public void carve(ChunkRegion region, long seed,
+                      NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
+                      StructureAccessor structAcc, Chunk chunk,
+                      GenerationStep.Carver carverStep) {
+    }
 
-    @Override public void buildSurface(ChunkRegion region,
-                                       StructureAccessor structAcc,
-                                       NoiseConfig noiseConfig,
-                                       Chunk chunk) {}
+    @Override
+    public void buildSurface(ChunkRegion region,
+                             StructureAccessor structAcc,
+                             NoiseConfig noiseConfig,
+                             Chunk chunk) {
+    }
 
-    @Override public void populateEntities(ChunkRegion region) {}
-    @Override public void getDebugHudText(java.util.List<String> text,
-                                          NoiseConfig noiseConfig,
-                                          BlockPos pos) {}
+    @Override
+    public void populateEntities(ChunkRegion region) {
+    }
+
+    @Override
+    public void getDebugHudText(java.util.List<String> text,
+                                NoiseConfig noiseConfig,
+                                BlockPos pos) {
+    }
 }

@@ -47,11 +47,11 @@ public class BellWalkerEntity extends PathAwareEntity
         this.navigation = new SlightlyBetterMobNavigation(this, world);
 
         List<ServerLimb> endpoints = List.of(
-                new ServerLimb( 1.25, 0.0,  1.25),
-                new ServerLimb(-1.25, 0.0,  1.25),
-                new ServerLimb( 1.25, 0.0,  0.1),
-                new ServerLimb(-1.25, 0.0,  0.1),
-                new ServerLimb( 1.25, 0.0, -1.25),
+                new ServerLimb(1.25, 0.0, 1.25),
+                new ServerLimb(-1.25, 0.0, 1.25),
+                new ServerLimb(1.25, 0.0, 0.1),
+                new ServerLimb(-1.25, 0.0, 0.1),
+                new ServerLimb(1.25, 0.0, -1.25),
                 new ServerLimb(-1.25, 0.0, -1.25)
         );
         IKLegCompDark.LegSetting setting = new IKLegCompDark.LegSetting.Builder()
@@ -80,7 +80,18 @@ public class BellWalkerEntity extends PathAwareEntity
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 3000.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5);
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1000.0);
+    }
+
+    @Override
+    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+        return false;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(net.minecraft.entity.damage.DamageSource damageSource) {
+        return true;
     }
 
     public void clearStalkTarget() {
@@ -203,7 +214,7 @@ public class BellWalkerEntity extends PathAwareEntity
                 if (--idleTicks <= 0) {
                     double dx = (mob.getRandom().nextDouble() * 2 - 1) * 10;
                     double dz = (mob.getRandom().nextDouble() * 2 - 1) * 10;
-                    BlockPos dest = mob.getBlockPos().add((int)dx, 0, (int)dz);
+                    BlockPos dest = mob.getBlockPos().add((int) dx, 0, (int) dz);
                     mob.getNavigation().startMovingTo(
                             dest.getX(), dest.getY(), dest.getZ(), speed
                     );

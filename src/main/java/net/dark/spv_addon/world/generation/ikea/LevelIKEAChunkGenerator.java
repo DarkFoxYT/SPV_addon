@@ -44,19 +44,16 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final Random random = Random.create();
 
-    @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
-        return CODEC;
-    }
-
     public LevelIKEAChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
         this.settings = settings;
         SPBRevampedClient.setInBackrooms(true);
     }
 
-
-
+    @Override
+    protected Codec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
+    }
 
     @Override
     public void generate(StructureWorldAccess world, Chunk chunk) {
@@ -78,56 +75,56 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
             for (int gz = 0; gz < 128; gz++) {
                 int px = gx * 32;
                 int pz = gz * 32;
-            int chunkX = px / 16;
-            int chunkZ = pz / 16;
-            if (chunkX == cx && chunkZ == cz) {
+                int chunkX = px / 16;
+                int chunkZ = pz / 16;
+                if (chunkX == cx && chunkZ == cz) {
                     String pathName = "ikea/pathway_room" + (((gx + gz) % 4) + 1);
-                Identifier pathId = new Identifier(Spv_addon.MOD_ID, pathName);
-                Optional<StructureTemplate> optPath = mgr.getTemplate(pathId);
-                if (optPath.isPresent()) {
-                    BlockPos pathPos = new BlockPos(px, 0, pz);
-                    StructurePlacementData pathData = new StructurePlacementData()
-                            .setMirror(BlockMirror.NONE)
-                            .setIgnoreEntities(true);
-                    optPath.get().place(world, pathPos, pathPos, pathData, random, 2);
+                    Identifier pathId = new Identifier(Spv_addon.MOD_ID, pathName);
+                    Optional<StructureTemplate> optPath = mgr.getTemplate(pathId);
+                    if (optPath.isPresent()) {
+                        BlockPos pathPos = new BlockPos(px, 0, pz);
+                        StructurePlacementData pathData = new StructurePlacementData()
+                                .setMirror(BlockMirror.NONE)
+                                .setIgnoreEntities(true);
+                        optPath.get().place(world, pathPos, pathPos, pathData, random, 2);
+                    }
                 }
-            }
                 int rightPx = px + 32;
                 int rightPz = pz;
-            int rightChunkX = rightPx / 16;
-            int rightChunkZ = rightPz / 16;
-            if (rightChunkX == cx && rightChunkZ == cz) {
+                int rightChunkX = rightPx / 16;
+                int rightChunkZ = rightPz / 16;
+                if (rightChunkX == cx && rightChunkZ == cz) {
                     String miscName = "ikea/misc_room" + (((gx + gz) % 4) + 1);
-                Identifier miscId = new Identifier(Spv_addon.MOD_ID, miscName);
-                Optional<StructureTemplate> optMisc = mgr.getTemplate(miscId);
-                if (optMisc.isPresent()) {
-                    BlockPos miscPos = new BlockPos(rightPx, 0, rightPz);
-                    StructurePlacementData miscData = new StructurePlacementData()
-                            .setMirror(BlockMirror.NONE)
-                            .setRotation(BlockRotation.values()[random.nextInt(BlockRotation.values().length)])
-                            .setIgnoreEntities(true);
-                    optMisc.get().place(world, miscPos, miscPos, miscData, random, 2);
+                    Identifier miscId = new Identifier(Spv_addon.MOD_ID, miscName);
+                    Optional<StructureTemplate> optMisc = mgr.getTemplate(miscId);
+                    if (optMisc.isPresent()) {
+                        BlockPos miscPos = new BlockPos(rightPx, 0, rightPz);
+                        StructurePlacementData miscData = new StructurePlacementData()
+                                .setMirror(BlockMirror.NONE)
+                                .setRotation(BlockRotation.values()[random.nextInt(BlockRotation.values().length)])
+                                .setIgnoreEntities(true);
+                        optMisc.get().place(world, miscPos, miscPos, miscData, random, 2);
+                    }
                 }
-            }
                 // Génération des salles à gauche
                 int leftPx = px - 32;
                 int leftPz = pz;
-            int leftChunkX = leftPx / 16;
-            int leftChunkZ = leftPz / 16;
-            if (leftChunkX == cx && leftChunkZ == cz) {
+                int leftChunkX = leftPx / 16;
+                int leftChunkZ = leftPz / 16;
+                if (leftChunkX == cx && leftChunkZ == cz) {
                     String miscName = "ikea/misc_room" + (((gx + gz + 2) % 4) + 1);
-                Identifier miscId = new Identifier(Spv_addon.MOD_ID, miscName);
-                Optional<StructureTemplate> optMisc = mgr.getTemplate(miscId);
-                if (optMisc.isPresent()) {
-                    BlockPos miscPos = new BlockPos(leftPx, 0, leftPz);
-                    StructurePlacementData miscData = new StructurePlacementData()
-                            .setMirror(BlockMirror.NONE)
-                            .setRotation(BlockRotation.values()[random.nextInt(BlockRotation.values().length)])
-                            .setIgnoreEntities(true);
-                    optMisc.get().place(world, miscPos, miscPos, miscData, random, 2);
+                    Identifier miscId = new Identifier(Spv_addon.MOD_ID, miscName);
+                    Optional<StructureTemplate> optMisc = mgr.getTemplate(miscId);
+                    if (optMisc.isPresent()) {
+                        BlockPos miscPos = new BlockPos(leftPx, 0, leftPz);
+                        StructurePlacementData miscData = new StructurePlacementData()
+                                .setMirror(BlockMirror.NONE)
+                                .setRotation(BlockRotation.values()[random.nextInt(BlockRotation.values().length)])
+                                .setIgnoreEntities(true);
+                        optMisc.get().place(world, miscPos, miscPos, miscData, random, 2);
+                    }
                 }
             }
-        }
         }
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 2; ++j) {
@@ -153,13 +150,19 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
         }
 
     }
-    @Override public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
-                                                            NoiseConfig noiseConfig,
-                                                            StructureAccessor structureAccessor,
-                                                            Chunk chunk) {
+
+    @Override
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
+                                                  NoiseConfig noiseConfig,
+                                                  StructureAccessor structureAccessor,
+                                                  Chunk chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
-    @Override public int getWorldHeight() { return 256; }
+
+    @Override
+    public int getWorldHeight() {
+        return 256;
+    }
 
     @Override
     public int getHeight(int x, int z, net.minecraft.world.Heightmap.Type type,
@@ -179,18 +182,27 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
         return new VerticalBlockSample(0, states);
     }
 
-    @Override public void carve(ChunkRegion region, long seed,
-                                NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
-                                StructureAccessor structAcc, Chunk chunk,
-                                GenerationStep.Carver carverStep) {}
+    @Override
+    public void carve(ChunkRegion region, long seed,
+                      NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
+                      StructureAccessor structAcc, Chunk chunk,
+                      GenerationStep.Carver carverStep) {
+    }
 
-    @Override public void buildSurface(ChunkRegion region,
-                                       StructureAccessor structAcc,
-                                       NoiseConfig noiseConfig,
-                                       Chunk chunk) {}
+    @Override
+    public void buildSurface(ChunkRegion region,
+                             StructureAccessor structAcc,
+                             NoiseConfig noiseConfig,
+                             Chunk chunk) {
+    }
 
-    @Override public void populateEntities(ChunkRegion region) {}
-    @Override public void getDebugHudText(java.util.List<String> text,
-                                          NoiseConfig noiseConfig,
-                                          BlockPos pos) {}
+    @Override
+    public void populateEntities(ChunkRegion region) {
+    }
+
+    @Override
+    public void getDebugHudText(java.util.List<String> text,
+                                NoiseConfig noiseConfig,
+                                BlockPos pos) {
+    }
 }

@@ -22,8 +22,8 @@ public class ShelfBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private static final VoxelShape SHAPE = VoxelShapes.union(
-            VoxelShapes.cuboid(0.0, 0.0, 0.0, 1.0, 1.0/16.0, 1.0),
-            VoxelShapes.cuboid(0.0, 1.0/16.0, 7.0/16.0, 1.0, 1.0, 9.0/16.0)
+            VoxelShapes.cuboid(0.0, 0.0, 0.0, 1.0, 1.0 / 16.0, 1.0),
+            VoxelShapes.cuboid(0.0, 1.0 / 16.0, 7.0 / 16.0, 1.0, 1.0, 9.0 / 16.0)
     );
 
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
@@ -40,19 +40,8 @@ public class ShelfBlock extends Block {
         setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
-    @Nullable
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
-    }
-
     private static VoxelShape rotateShape180(VoxelShape shape) {
-        VoxelShape[] buffer = { VoxelShapes.empty() };
+        VoxelShape[] buffer = {VoxelShapes.empty()};
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
                     1 - maxX, minY, 1 - maxZ, 1 - minX, maxY, 1 - minZ
@@ -62,7 +51,7 @@ public class ShelfBlock extends Block {
     }
 
     private static VoxelShape rotateShape90(VoxelShape shape) {
-        VoxelShape[] buffer = { VoxelShapes.empty() };
+        VoxelShape[] buffer = {VoxelShapes.empty()};
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
                     minZ, minY, 1 - maxX, maxZ, maxY, 1 - minX
@@ -72,13 +61,24 @@ public class ShelfBlock extends Block {
     }
 
     private static VoxelShape rotateShape270(VoxelShape shape) {
-        VoxelShape[] buffer = { VoxelShapes.empty() };
+        VoxelShape[] buffer = {VoxelShapes.empty()};
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
                     1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
             ));
         });
         return buffer[0];
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     @Override

@@ -14,11 +14,15 @@ import net.minecraft.util.Util;
 @Environment(EnvType.CLIENT)
 public class SanityBar implements HudRenderCallback {
     private static final Identifier SANITY_EMPTY = new Identifier("spv_addon", "textures/gui/sanity_0.png");
-    private static final Identifier SANITY_FULL  = new Identifier("spv_addon", "textures/gui/sanity_icon.png");
+    private static final Identifier SANITY_FULL = new Identifier("spv_addon", "textures/gui/sanity_icon.png");
     private static final int ICON_W = 32, ICON_H = 32; // Taille de la texture
     private static final float SCALE = 1.0f; // Pour garder même rendu que les autres
-    private static final int X_MARGIN = 16 + (int)(44 * 0.75f) + 12; // Décale à droite de la ThirstHud (qui fait ~33px avec scale)
+    private static final int X_MARGIN = 16 + (int) (44 * 0.75f) + 12; // Décale à droite de la ThirstHud (qui fait ~33px avec scale)
     private static final int Y_MARGIN = 16; // Même base en bas de l'écran
+
+    public static void register() {
+        HudRenderCallback.EVENT.register(new SanityBar());
+    }
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -37,7 +41,7 @@ public class SanityBar implements HudRenderCallback {
 
         int sh = client.getWindow().getScaledHeight();
         int x = X_MARGIN; // Juste à droite de la ThirstHud
-        int y = sh - (int)(ICON_H * SCALE) - 16; // Même base que la soif
+        int y = sh - (int) (ICON_H * SCALE) - 16; // Même base que la soif
 
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);
@@ -67,16 +71,12 @@ public class SanityBar implements HudRenderCallback {
         // % texte sous la barre
         String txt = sanity + "%";
         int tw = client.textRenderer.getWidth(txt);
-        dc.drawText(client.textRenderer, txt, x + (int)(ICON_W * SCALE) / 2 - tw / 2, y + (int)(ICON_H * SCALE) + 2, 0xFFFFFF, true);
+        dc.drawText(client.textRenderer, txt, x + (int) (ICON_W * SCALE) / 2 - tw / 2, y + (int) (ICON_H * SCALE) + 2, 0xFFFFFF, true);
     }
 
     private float getPulseAlpha() {
         double t = Util.getMeasuringTimeMs() / 600.0;
         double sway = (Math.sin(t) + 1.0) / 2.0;
-        return 0.3f + (float)(sway * 0.7f);
-    }
-
-    public static void register() {
-        HudRenderCallback.EVENT.register(new SanityBar());
+        return 0.3f + (float) (sway * 0.7f);
     }
 }

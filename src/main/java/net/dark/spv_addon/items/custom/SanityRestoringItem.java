@@ -19,13 +19,12 @@ public class SanityRestoringItem extends Item {
     private final boolean decreaseThirst;
 
     /**
-     *
-     * @param settings         Item settings
-     * @param sanityChange     Amount of sanity to change (positive or negative)
-     * @param thirstChange     Amount of thirst to change (positive or negative)
-     * @param poisoned         Whether the item causes poison effect
-     * @param decreaseSanity   Whether the item decreases sanity
-     * @param decreaseThirst   Whether the item decreases thirst
+     * @param settings       Item settings
+     * @param sanityChange   Amount of sanity to change (positive or negative)
+     * @param thirstChange   Amount of thirst to change (positive or negative)
+     * @param poisoned       Whether the item causes poison effect
+     * @param decreaseSanity Whether the item decreases sanity
+     * @param decreaseThirst Whether the item decreases thirst
      */
 
     public SanityRestoringItem(Settings settings, int sanityChange, int thirstChange, boolean poisoned, boolean decreaseSanity, boolean decreaseThirst) {
@@ -48,7 +47,7 @@ public class SanityRestoringItem extends Item {
                 ThirstManager.increaseThirst(player, value);
             }
             if (sanityChange != 0) {
-            if (!SanityLightStore.isPlayerInLightRange(world, player)) {
+                if (!SanityLightStore.isPlayerInLightRange(world, player)) {
                     int value = decreaseSanity ? -Math.abs(sanityChange) : Math.abs(sanityChange);
                     if (value > 0) {
                         sanity.increaseSanity(value);
@@ -57,7 +56,7 @@ public class SanityRestoringItem extends Item {
                     }
                 }
             }
-                stack.decrement(1);
+            stack.decrement(1);
 
             if (poisoned) {
                 player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
@@ -67,7 +66,7 @@ public class SanityRestoringItem extends Item {
                         true,
                         false
                 ));
-        }
+            }
         }
         return TypedActionResult.success(stack, world.isClient());
 

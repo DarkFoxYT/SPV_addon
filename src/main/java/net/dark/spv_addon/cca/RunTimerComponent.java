@@ -23,6 +23,7 @@ public class RunTimerComponent implements AutoSyncedComponent {
     public boolean isActive() {
         return active;
     }
+
     public void tick() {
         if (!active) return;
         ticksSpentInBackrooms++;
@@ -38,7 +39,7 @@ public class RunTimerComponent implements AutoSyncedComponent {
     }
 
     public void activate(int minTicks, int maxTicks) {
-        noclipThreshold = minTicks + (int)(Math.random() * (maxTicks - minTicks));
+        noclipThreshold = minTicks + (int) (Math.random() * (maxTicks - minTicks));
         active = true;
     }
 }

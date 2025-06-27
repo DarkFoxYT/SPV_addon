@@ -27,20 +27,24 @@ import org.lwjgl.opengl.GL43C;
 import java.nio.ByteBuffer;
 
 public class GrassRenderer {
-    VertexBuffer vertexBuffer;
+    public static final VertexFormat POSITION_NORMAL;
     private static final Identifier shaderPath = new Identifier("spv_addon", "grass/grass");
     private static final Identifier windTexture = new Identifier("spv_addon", "textures/environment/puddle_noise.png");
     private static final Identifier computeShaderPath = new Identifier("spv_addon", "grass/compute/positions");
+
+    static {
+        POSITION_NORMAL = new VertexFormat(ImmutableMap.of(
+                "Position", VertexFormats.POSITION_ELEMENT,
+                "Normal", VertexFormats.NORMAL_ELEMENT
+        ));
+    }
+
     private final int positionsVbo;
     private final int indirectVbo;
+    VertexBuffer vertexBuffer;
     private int lastGrassCount;
     private int lastMeshResolution;
     private ByteBuffer cmd;
-    public static final VertexFormat POSITION_NORMAL;
-
-    private float getGrassHeight() {
-        return 0.4f;
-    }
 
     public GrassRenderer() {
         this.vertexBuffer = new VertexBuffer(Usage.STATIC);
@@ -55,6 +59,10 @@ public class GrassRenderer {
         this.positionsVbo = GL15C.glGenBuffers();
         this.indirectVbo = GL15C.glGenBuffers();
         this.updateBuffers(true);
+    }
+
+    private float getGrassHeight() {
+        return 0.4f;
     }
 
     public void render() {
@@ -81,7 +89,7 @@ public class GrassRenderer {
             ShaderProgram shader = VeilRenderSystem.setShader(shaderPath);
             if (shader != null) {
                 shader.setFloat("GameTime", RenderSystem.getShaderGameTime());
-                shader.setInt("NumOfInstances", MathHelper.floor(MathHelper.sqrt((float)ConfigStuff.grassQuality.getCount())));
+                shader.setInt("NumOfInstances", MathHelper.floor(MathHelper.sqrt((float) ConfigStuff.grassQuality.getCount())));
                 shader.setFloat("grassHeight", this.getGrassHeight());
                 shader.setFloat("density", ConfigStuff.grassQuality.getDensity());
                 RenderSystem.setShaderTexture(0, windTexture);
@@ -91,7 +99,7 @@ public class GrassRenderer {
                 GL15C.glBindBuffer(36671, this.indirectVbo);
                 GL42C.glBindBufferBase(37074, 0, this.positionsVbo);
                 shader.bind();
-                ((RenderIndirectExtension)this.vertexBuffer).spb_revamped_1_20_1$drawIndirect();
+                ((RenderIndirectExtension) this.vertexBuffer).spb_revamped_1_20_1$drawIndirect();
                 ShaderProgram.unbind();
                 shader.clearSamplers();
                 GL42C.glBindBufferBase(37074, 0, 0);
@@ -109,7 +117,7 @@ public class GrassRenderer {
         boolean resolutionChange = currentMeshResolution != this.lastMeshResolution;
         if (countChange) {
             GL15C.glBindBuffer(37074, this.positionsVbo);
-            GL42C.glBufferData(37074, 4L * (long)currentGrassCount * 4L, 35048);
+            GL42C.glBufferData(37074, 4L * (long) currentGrassCount * 4L, 35048);
             GL15C.glBindBuffer(37074, 0);
         }
 
@@ -144,15 +152,15 @@ public class GrassRenderer {
             if (shader.isCompute()) {
                 GL42C.glBindBufferBase(37074, 0, this.positionsVbo);
                 GL42C.glBindBufferBase(37074, 1, this.indirectVbo);
-                int numOfInst = MathHelper.floor(MathHelper.sqrt((float)ConfigStuff.grassQuality.getCount()));
+                int numOfInst = MathHelper.floor(MathHelper.sqrt((float) ConfigStuff.grassQuality.getCount()));
                 shader.setInt("NumOfInstances", numOfInst);
                 shader.setFloat("density", ConfigStuff.grassQuality.getDensity());
-                float maxDist = (float)numOfInst / (ConfigStuff.grassQuality.getDensity() * 1.85F);
+                float maxDist = (float) numOfInst / (ConfigStuff.grassQuality.getDensity() * 1.85F);
                 shader.setFloat("maxDist", maxDist);
                 Vector4fc[] planes = VeilRenderer.getCullingFrustum().getPlanes();
                 float[] values = new float[4 * planes.length];
 
-                for(int i = 0; i < planes.length; ++i) {
+                for (int i = 0; i < planes.length; ++i) {
                     Vector4fc plane = planes[i];
                     values[i * 4] = plane.x();
                     values[i * 4 + 1] = plane.y();
@@ -162,7 +170,7 @@ public class GrassRenderer {
 
                 shader.setFloats("FrustumPlanes", values);
                 shader.bind();
-                int grass = MathHelper.floor(MathHelper.sqrt((float)ConfigStuff.grassQuality.getCount()) / 8.0F);
+                int grass = MathHelper.floor(MathHelper.sqrt((float) ConfigStuff.grassQuality.getCount()) / 8.0F);
                 int x = Math.min(grass, VeilRenderSystem.maxComputeWorkGroupCountX());
                 int y = Math.min(grass, VeilRenderSystem.maxComputeWorkGroupCountY());
                 GL43C.glDispatchCompute(x, y, 1);
@@ -178,17 +186,17 @@ public class GrassRenderer {
 
     private void createGrassModel(BufferBuilder bufferBuilder) {
         int segments = ConfigStuff.grassQuality.getResolution();
-        float xStep = 0.1F / (float)segments;
+        float xStep = 0.1F / (float) segments;
 
-        for(int i = 0; i < segments; ++i) {
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, 1.0F).next();
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, -1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)i), this.getGrassHeight() / (float)segments * (float)i, 0.0F).normal(0.0F, 0.0F, -1.0F).next();
-            bufferBuilder.vertex(0.4 + (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, -1.0F).next();
-            bufferBuilder.vertex(0.6 - (double)(xStep * (float)(i + 1)), this.getGrassHeight() / (float)segments * (float)(i + 1), 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+        for (int i = 0; i < segments; ++i) {
+            bufferBuilder.vertex(0.6 - (double) (xStep * (float) (i + 1)), this.getGrassHeight() / (float) segments * (float) (i + 1), 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.4 + (double) (xStep * (float) (i + 1)), this.getGrassHeight() / (float) segments * (float) (i + 1), 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.4 + (double) (xStep * (float) i), this.getGrassHeight() / (float) segments * (float) i, 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.6 - (double) (xStep * (float) i), this.getGrassHeight() / (float) segments * (float) i, 0.0F).normal(0.0F, 0.0F, 1.0F).next();
+            bufferBuilder.vertex(0.6 - (double) (xStep * (float) i), this.getGrassHeight() / (float) segments * (float) i, 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.4 + (double) (xStep * (float) i), this.getGrassHeight() / (float) segments * (float) i, 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.4 + (double) (xStep * (float) (i + 1)), this.getGrassHeight() / (float) segments * (float) (i + 1), 0.0F).normal(0.0F, 0.0F, -1.0F).next();
+            bufferBuilder.vertex(0.6 - (double) (xStep * (float) (i + 1)), this.getGrassHeight() / (float) segments * (float) (i + 1), 0.0F).normal(0.0F, 0.0F, -1.0F).next();
         }
 
     }
@@ -199,12 +207,5 @@ public class GrassRenderer {
         GL42C.glUnmapBuffer(36671);
         this.cmd.clear();
         this.cmd = null;
-    }
-
-    static {
-        POSITION_NORMAL = new VertexFormat(ImmutableMap.of(
-            "Position", VertexFormats.POSITION_ELEMENT,
-            "Normal", VertexFormats.NORMAL_ELEMENT
-        ));
     }
 }

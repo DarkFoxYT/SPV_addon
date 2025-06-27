@@ -39,11 +39,11 @@ public class KittyLampEntity extends BlockEntity {
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world.isClient) {
             if (this.light == null) {
-                Vec3d position = pos.toCenterPos().add((double)-0.5F, -0.06, (double)0.0F);
+                Vec3d position = pos.toCenterPos().add(-0.5F, -0.06, 0.0F);
                 this.brightness = 1F;
                 this.angle = 60.4F;
                 this.light = new AreaLight();
-                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(((AreaLight)this.light.setBrightness(this.brightness).setSize(0.9, (double)0.0F).setAngle((float)Math.toRadians((double)this.angle)).setOrientation((new Quaternionf()).rotateXYZ((float)Math.toRadians((double)-90.0F), 0.0F, 0.0F)).setColor(1,0,0.86f).setPosition(new Vector3d(position.x, position.y, position.z))).setDistance(13));
+                VeilRenderSystem.renderer().getDeferredRenderer().getLightRenderer().addLight(this.light.setBrightness(this.brightness).setSize(0.9, 0.0F).setAngle((float) Math.toRadians(this.angle)).setOrientation((new Quaternionf()).rotateXYZ((float) Math.toRadians(-90.0F), 0.0F, 0.0F)).setColor(1, 0, 0.86f).setPosition(new Vector3d(position.x, position.y, position.z)).setDistance(13));
             }
         }
     }

@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "spv_addon:block/run_roof" }
+    "": {
+      "model": "spv_addon:block/run_roof"
+    }
   }
 }

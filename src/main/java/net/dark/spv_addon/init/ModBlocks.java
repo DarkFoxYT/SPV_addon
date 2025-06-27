@@ -4,8 +4,6 @@ import com.sp.block.SprintBlockSoundGroup;
 import com.sp.block.custom.CarpetBlock;
 import com.sp.block.custom.WallBlock;
 import com.sp.block.custom.WallText;
-import com.sp.block.entity.CeilingLightBlockEntity;
-import com.sp.block.entity.FluorescentLightBlockEntity;
 import net.dark.spv_addon.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -35,11 +33,9 @@ public class ModBlocks {
     public static final Block KITTY_PLUSHIE_DEV = new PlushieBlock_bonk(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(0.5f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block CROSS = new CrossBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block EXIT_SIGN = new ExitSignBlock(FabricBlockSettings.copyOf(com.sp.init.ModBlocks.RED_METAL_CASING).hardness(-1f).noBlockBreakParticles().nonOpaque());
+    public static final Block IKEA_ARROW = new WallText(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque().collidable(false).sounds(SprintBlockSoundGroup.SILENT));
     public static final Block TAPE_RECORDER = new TapeRecorderBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
     public static final Block VENT = new VentBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque());
-    public static final Block IKEA_ARROW = new WallText(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(-1f).noBlockBreakParticles().nonOpaque().collidable(false).sounds(SprintBlockSoundGroup.SILENT));
-
-
     public static final Block TABLE = new TableBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
     public static final Block BED1 = new BedBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());
     public static final Block BED2 = new BedBlock2(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).hardness(-1f).noBlockBreakParticles().sounds(BlockSoundGroup.WOOD).dropsNothing().nonOpaque());

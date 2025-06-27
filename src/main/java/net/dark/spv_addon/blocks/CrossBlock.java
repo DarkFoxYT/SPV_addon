@@ -22,9 +22,9 @@ public class CrossBlock extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private static final VoxelShape BASE_SHAPE = VoxelShapes.union(
-            VoxelShapes.cuboid(6/16.0, -1/16.0, 7/16.0, 10/16.0, 21/16.0, 9/16.0),
-            VoxelShapes.cuboid(10/16.0, 12/16.0, 7/16.0, 15/16.0, 16/16.0, 9/16.0),
-            VoxelShapes.cuboid(1/16.0, 12/16.0, 7/16.0, 6/16.0, 16/16.0, 9/16.0)
+            VoxelShapes.cuboid(6 / 16.0, -1 / 16.0, 7 / 16.0, 10 / 16.0, 21 / 16.0, 9 / 16.0),
+            VoxelShapes.cuboid(10 / 16.0, 12 / 16.0, 7 / 16.0, 15 / 16.0, 16 / 16.0, 9 / 16.0),
+            VoxelShapes.cuboid(1 / 16.0, 12 / 16.0, 7 / 16.0, 6 / 16.0, 16 / 16.0, 9 / 16.0)
     );
 
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
@@ -44,7 +44,7 @@ public class CrossBlock extends HorizontalFacingBlock {
 
         if (dir == Direction.NORTH) return shape;
 
-        VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
         int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
 
         for (int i = 0; i < times; ++i) {
@@ -83,6 +83,7 @@ public class CrossBlock extends HorizontalFacingBlock {
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
+
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));

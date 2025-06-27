@@ -16,9 +16,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
+    public static final Set<UUID> justMadeNoise = new ConcurrentSkipListSet<>();
     public static VoicechatServerApi voicechatApi;
     private final ConcurrentHashMap<UUID, OpusDecoder> decoders = new ConcurrentHashMap<>();
-    public static final Set<UUID> justMadeNoise = new ConcurrentSkipListSet<>();
+
+    public static boolean hasJustMadeNoise(UUID uuid) {
+        return justMadeNoise.contains(uuid);
+    }
+
+    public static void resetNoiseEachTick(MinecraftServer server) {
+        justMadeNoise.clear();
+    }
 
     @Override
     public String getPluginId() {
@@ -43,9 +51,9 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
         if (sender != null) {
             Object playerObj = sender.getPlayer().getPlayer();
             if (playerObj instanceof PlayerEntity player) {
-            justMadeNoise.add(player.getUuid());
+                justMadeNoise.add(player.getUuid());
+            }
         }
-    }
     }
 
     private void onServerStart(VoicechatServerStartedEvent event) {
@@ -68,16 +76,9 @@ public class SpvAddonVoicechatPlugin implements VoicechatPlugin {
         if (decoder != null) {
             try {
                 decoder.close();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         decoders.remove(uuid);
-    }
-
-    public static boolean hasJustMadeNoise(UUID uuid) {
-        return justMadeNoise.contains(uuid);
-    }
-
-    public static void resetNoiseEachTick(MinecraftServer server) {
-        justMadeNoise.clear();
     }
 }

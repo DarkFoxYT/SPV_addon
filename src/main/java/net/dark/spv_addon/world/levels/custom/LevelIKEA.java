@@ -26,10 +26,10 @@ public class LevelIKEA extends BackroomsLevel {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
             int exitRadius = ConfigStuff.exitSpawnRadius;
             if (world.getServer() != null && world.getServer().isDedicated()) {
-                exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
+                exitRadius = ((NewServerProperties) ((MinecraftDedicatedServer) world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
+            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double) exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
                 playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL207_BACKROOMS_LEVEL));
             }
 
@@ -55,10 +55,12 @@ public class LevelIKEA extends BackroomsLevel {
     }
 
     @Override
-    public void writeToNbt(NbtCompound nbt) { }
+    public void writeToNbt(NbtCompound nbt) {
+    }
 
     @Override
-    public void readFromNbt(NbtCompound nbt) { }
+    public void readFromNbt(NbtCompound nbt) {
+    }
 
     @Override
     public boolean transitionOut(CrossDimensionTeleport teleport) {

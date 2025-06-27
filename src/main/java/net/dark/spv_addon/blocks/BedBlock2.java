@@ -11,6 +11,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class BedBlock2 extends Block {
+    public static final net.minecraft.state.property.DirectionProperty FACING =
+            net.minecraft.state.property.Properties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE = VoxelShapes.union(
             VoxelShapes.cuboid(0.0, 0.0, 0.0, 1.0, 1.0 / 16.0, 1.0),
             VoxelShapes.cuboid(0.0, 1.0 / 16.0, 7.0 / 16.0, 1.0, 1.0, 9.0 / 16.0)
@@ -20,9 +22,6 @@ public class BedBlock2 extends Block {
         super(settings);
         setDefaultState(this.stateManager.getDefaultState().with(FACING, net.minecraft.util.math.Direction.NORTH));
     }
-
-    public static final net.minecraft.state.property.DirectionProperty FACING =
-            net.minecraft.state.property.Properties.HORIZONTAL_FACING;
 
     @Override
     protected void appendProperties(net.minecraft.state.StateManager.Builder<Block, BlockState> builder) {

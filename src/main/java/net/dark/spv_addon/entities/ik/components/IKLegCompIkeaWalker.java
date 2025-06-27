@@ -27,8 +27,8 @@ public class IKLegCompIkeaWalker<C extends IKChain, E extends IKAnimatable<E>>
     private final List<ServerLimb> endPoints;
     private final List<Vec3d> bases;
     private final List<LegSetting> settings;
-    private int stillStandCounter = 0;
     private final List<Double> stepProgress = new ArrayList<>();
+    private int stillStandCounter = 0;
 
     @SafeVarargs
     public IKLegCompIkeaWalker(List<LegSetting> settings, List<ServerLimb> endpoints, C... limbs) {
@@ -141,7 +141,6 @@ public class IKLegCompIkeaWalker<C extends IKChain, E extends IKAnimatable<E>>
 
             double prog = stepProgress.get(i);
             Vec3d limbPos = limb.getPos();
-
 
 
             boolean canStep = true;

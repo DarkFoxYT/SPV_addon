@@ -12,11 +12,15 @@ import net.minecraft.util.Util;
 
 public class ThirstHud implements HudRenderCallback {
     private static final Identifier THIRST_EMPTY = new Identifier("spv_addon", "textures/gui/thirst_0.png");
-    private static final Identifier THIRST_FULL  = new Identifier("spv_addon", "textures/gui/thirst_icon.png");
+    private static final Identifier THIRST_FULL = new Identifier("spv_addon", "textures/gui/thirst_icon.png");
     // Les textures doivent faire 44x64px (fond et remplissage)
     private static final int ICON_W = 64, ICON_H = 44;
     private static final float SCALE = 0.75f; // Ajuste pour la taille finale affichée
     private static final int X_MARGIN = 70, Y_MARGIN = 40; // Position à caler selon ta GUI
+
+    public static void register() {
+        HudRenderCallback.EVENT.register(new ThirstHud());
+    }
 
     @Override
     public void onHudRender(DrawContext dc, float tickDelta) {
@@ -37,7 +41,7 @@ public class ThirstHud implements HudRenderCallback {
         int sh = client.getWindow().getScaledHeight();
 
         int x = 16; // 16px depuis le bord gauche
-        int y = sh - (int)(ICON_H * SCALE) - 16; // 16px depuis le bas
+        int y = sh - (int) (ICON_H * SCALE) - 16; // 16px depuis le bas
 
         dc.getMatrices().push();
         dc.getMatrices().translate(x, y, 0);
@@ -65,17 +69,12 @@ public class ThirstHud implements HudRenderCallback {
         // Texte %
         String txt = level + "%";
         int tw = client.textRenderer.getWidth(txt);
-        dc.drawText(client.textRenderer, txt, x + (int)(ICON_W * SCALE) / 2 - tw / 2, y + (int)(ICON_H * SCALE) + 2, 0xFFFFFF, true);
+        dc.drawText(client.textRenderer, txt, x + (int) (ICON_W * SCALE) / 2 - tw / 2, y + (int) (ICON_H * SCALE) + 2, 0xFFFFFF, true);
     }
-
 
     private float getPulseAlpha() {
         double t = Util.getMeasuringTimeMs() / 600.0;
         double sway = (Math.sin(t) + 1.0) / 2.0;
-        return 0.3f + (float)(sway * 0.7f);
-    }
-
-    public static void register() {
-        HudRenderCallback.EVENT.register(new ThirstHud());
+        return 0.3f + (float) (sway * 0.7f);
     }
 }

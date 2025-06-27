@@ -26,13 +26,13 @@ public class BedBlock extends Block {
     public static final EnumProperty<BedPart> PART = EnumProperty.of("part", BedPart.class);
 
     private static final VoxelShape SHAPE = VoxelShapes.union(
-            VoxelShapes.cuboid(0/16.0, -3/16.0, 0/16.0, 2/16.0, 6/16.0, 2/16.0),
-            VoxelShapes.cuboid(14/16.0, -3/16.0, 0/16.0, 16/16.0, 6/16.0, 2/16.0),
-            VoxelShapes.cuboid(0/16.0, -3/16.0, 30/16.0, 2/16.0, 6/16.0, 32/16.0),
-            VoxelShapes.cuboid(14/16.0, -3/16.0, 30/16.0, 16/16.0, 6/16.0, 32/16.0),
-            VoxelShapes.cuboid(0/16.0, 6/16.0, 0/16.0, 16/16.0, 10/16.0, 32/16.0),
-            VoxelShapes.cuboid(-0.5/16.0, 6.6/16.0, -0.9/16.0, 16.5/16.0, 12.1/16.0, 25.2/16.0),
-            VoxelShapes.cuboid(4.3/16.0, 7.3/16.0, 25.9/16.0, 15.7/16.0, 11.3/16.0, 31.4/16.0)
+            VoxelShapes.cuboid(0 / 16.0, -3 / 16.0, 0 / 16.0, 2 / 16.0, 6 / 16.0, 2 / 16.0),
+            VoxelShapes.cuboid(14 / 16.0, -3 / 16.0, 0 / 16.0, 16 / 16.0, 6 / 16.0, 2 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, -3 / 16.0, 30 / 16.0, 2 / 16.0, 6 / 16.0, 32 / 16.0),
+            VoxelShapes.cuboid(14 / 16.0, -3 / 16.0, 30 / 16.0, 16 / 16.0, 6 / 16.0, 32 / 16.0),
+            VoxelShapes.cuboid(0 / 16.0, 6 / 16.0, 0 / 16.0, 16 / 16.0, 10 / 16.0, 32 / 16.0),
+            VoxelShapes.cuboid(-0.5 / 16.0, 6.6 / 16.0, -0.9 / 16.0, 16.5 / 16.0, 12.1 / 16.0, 25.2 / 16.0),
+            VoxelShapes.cuboid(4.3 / 16.0, 7.3 / 16.0, 25.9 / 16.0, 15.7 / 16.0, 11.3 / 16.0, 31.4 / 16.0)
     );
 
     private static final VoxelShape SHAPE_EMPTY = VoxelShapes.empty();
@@ -53,6 +53,48 @@ public class BedBlock extends Block {
                 .with(PART, BedPart.FOOT));
     }
 
+    private static VoxelShape rotateShape180Foot(VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double newMinX = 1 - maxX;
+            double newMaxX = 1 - minX;
+            double newMinZ = 1 - maxZ;
+            double newMaxZ = 1 - minZ;
+            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
+                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
+            ));
+        });
+        return buffer[0];
+    }
+
+    private static VoxelShape rotateShape90Foot(VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double newMinX = minZ;
+            double newMaxX = maxZ;
+            double newMinZ = 1 - maxX;
+            double newMaxZ = 1 - minX;
+            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
+                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
+            ));
+        });
+        return buffer[0];
+    }
+
+    private static VoxelShape rotateShape270Foot(VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double newMinX = 1 - maxZ;
+            double newMaxX = 1 - minZ;
+            double newMinZ = minX;
+            double newMaxZ = maxX;
+            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
+                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
+            ));
+        });
+        return buffer[0];
+    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, PART);
@@ -69,48 +111,6 @@ public class BedBlock extends Block {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable net.minecraft.entity.LivingEntity placer, net.minecraft.item.ItemStack itemStack) {
-    }
-
-    private static VoxelShape rotateShape180Foot(VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            double newMinX = 1 - maxX;
-            double newMaxX = 1 - minX;
-            double newMinZ = 1 - maxZ;
-            double newMaxZ = 1 - minZ;
-            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
-            ));
-        });
-        return buffer[0];
-    }
-
-    private static VoxelShape rotateShape90Foot(VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            double newMinX = minZ;
-            double newMaxX = maxZ;
-            double newMinZ = 1 - maxX;
-            double newMaxZ = 1 - minX;
-            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
-            ));
-        });
-        return buffer[0];
-    }
-
-    private static VoxelShape rotateShape270Foot(VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[] { VoxelShapes.empty() };
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            double newMinX = 1 - maxZ;
-            double newMaxX = 1 - minZ;
-            double newMinZ = minX;
-            double newMaxZ = maxX;
-            buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
-            ));
-        });
-        return buffer[0];
     }
 
     @Override

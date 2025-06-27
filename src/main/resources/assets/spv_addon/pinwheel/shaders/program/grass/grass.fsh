@@ -18,7 +18,7 @@ float getGrassHeightGradient(float height){
 }
 
 void main() {
-//    discard;
+    //    discard;
     vec3 worldPos = localPos + VeilCamera.CameraPosition;
     float grassGradient = getGrassHeightGradient(worldPos.y - 66.0);
     vec3 grassColor = mix(vec3(0.2, 0.3, 0.2), vec3(0.3, 0.5, 0.1)*0.8, grassGradient);
@@ -26,10 +26,10 @@ void main() {
     float occlusionFactor = clamp(grassGradient, 0.5, 1.0);
 
 
-//    fragColor = vec4(grassColor * occlusionFactor, 1.0);
+    //    fragColor = vec4(grassColor * occlusionFactor, 1.0);
     fragAlbedo = vec4(grassColor * occlusionFactor, 1.0);
     fragNormal = vec4(worldToViewSpaceDirection(normal), 1.0);
     fragMaterial = ivec4(15, 0, 0, 1);
-//    fragLightSampler = vec4(texCoord2, 0.0, 1.0);
+    //    fragLightSampler = vec4(texCoord2, 0.0, 1.0);
     fragLightMap = vec4(1);
 }
