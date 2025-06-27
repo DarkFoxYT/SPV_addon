@@ -23,7 +23,7 @@ public class LevelIKEA extends BackroomsLevel {
         com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.unregisterTransition("level2 -> poolrooms");
 
         com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.registerTransition((world, playerComponent, from) -> {
-            List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
+            List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
             int exitRadius = ConfigStuff.exitSpawnRadius;
             if (world.getServer() != null && world.getServer().isDedicated()) {
                 exitRadius = ((NewServerProperties) ((MinecraftDedicatedServer) world.getServer()).getProperties()).getExitSpawnRadius();
@@ -51,7 +51,7 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public BoolTextPair allowsTorch() {
-        return new BoolTextPair(true, Text.translatable("Flashlight on."));
+        return new BoolTextPair(true, Text.translatable("Flash.on"));
     }
 
     @Override

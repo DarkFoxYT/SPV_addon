@@ -48,7 +48,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
         this.registerTransition((world, playerComponent, from) -> {
-            List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList();
+            List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
             if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= 12.0F && playerComponent.player.isOnGround()) {
                 for (PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
                     PlayerComponent otherPlayerComponent = InitializeComponents.PLAYER.get(player);

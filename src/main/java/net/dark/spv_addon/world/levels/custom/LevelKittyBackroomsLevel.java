@@ -27,7 +27,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         super("level_kitty", KittyChunkGenerator.CODEC, new Vec3d(21, 2, 13), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
 
         this.registerTransition((world, playerComponent, from) -> {
-            List<CrossDimensionTeleport> playerList = new ArrayList();
+            List<CrossDimensionTeleport> playerList = new ArrayList<>();
             int exitRadius = ConfigStuff.exitSpawnRadius;
             if (world.getServer() != null && world.getServer().isDedicated()) {
                 exitRadius = ((NewServerProperties) ((MinecraftDedicatedServer) world.getServer()).getProperties()).getExitSpawnRadius();

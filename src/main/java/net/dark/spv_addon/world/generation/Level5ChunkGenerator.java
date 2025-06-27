@@ -152,9 +152,7 @@ public class Level5ChunkGenerator extends ChunkGenerator {
                         occupied[x % 64][z % 64] = 1;
 
                 var opt = templateManager.getTemplate(room.id());
-                if (opt.isPresent()) {
-                    opt.get().place(world, mutable.set(px, 18, pz), mutable.set(px, 18, pz), randomRotation(), random, 2);
-                }
+                opt.ifPresent(structureTemplate -> structureTemplate.place(world, mutable.set(px, 18, pz), mutable.set(px, 18, pz), randomRotation(), random, 2));
             }
         }
 
@@ -166,9 +164,7 @@ public class Level5ChunkGenerator extends ChunkGenerator {
                 int px = baseX + rx * spacing;
                 int pz = baseZ + rz * spacing;
                 var opt = templateManager.getTemplate(roof.id());
-                if (opt.isPresent()) {
-                    opt.get().place(world, mutable.set(px, 32, pz), mutable.set(px, 32, pz), randomRotation(), random, 16);
-                }
+                opt.ifPresent(structureTemplate -> structureTemplate.place(world, mutable.set(px, 32, pz), mutable.set(px, 32, pz), randomRotation(), random, 16));
             }
         }
 

@@ -97,14 +97,11 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
             Vec3d basePos = this.bases.get(i);
             C limbChain = this.setLimb(i, basePos, entity);
 
-            // Mouvement de respiration même à l'arrêt
             double breathing = Math.sin((age + i * 10) * 0.04) * 0.07;
 
-            // Bump vertical doux et long, type ease-in-out
             double progress = stepProgress.get(i);
-            double bumpHeight = 0.0;
+            double bumpHeight = 0.2;
             if (progress < 1.0) {
-                // Courbe ease-in-out pour un mouvement plus naturel
                 double t = 0.5 - 0.5 * Math.cos(Math.PI * progress);
                 bumpHeight = Math.sin(Math.PI * t) * 0.19 + breathing;
             } else {
@@ -123,7 +120,6 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
                 segAcc.moveTo(start, end, entity);
             }
         }
-        // Arms
         if (armTarget != null) {
             for (int i = 0; i < this.limbs.size(); i++) {
                 var optArmBone = model.getBone("arm_base" + (i + 1));
@@ -169,10 +165,8 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
             var hit = rayCastToGround(worldBase, entity, settings.get(i).fluid());
             Vec3d target = hit.getPos();
 
-            // Collision murale
             target = adjustForWall(entity, worldBase, target);
 
-            // Progression du pas plus lente et moins agressive
             double prog = stepProgress.get(i);
             if (limb.hasToBeSet) {
                 prog = 0.0;
@@ -182,7 +176,7 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
                 prog = 0.0;
                 limb.setTarget(target);
             } else {
-                prog = Math.min(prog + 0.045, 1.0); // Plus petit = plus lent, plus doux
+                prog = Math.min(prog + 0.045, 1.0);
             }
             stepProgress.set(i, prog);
         }

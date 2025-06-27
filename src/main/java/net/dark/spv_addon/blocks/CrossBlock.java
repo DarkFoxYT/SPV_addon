@@ -31,7 +31,7 @@ public class CrossBlock extends HorizontalFacingBlock {
 
     static {
         for (Direction dir : Direction.Type.HORIZONTAL) {
-            ROTATED_SHAPES.put(dir, rotateShape(BASE_SHAPE, dir));
+            ROTATED_SHAPES.put(dir, rotateShape(dir));
         }
     }
 
@@ -40,11 +40,11 @@ public class CrossBlock extends HorizontalFacingBlock {
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
-    private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
+    private static VoxelShape rotateShape(Direction dir) {
 
-        if (dir == Direction.NORTH) return shape;
+        if (dir == Direction.NORTH) return CrossBlock.BASE_SHAPE;
 
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+        VoxelShape[] buffer = new VoxelShape[]{CrossBlock.BASE_SHAPE, VoxelShapes.empty()};
         int times = (dir == Direction.SOUTH) ? 2 : (dir == Direction.WEST ? 1 : 3);
 
         for (int i = 0; i < times; ++i) {

@@ -90,15 +90,14 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
                     }
                 }
                 int rightPx = px + 32;
-                int rightPz = pz;
                 int rightChunkX = rightPx / 16;
-                int rightChunkZ = rightPz / 16;
+                int rightChunkZ = pz / 16;
                 if (rightChunkX == cx && rightChunkZ == cz) {
                     String miscName = "ikea/misc_room" + (((gx + gz) % 4) + 1);
                     Identifier miscId = new Identifier(Spv_addon.MOD_ID, miscName);
                     Optional<StructureTemplate> optMisc = mgr.getTemplate(miscId);
                     if (optMisc.isPresent()) {
-                        BlockPos miscPos = new BlockPos(rightPx, 0, rightPz);
+                        BlockPos miscPos = new BlockPos(rightPx, 0, pz);
                         StructurePlacementData miscData = new StructurePlacementData()
                                 .setMirror(BlockMirror.NONE)
                                 .setRotation(BlockRotation.values()[random.nextInt(BlockRotation.values().length)])
@@ -108,15 +107,14 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
                 }
                 // Génération des salles à gauche
                 int leftPx = px - 32;
-                int leftPz = pz;
                 int leftChunkX = leftPx / 16;
-                int leftChunkZ = leftPz / 16;
+                int leftChunkZ = pz / 16;
                 if (leftChunkX == cx && leftChunkZ == cz) {
                     String miscName = "ikea/misc_room" + (((gx + gz + 2) % 4) + 1);
                     Identifier miscId = new Identifier(Spv_addon.MOD_ID, miscName);
                     Optional<StructureTemplate> optMisc = mgr.getTemplate(miscId);
                     if (optMisc.isPresent()) {
-                        BlockPos miscPos = new BlockPos(leftPx, 0, leftPz);
+                        BlockPos miscPos = new BlockPos(leftPx, 0, pz);
                         StructurePlacementData miscData = new StructurePlacementData()
                                 .setMirror(BlockMirror.NONE)
                                 .setRotation(BlockRotation.values()[random.nextInt(BlockRotation.values().length)])

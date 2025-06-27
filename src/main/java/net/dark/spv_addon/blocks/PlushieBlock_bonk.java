@@ -22,8 +22,8 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(
-            2, 0, 2,  // from (x, y, z)
-            14, 10, 14 // to (x, y, z) - a bit short and not full width
+            2, 0, 2,
+            14, 10, 14
     );
     private static final Map<Direction, VoxelShape> ROTATED_SHAPES = new EnumMap<>(Direction.class);
 
@@ -38,9 +38,7 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
-    // Rotates a VoxelShape for each direction
     private static VoxelShape rotateShape(VoxelShape shape, Direction dir) {
-        // No rotation for NORTH
         if (dir == Direction.NORTH) return shape;
 
         VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
@@ -48,7 +46,6 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
 
         for (int i = 0; i < times; ++i) {
             buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                // 90 deg Y rotation: (x, z) -> (1-z, x)
                 buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(
                         1 - maxZ, minY, minX, 1 - minZ, maxY, maxX
                 ));
@@ -59,31 +56,26 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
         return buffer[0];
     }
 
-    // Placement
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
-    // Properties
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
-    // Outline shape (what you see)
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
         return ROTATED_SHAPES.get(state.get(FACING));
     }
 
-    // Collision shape (what you bump into)
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
         return ROTATED_SHAPES.get(state.get(FACING));
     }
 
-    // Rotation and mirror for blockstates (for structure placing etc)
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
@@ -94,12 +86,11 @@ public class PlushieBlock_bonk extends HorizontalFacingBlock {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
-    // Ajout : jouer un son quand on fait un clic droit sur le bloc
     @Override
     public net.minecraft.util.ActionResult onUse(BlockState state, net.minecraft.world.World world, BlockPos pos, net.minecraft.entity.player.PlayerEntity player, net.minecraft.util.Hand hand, net.minecraft.util.hit.BlockHitResult hit) {
         if (!world.isClient) {
             world.playSound(
-                    null, // joueur source (null = tout le monde entend)
+                    null,
                     pos,
                     net.dark.spv_addon.init.ModSounds.BONK,
                     net.minecraft.sound.SoundCategory.BLOCKS,

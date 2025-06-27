@@ -34,9 +34,9 @@ public class TableBlock extends Block {
 
     static {
         ROTATED_SHAPES.put(Direction.NORTH, SHAPE);
-        ROTATED_SHAPES.put(Direction.SOUTH, rotateShape180Foot(SHAPE));
-        ROTATED_SHAPES.put(Direction.WEST, rotateShape90Foot(SHAPE));
-        ROTATED_SHAPES.put(Direction.EAST, rotateShape270Foot(SHAPE));
+        ROTATED_SHAPES.put(Direction.SOUTH, rotateShape180Foot());
+        ROTATED_SHAPES.put(Direction.WEST, rotateShape90Foot());
+        ROTATED_SHAPES.put(Direction.EAST, rotateShape270Foot());
     }
 
     public TableBlock(Settings settings) {
@@ -56,9 +56,9 @@ public class TableBlock extends Block {
         return buffer[0];
     }
 
-    private static VoxelShape rotateShape180Foot(VoxelShape shape) {
+    private static VoxelShape rotateShape180Foot() {
         VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+        TableBlock.SHAPE.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             double newMinX = 1 - maxX;
             double newMaxX = 1 - minX;
             double newMinZ = 1 - maxZ;
@@ -70,29 +70,25 @@ public class TableBlock extends Block {
         return buffer[0];
     }
 
-    private static VoxelShape rotateShape90Foot(VoxelShape shape) {
+    private static VoxelShape rotateShape90Foot() {
         VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            double newMinX = minZ;
-            double newMaxX = maxZ;
+        TableBlock.SHAPE.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             double newMinZ = 1 - maxX;
             double newMaxZ = 1 - minX;
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
+                    minZ, minY, newMinZ, maxZ, maxY, newMaxZ
             ));
         });
         return buffer[0];
     }
 
-    private static VoxelShape rotateShape270Foot(VoxelShape shape) {
+    private static VoxelShape rotateShape270Foot() {
         VoxelShape[] buffer = new VoxelShape[]{VoxelShapes.empty()};
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+        TableBlock.SHAPE.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             double newMinX = 1 - maxZ;
             double newMaxX = 1 - minZ;
-            double newMinZ = minX;
-            double newMaxZ = maxX;
             buffer[0] = VoxelShapes.union(buffer[0], VoxelShapes.cuboid(
-                    newMinX, minY, newMinZ, newMaxX, maxY, newMaxZ
+                    newMinX, minY, minX, newMaxX, maxY, maxX
             ));
         });
         return buffer[0];

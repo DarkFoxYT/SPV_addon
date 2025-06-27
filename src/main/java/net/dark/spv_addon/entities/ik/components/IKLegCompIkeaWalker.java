@@ -159,8 +159,7 @@ public class IKLegCompIkeaWalker<C extends IKChain, E extends IKAnimatable<E>>
             double behindDistance = limbPos.z - worldBase.z;
             if (isIdle && behindDistance < -maxIdleDistance) {
                 prog = 0.0;
-                Vec3d idleTarget = worldBase;
-                limb.setTarget(idleTarget);
+                limb.setTarget(worldBase);
                 stepProgress.set(i, prog);
                 continue;
             }

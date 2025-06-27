@@ -22,18 +22,14 @@ public class WindowCutsceneManager {
     private Path cameraPathRotY;
     private Path cameraPathRotZ;
     private Entity camera = null;
-    private Vec3d startPos;
-    private Vec3d endPos;
-    private Vec3d startRot;
-    private Vec3d endRot;
 
     public void start() {
         if (client.player == null || client.world == null) return;
         this.startTime = System.currentTimeMillis();
-        this.startPos = client.player.getPos();
-        this.endPos = startPos.add(client.player.getRotationVec(1.0F).multiply(1)).add(0, -0.5, 0); // avance d'1 bloc devant et descend de 0.5 bloc
-        this.startRot = new Vec3d(client.player.getPitch(), client.player.getYaw(), 0);
-        this.endRot = new Vec3d(client.player.getPitch() - 30, client.player.getYaw(), 15); // regarde un peu plus vers le haut et roule de 15 degrés
+        Vec3d startPos = client.player.getPos();
+        Vec3d endPos = startPos.add(client.player.getRotationVec(1.0F).multiply(1)).add(0, -0.5, 0); // avance d'1 bloc devant et descend de 0.5 bloc
+        Vec3d startRot = new Vec3d(client.player.getPitch(), client.player.getYaw(), 0);
+        Vec3d endRot = new Vec3d(client.player.getPitch() - 30, client.player.getYaw(), 15); // regarde un peu plus vers le haut et roule de 15 degrés
 
         this.cameraPathPos = new Path(List.of(
                 new Keyframe(startPos, Vec3d.ZERO, Vec3d.ZERO, 0, Easing.easeOutQuad),

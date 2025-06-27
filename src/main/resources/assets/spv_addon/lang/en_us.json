@@ -23,5 +23,6 @@
   "block.spv_addon.run_roof": "Run Roof",
   "block.spv_addon.kitty_lamp": "Kitty Light",
   "block.spv_addon.kitty_light": "Kitty Lamp",
-  "itemGroup.spv_addon": "The Volatile Addon"
+  "itemGroup.spv_addon": "The Volatile Addon",
+  "Flash.on": "Flashlight on"
 }

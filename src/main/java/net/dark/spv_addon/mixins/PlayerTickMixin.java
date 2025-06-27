@@ -13,14 +13,17 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerTickMixin {
+    @Unique
     private static final TagKey<Block> SANITY_LIGHT_TAG =
             TagKey.of(Registries.BLOCK.getKey(), new Identifier("spv_addon", "sanity_lights"));
+    @Unique
     private int tickCounter = 0;
 
     @Inject(method = "tick", at = @At("TAIL"))

@@ -50,10 +50,6 @@ public class CustomDeathScreen extends Screen {
         }
     }
 
-    public boolean isPauseScreen() {
-        return false;
-    }
-
     private void updateStaticTexture(int w, int h) {
         if (staticImage == null || staticImage.getWidth() != w || staticImage.getHeight() != h) {
             closeStaticImage();
