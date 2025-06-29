@@ -4,6 +4,7 @@ package net.dark.spv_addon.world.generation.run;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevampedClient;
+import com.sp.compat.modmenu.ConfigStuff;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -50,7 +51,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
         super(biomeSource);
         SPBRevampedClient.setInBackrooms(true);
         this.settings = settings;
-        this.corridorLength = random.nextBetween(100, 500);
+        this.corridorLength = ConfigStuff.exitSpawnRadius;
     }
 
 
@@ -69,7 +70,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
         } else if (cx == exitChunk) {
             roomId = new Identifier(Spv_addon.MOD_ID, "run/exit");
         } else if (cx < exitChunk) {
-            int hallwayType = random.nextBetween(1, 8);
+            int hallwayType = random.nextBetween(1, 14);
             roomId = new Identifier(Spv_addon.MOD_ID, "run/hallway" + hallwayType);
         } else {
             return;

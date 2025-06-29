@@ -20,7 +20,7 @@ float getGrassHeightGradient(float height){
 void main() {
     //    discard;
     vec3 worldPos = localPos + VeilCamera.CameraPosition;
-    float grassGradient = getGrassHeightGradient(worldPos.y - 66.0);
+    float grassGradient = getGrassHeightGradient(worldPos.y - 21.0);
     vec3 grassColor = mix(vec3(0.2, 0.3, 0.2), vec3(0.3, 0.5, 0.1)*0.8, grassGradient);
 
     float occlusionFactor = clamp(grassGradient, 0.5, 1.0);

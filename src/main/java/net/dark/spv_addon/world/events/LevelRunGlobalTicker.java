@@ -16,12 +16,8 @@ import static com.sp.init.BackroomsLevels.LEVEL1_WORLD_KEY;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {
-    private static final boolean IS_DEV = java.lang.management.ManagementFactory.getRuntimeMXBean()
-            .getInputArguments()
-            .toString()
-            .contains("jdwp");
+    private static final boolean IS_DEV = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
     private static final int TICKS_PER_MIN = 20 * 60;
-    private static final Set<ServerPlayerEntity> alreadyTeleported = new HashSet<>();
     private static int globalTimerTicks = -1;
     private static boolean alreadyActivated = false;
 
@@ -55,13 +51,17 @@ public class LevelRunGlobalTicker {
             int delay = IS_DEV ? TICKS_PER_MIN : (5 * TICKS_PER_MIN) + new Random().nextInt(6 * TICKS_PER_MIN);
             globalTimerTicks = delay;
             alreadyActivated = true;
-            System.out.println("[SPV_ADDON] Global LevelRun timer started for " + (delay / 20) + "s.");
+            if (IS_DEV) {
+                System.out.println("[SPV_ADDON] Global LevelRun timer started for " + (delay / 20) + "s.");
+            }
         }
 
         if (globalTimerTicks > 0) {
             globalTimerTicks--;
             if (globalTimerTicks == 0) {
-                System.out.println("[SPV_ADDON] Global LevelRun timer expired! Noclipping...");
+                if (IS_DEV) {
+                    System.out.println("[SPV_ADDON] Global LevelRun timer expired! Noclipping...");
+                }
                 boolean goKitty = plushieHolder != null;
 
                 // Remove plushie from holder (1 item only)
@@ -77,10 +77,14 @@ public class LevelRunGlobalTicker {
                 for (ServerPlayerEntity player : playersInBackrooms) {
                     if (goKitty) {
                         noclipPlayerToKitty(player);
-                        System.out.println("[SPV_ADDON] " + player.getEntityName() + " was sent to LEVEL_KITTY.");
+                        if (IS_DEV) {
+                            System.out.println("[SPV_ADDON] " + player.getEntityName() + " was sent to LEVEL_KITTY.");
+                        }
                     } else {
                         noclipPlayerToLevelRun(player);
-                        System.out.println("[SPV_ADDON] " + player.getEntityName() + " was sent to LEVEL_RUN.");
+                        if (IS_DEV) {
+                            System.out.println("[SPV_ADDON] " + player.getEntityName() + " was sent to LEVEL_RUN.");
+                        }
                     }
                 }
 

@@ -1,5 +1,7 @@
 package net.dark.spv_addon;
 
+import com.sp.SPBRevamped;
+import com.sp.SPBRevampedClient;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
@@ -10,6 +12,7 @@ import net.dark.spv_addon.init.*;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
 import net.dark.spv_addon.world.events.RedWoolTeleporter;
+import net.dark.spv_addon.world.events.level207.WoolTeleporter207;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -47,15 +50,12 @@ public class Spv_addon implements ModInitializer {
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            SpvCommands.register(dispatcher);
-
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 RedWoolTeleporter.tickPlayer(player);
-                RedWoolTeleporter.tickPlayer(player);
+                WoolTeleporter207.tickPlayer(player);
             }
         });
 

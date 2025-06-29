@@ -47,7 +47,6 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
     public LevelIKEAChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
         this.settings = settings;
-        SPBRevampedClient.setInBackrooms(true);
     }
 
     @Override

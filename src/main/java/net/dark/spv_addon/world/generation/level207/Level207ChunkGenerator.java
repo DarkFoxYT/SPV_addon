@@ -61,14 +61,11 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
         this.generateFeatures(world, chunk, null);
     }
 
-
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
 
-
-        // Place a room every 2x2 chunk area (room sizes are 32x32)
         if (cx % 2 == 0 && cz % 2 == 0) {
             int rx = cx / 2;
             int rz = cz / 2;
@@ -77,13 +74,9 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
             if (rx == 0 && rz == 0) {
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/entrance");
             } else {
-                int minRoom = 1, maxRoom = 3;
-                int bound = maxRoom - minRoom + 1;
-                int variant = minRoom;
-                variant = minRoom + random.nextInt(bound);
+                int variant = 1 + random.nextInt(3); // 1-3 inclus
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/grave" + variant);
             }
-
 
             MinecraftServer server = world.getServer();
             if (server == null) return;
@@ -91,56 +84,27 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
             Optional<StructureTemplate> optTpl = mgr.getTemplate(roomId);
             if (optTpl.isEmpty()) return;
 
+            StructureTemplate template = optTpl.get();
+
+            int limeYOffset = 0;
+            for (StructureTemplate.StructureBlockInfo info : template.getInfosForBlock(BlockPos.ORIGIN, new StructurePlacementData(), Blocks.LIME_WOOL)) {
+                limeYOffset = info.pos().getY();
+                break;
+            }
+
             int bx = chunk.getPos().getStartX();
             int bz = chunk.getPos().getStartZ();
-            BlockPos.Mutable basePos = new BlockPos.Mutable(bx, 65, bz); // Y=65
+            int baseY = 20 - limeYOffset;
 
+            BlockPos.Mutable basePos = new BlockPos.Mutable(bx, baseY, bz);
             StructurePlacementData placeData = new StructurePlacementData()
                     .setMirror(BlockMirror.NONE)
                     .setRotation(BlockRotation.NONE)
                     .setIgnoreEntities(true);
 
-
-            optTpl.get().place(world, basePos, basePos, placeData, random, 2);
+            template.place(world, basePos, basePos, placeData, random, 2);
         }
     }
-
-
-    private void tryPlaceExitNearPlayer(PlayerEntity player) {
-        if (!(player.getWorld() instanceof ServerWorld world)) return;
-
-        MinecraftServer server = world.getServer();
-        if (server == null) return;
-
-        StructureTemplateManager mgr = server.getStructureTemplateManager();
-        Identifier exitId = new Identifier(Spv_addon.MOD_ID, "level207/exit");
-        Optional<StructureTemplate> optTpl = mgr.getTemplate(exitId);
-        if (optTpl.isEmpty()) return;
-
-        // Recherche du offset vertical via lime wool (comme RUN)
-        StructureTemplate template = optTpl.get();
-        int yOffset = 0;
-        for (StructureTemplate.StructureBlockInfo info : template.getInfosForBlock(BlockPos.ORIGIN, new StructurePlacementData(), Blocks.LIME_WOOL)) {
-            if (info.state().isOf(Blocks.LIME_WOOL)) {
-                yOffset = info.pos().getY() + 1;
-                break;
-            }
-        }
-
-        // Position d’apparition autour du joueur
-        int radius = 20;
-        int px = (int) player.getX() + random.nextBetween(-radius, radius);
-        int pz = (int) player.getZ() + random.nextBetween(-radius, radius);
-        BlockPos basePos = new BlockPos(px, 65 - yOffset, pz);
-
-        StructurePlacementData placeData = new StructurePlacementData()
-                .setMirror(BlockMirror.NONE)
-                .setRotation(BlockRotation.NONE)
-                .setIgnoreEntities(true);
-
-        template.place(world, basePos, basePos, placeData, random, 2);
-    }
-
 
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
@@ -150,45 +114,18 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
         return CompletableFuture.completedFuture(chunk);
     }
 
-    @Override
-    public int getSeaLevel() {
-        return 0;
-    }
-
-    @Override
-    public int getMinimumY() {
-        return 0;
-    }
-
-    @Override
-    public int getWorldHeight() {
-        return 256;
-    }
-
-    @Override
-    public int getHeight(int x, int z, net.minecraft.world.Heightmap.Type type,
-                         net.minecraft.world.HeightLimitView view,
-                         NoiseConfig noiseConfig) {
-        return getWorldHeight();
-    }
-
-    @Override
-    public VerticalBlockSample getColumnSample(int x, int z,
-                                               net.minecraft.world.HeightLimitView view,
-                                               NoiseConfig noiseConfig) {
+    @Override public int getSeaLevel() { return 0; }
+    @Override public int getMinimumY() { return 0; }
+    @Override public int getWorldHeight() { return 256; }
+    @Override public int getHeight(int x, int z, net.minecraft.world.Heightmap.Type type, net.minecraft.world.HeightLimitView view, NoiseConfig noiseConfig) { return getWorldHeight(); }
+    @Override public VerticalBlockSample getColumnSample(int x, int z, net.minecraft.world.HeightLimitView view, NoiseConfig noiseConfig) {
         var states = new net.minecraft.block.BlockState[getWorldHeight()];
-        for (int i = 0; i < states.length; i++) {
-            states[i] = Blocks.AIR.getDefaultState();
-        }
+        for (int i = 0; i < states.length; i++) states[i] = Blocks.AIR.getDefaultState();
         return new VerticalBlockSample(0, states);
     }
 
     @Override
-    public void carve(ChunkRegion region, long seed,
-                      NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess,
-                      StructureAccessor structAcc, Chunk chunk,
-                      GenerationStep.Carver carverStep) {
-    }
+    public void carve(ChunkRegion region, long seed, NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess, StructureAccessor structAcc, Chunk chunk, GenerationStep.Carver carverStep) {}
 
     @Override
     public void buildSurface(ChunkRegion region,
