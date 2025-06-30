@@ -1,0 +1,45 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"1": "spv_addon:block/slope_wall",
+		"particle": "spv_addon:block/slope_wall"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [8, 16, 0, 13.48438], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [8, 7.98438, 16, 15.98438], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [16, 7.98438, 8, 15.98438], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [0, 11.42188, 8, 16], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [16, 0, 8, 8], "texture": "#1"},
+				"down": {"uv": [8, 0, 16, 8], "rotation": 180, "texture": "#1"}
+			}
+		},
+		{
+			"from": [-3.31, -0.05, 7.98],
+			"to": [19.32, 15.95, 8.08],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 7.95, 8.05]},
+			"faces": {
+				"north": {"uv": [0, 0, 8, 11.29688], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [32, 0.04688, 24, 0], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [8, 0, 16, 11.29688], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [32, 0.5, 24, 0.54688], "rotation": 90, "texture": "#1"},
+				"up": {"uv": [8.5, 19.5, 8.54688, 30.79688], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [8, 19.5, 8.04688, 30.79688], "rotation": 90, "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}
