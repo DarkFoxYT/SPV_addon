@@ -53,6 +53,10 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
         return 2.8;
     }
 
+    public boolean isInvulnerable() {
+        return true;
+    }
+
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new MeleeAttackGoal(this, 1.0, true) {

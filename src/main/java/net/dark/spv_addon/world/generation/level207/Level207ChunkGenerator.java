@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
+public final class Level207ChunkGenerator extends ChunkGenerator {
     public static final Codec<Level207ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -54,11 +54,6 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
     @Override
     protected Codec<? extends ChunkGenerator> getCodec() {
         return CODEC;
-    }
-
-    @Override
-    public void generate(StructureWorldAccess world, Chunk chunk) {
-        this.generateFeatures(world, chunk, null);
     }
 
     @Override

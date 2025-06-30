@@ -2,16 +2,16 @@ package net.dark.spv_addon.world.levels.custom;
 
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
-import net.dark.spv_addon.world.generation.Level5ChunkGenerator;
+import net.dark.spv_addon.world.generation.level188.Level188ChunkGenerator;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
-public class Level5BackroomsLevel extends BackroomsLevel {
+public class Level188BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
-    public Level5BackroomsLevel() {
-        super("level5", Level5ChunkGenerator.CODEC, new Vec3d(0, 20.0, 0), BackroomsLevels.LEVEL5_WORLD_KEY, "spv_addon");
+    public Level188BackroomsLevel() {
+        super("level188", Level188ChunkGenerator.CODEC, new Vec3d(16, 50, 16), BackroomsLevels.LEVEL188_WORLD_KEY, "spv_addon");
     }
 
     @Override
@@ -20,7 +20,7 @@ public class Level5BackroomsLevel extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return this.random.nextBetween(100000, 100000);
+        return this.random.nextBetween(100, 1000);
     }
 
     @Override

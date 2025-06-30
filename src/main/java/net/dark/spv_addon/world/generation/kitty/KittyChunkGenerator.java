@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class KittyChunkGenerator extends BackroomsChunkGenerator {
+public final class KittyChunkGenerator extends ChunkGenerator {
     public static final Codec<KittyChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -68,11 +68,6 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
     }
 
     @Override
-    public void generate(StructureWorldAccess world, Chunk chunk) {
-        this.generateFeatures(world, chunk, null);
-    }
-
-    @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
@@ -88,7 +83,7 @@ public final class KittyChunkGenerator extends BackroomsChunkGenerator {
                 int minRoom = 1, maxRoom = 27;
                 int bound = maxRoom - minRoom + 1;
                 int variant = minRoom;
-                if (bound > 0) variant = minRoom + random.nextInt(bound);
+                variant = minRoom + random.nextInt(bound);
                 roomId = new Identifier(Spv_addon.MOD_ID, "kitty/room" + variant);
             }
 
