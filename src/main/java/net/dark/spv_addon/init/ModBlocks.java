@@ -23,6 +23,7 @@ public class ModBlocks {
     public static final Block C_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block KITTY_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
+    public static final Block LE_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_ROOF = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block GRASS1 = new Block(FabricBlockSettings.copyOf(Blocks.DIRT).strength(-1.0F).noBlockBreakParticles().sounds(SprintBlockSoundGroup.GRASS2));
     public static final Block HOTEL_FLOOR = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1f).noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
@@ -59,6 +60,7 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "exit_sign"), EXIT_SIGN);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_wall"), KITTY_WALL);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_floor"), KITTY_FLOOR);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "188_carp"), LE_FLOOR);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "ikea_shelf"), IKEA_SHELF);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "ikea_shelf1"), IKEA_SHELF1);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "ikea_shelf2"), IKEA_SHELF2);

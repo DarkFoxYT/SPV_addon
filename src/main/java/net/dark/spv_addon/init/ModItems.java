@@ -24,8 +24,9 @@ public class ModItems {
     public static final Item IKEA_SHELF = register("ikea_shelf", new BlockItem(ModBlocks.IKEA_SHELF, new FabricItemSettings()));
     public static final Item IKEA_SHELF1 = register("ikea_shelf1", new BlockItem(ModBlocks.IKEA_SHELF1, new FabricItemSettings()));
     public static final Item IKEA_SHELF2 = register("ikea_shelf2", new BlockItem(ModBlocks.IKEA_SHELF2, new FabricItemSettings()));
-    public static final Item KITTY_1 = register("kitty_floor", new BlockItem(ModBlocks.KITTY_FLOOR, new FabricItemSettings()));
-    public static final Item KITTY_2 = register("kitty_wall", new BlockItem(ModBlocks.KITTY_WALL, new FabricItemSettings()));
+    public static final Item KITTY_FLOOR = register("kitty_floor", new BlockItem(ModBlocks.KITTY_FLOOR, new FabricItemSettings()));
+    public static final Item LE_FLOOR = register("188_carp", new BlockItem(ModBlocks.LE_FLOOR, new FabricItemSettings()));
+    public static final Item KITTY_WALL = register("kitty_wall", new BlockItem(ModBlocks.KITTY_WALL, new FabricItemSettings()));
     public static final Item KITTY_PLUSH = register("kitty_plushie", new BlockItem(ModBlocks.KITTY_PLUSHIE, new FabricItemSettings()));
     public static final Item KITTY_PLUSH1 = register("kitty_plushie1", new BlockItem(ModBlocks.KITTY_PLUSHIE1, new FabricItemSettings()));
     public static final Item KITTY_PLUSH_DEV = register("kitty_plushie_dev", new BlockItem(ModBlocks.KITTY_PLUSHIE_DEV, new FabricItemSettings()));

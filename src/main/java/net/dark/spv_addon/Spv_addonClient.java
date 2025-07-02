@@ -21,6 +21,7 @@ import net.dark.spv_addon.entities.custom.StalkerEntity;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
+import net.dark.spv_addon.init.helper.ZoomRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -80,16 +81,14 @@ public class Spv_addonClient implements ClientModInitializer {
                     public void reload(ResourceManager manager) {
 
                         BlockIdMap.registerBlockID(blockIdMap -> {
-                            blockIdMap.put(ModBlocks.KITTY_FLOOR, 45);
-                            blockIdMap.put(ModBlocks.KITTY_PLUSHIE, 46);
-                            blockIdMap.put(ModBlocks.KITTY_PLUSHIE1, 47);
-                            blockIdMap.put(ModBlocks.KITTY_PLUSHIE_DEV, 48);
-                            blockIdMap.put(ModBlocks.VENT, 49);
+                            blockIdMap.put(ModBlocks.KITTY_FLOOR, 4500);
+                            blockIdMap.put(ModBlocks.LE_FLOOR, 4501);
 
                         });
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0.5F, 2.0F, 256));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 2, 256));
+                        ZoomRegistry.registerZoom(ModBlocks.LE_FLOOR, new ZoomRegistry.ZoomData(2F));
                     }
 
                 });
