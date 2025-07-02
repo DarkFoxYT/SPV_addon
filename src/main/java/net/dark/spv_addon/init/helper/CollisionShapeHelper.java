@@ -19,13 +19,11 @@ public class CollisionShapeHelper {
     /**
      * Loads collision shapes grouped by direction prefix with numbered suffixes in the JSON model.
      * Only names like "collision_n1", "collision_e2", "collision_s3", "collision_w4" are accepted.
-     *
      * Returns a map from Direction (N, E, S, W) to combined VoxelShape for that direction.
      * If no collisions found for a direction, returns empty shape.
      */
     public static Map<Direction, VoxelShape> loadDirectionalCollisionsFromModelJson(String namespace, String path) {
         Map<Direction, List<VoxelShape>> shapeMap = new EnumMap<>(Direction.class);
-        // Initialize lists
         for (Direction dir : List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)) {
             shapeMap.put(dir, new ArrayList<>());
         }
@@ -46,7 +44,6 @@ public class CollisionShapeHelper {
 
                 String name = obj.get("name").getAsString().toLowerCase(Locale.ROOT);
 
-                // Only accept names like collision_n1, collision_e2, collision_s10, collision_w3, etc.
                 Direction dir = null;
                 if (name.matches("collision_n\\d+")) dir = Direction.NORTH;
                 else if (name.matches("collision_e\\d+")) dir = Direction.EAST;
@@ -72,7 +69,6 @@ public class CollisionShapeHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            // fallback to empty shapes for all directions
             Map<Direction, VoxelShape> fallback = new EnumMap<>(Direction.class);
             for (Direction d : List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)) {
                 fallback.put(d, VoxelShapes.empty());
@@ -80,7 +76,6 @@ public class CollisionShapeHelper {
             return fallback;
         }
 
-        // Combine lists into single shapes per direction
         Map<Direction, VoxelShape> combinedMap = new EnumMap<>(Direction.class);
         for (Direction d : List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)) {
             List<VoxelShape> list = shapeMap.get(d);
@@ -97,4 +92,55 @@ public class CollisionShapeHelper {
 
         return combinedMap;
     }
+
+    /**
+     * Loads all collision boxes named like "collision_1", "collision_2", etc.
+     * Ignores direction, doesn't rotate anything.
+     */
+    public static VoxelShape loadUnrotatedCollisionFromModelJson(String namespace, String path) {
+        List<VoxelShape> shapes = new ArrayList<>();
+
+        try {
+            Identifier id = new Identifier(namespace, "models/block/" + path + ".json");
+            InputStream stream = CollisionShapeHelper.class.getClassLoader().getResourceAsStream("assets/" + id.getNamespace() + "/" + id.getPath());
+            if (stream == null) throw new RuntimeException("Model file not found: " + id);
+
+            JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+            JsonArray elements = json.getAsJsonArray("elements");
+
+            for (JsonElement element : elements) {
+                JsonObject obj = element.getAsJsonObject();
+                if (!obj.has("name")) continue;
+
+                String name = obj.get("name").getAsString().toLowerCase(Locale.ROOT);
+                if (!name.matches("collision\\d+")) continue;
+
+                JsonArray from = obj.getAsJsonArray("from");
+                JsonArray to = obj.getAsJsonArray("to");
+
+                double x1 = from.get(0).getAsDouble();
+                double y1 = from.get(1).getAsDouble();
+                double z1 = from.get(2).getAsDouble();
+
+                double x2 = to.get(0).getAsDouble();
+                double y2 = to.get(1).getAsDouble();
+                double z2 = to.get(2).getAsDouble();
+
+                VoxelShape shape = Block.createCuboidShape(x1, y1, z1, x2, y2, z2);
+                shapes.add(shape);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return VoxelShapes.empty();
+        }
+
+        if (shapes.isEmpty()) return VoxelShapes.empty();
+        VoxelShape combined = shapes.get(0);
+        for (int i = 1; i < shapes.size(); i++) {
+            combined = VoxelShapes.union(combined, shapes.get(i));
+        }
+
+        return combined;
+    }
+
 }

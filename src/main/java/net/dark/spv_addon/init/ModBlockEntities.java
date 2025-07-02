@@ -2,6 +2,7 @@ package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.blocks.entities.KittyLampEntity;
 import net.dark.spv_addon.blocks.entities.KittyLightBlockEntity;
+import net.dark.spv_addon.blocks.entities.PlateBlockEntity;
 import net.dark.spv_addon.blocks.entities.TapeRecorderBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
@@ -12,6 +13,7 @@ public class ModBlockEntities {
     public static BlockEntityType<TapeRecorderBlockEntity> TAPE_RECORDER;
     public static BlockEntityType<KittyLampEntity> KITTY_LAMP;
     public static BlockEntityType<KittyLightBlockEntity> KITTY_LIGHT_BLOCK_ENTITY;
+    public static BlockEntityType<PlateBlockEntity> PLATE_BLOCK_ENTITY;
 
     public static void register() {
         TAPE_RECORDER = Registry.register(
@@ -28,6 +30,11 @@ public class ModBlockEntities {
                 Registries.BLOCK_ENTITY_TYPE,
                 new Identifier("spv_addon", "kitty_light"),
                 BlockEntityType.Builder.create(KittyLightBlockEntity::new, ModBlocks.KITTY_LIGHT).build(null)
+        );
+        PLATE_BLOCK_ENTITY = Registry.register(
+                Registries.BLOCK_ENTITY_TYPE,
+                new Identifier("spv_addon", "plate1"),
+                BlockEntityType.Builder.create(PlateBlockEntity::new, ModBlocks.PLATE1).build(null)
         );
     }
 }

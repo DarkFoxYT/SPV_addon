@@ -5,6 +5,7 @@ import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
+import net.dark.spv_addon.blocks.entities.rend.PlateBlockEntityRenderer;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.ShaderPuddleHook;
 import net.dark.spv_addon.client.gui.BatteryHud;
@@ -18,6 +19,7 @@ import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.entities.custom.StalkerEntity;
+import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
@@ -27,11 +29,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -48,6 +52,8 @@ public class Spv_addonClient implements ClientModInitializer {
                 WindowCutsceneCommand.register(dispatcher));
 
         ShaderPuddleHook.registerShaderHook();
+        BlockEntityRendererFactories.register(ModBlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
+
 
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WindowCutsceneCommand.tick());

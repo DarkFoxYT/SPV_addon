@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 public class ModBlocks {
 
     public static final Block HOTEL_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CONCRETE));
+    public static final Block PLATE1 = new PlateBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CONCRETE));
     public static final Block SLOPE_WALL= new SlopeWallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block RUN_ROOF = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block C_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
@@ -47,6 +48,7 @@ public class ModBlocks {
 
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "plate1"), PLATE1);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "slope_wall"), SLOPE_WALL);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_lamp"), KITTY_LAMP);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "run_roof"), RUN_ROOF);

@@ -46,6 +46,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUN_ROOF);
                         entries.add(ModBlocks.SLOPE_WALL);
                         entries.add(ModBlocks.LE_FLOOR);
+                        entries.add(ModBlocks.PLATE1);
 
 
                         // Items
