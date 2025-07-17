@@ -9,6 +9,7 @@ import net.dark.spv_addon.blocks.level188.SlopeWallBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemFrameItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -19,7 +20,8 @@ public class ModBlocks {
 
     public static final Block HOTEL_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CONCRETE));
     public static final Block PLATE1 = new PlateBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CONCRETE));
-    public static final Block SLOPE_WALL= new SlopeWallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
+    public static final Block CON1_SLOPE = new SlopeWallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.WALL));
+    public static final Block HF_SLOPE = new SlopeWallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().nonOpaque().sounds(SprintBlockSoundGroup.WALL));
     public static final Block RUN_ROOF = new CarpetBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
     public static final Block C_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.CARPET));
     public static final Block KITTY_WALL = new WallBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).hardness(-1.0F).solid().noBlockBreakParticles().sounds(SprintBlockSoundGroup.WALL));
@@ -49,7 +51,8 @@ public class ModBlocks {
     public static void registerModBlocks() {
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hotel_wall"), HOTEL_WALL);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "plate1"), PLATE1);
-        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "slope_wall"), SLOPE_WALL);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "slope_wall"), CON1_SLOPE);
+        Registry.register(Registries.BLOCK, new Identifier("spv_addon", "hf_slope"), HF_SLOPE);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_lamp"), KITTY_LAMP);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "run_roof"), RUN_ROOF);
         Registry.register(Registries.BLOCK, new Identifier("spv_addon", "kitty_light"), KITTY_LIGHT);

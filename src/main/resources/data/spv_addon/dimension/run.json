@@ -1,7 +1,7 @@
 {
   "type": "spv_addon:run",
   "generator": {
-    "type": "spv_addon:levelrun_chunk_generator",
+    "type": "spv_addon:level_run_chunk_generator",
     "settings": "spb-revamped:level0",
     "biome_source": {
       "type": "minecraft:fixed",

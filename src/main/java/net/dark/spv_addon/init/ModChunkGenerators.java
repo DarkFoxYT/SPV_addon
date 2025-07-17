@@ -24,7 +24,7 @@ public class ModChunkGenerators {
         );
         Registry.register(
                 Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "levelrun_chunk_generator"),
+                new Identifier(Spv_addon.MOD_ID, "level_run_chunk_generator"),
                 RunChunkGenerator.CODEC
         );
         Registry.register(

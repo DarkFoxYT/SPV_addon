@@ -34,8 +34,8 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
         // Jambes
         List<ServerLimb> legEndpoints = List.of(
-                new ServerLimb(0.12, 0.0, 0.1),
-                new ServerLimb(-0.12, 0.0, 0.1)
+                new ServerLimb(0.12, 0.0, 0.1, ((limb, legComponent1, i, movementSpeed) -> {})),
+                new ServerLimb(-0.12, 0.0, 0.1, ((limb, legComponent1, i, movementSpeed) -> {}))
         );
         IKLegCompIkeaWalker.LegSetting legSetting = new IKLegCompIkeaWalker.LegSetting.Builder()
                 .maxDistance(0.5)
@@ -63,8 +63,8 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
         // Bras
         List<ServerLimb> armEndpoints = List.of(
-                new ServerLimb(0.2, 1.5, -0.1),
-                new ServerLimb(-0.2, 1.5, -0.1)
+                new ServerLimb(0.2, 1.5, -0.1, ((limb, legComponent1, i, movementSpeed) -> {})),
+                new ServerLimb(-0.2, 1.5, 0.1, ((limb, legComponent1, i, movementSpeed) -> {}))
         );
         IKArmComp.LegSetting armSetting = new IKArmComp.LegSetting.Builder()
                 .maxDistance(0.5)

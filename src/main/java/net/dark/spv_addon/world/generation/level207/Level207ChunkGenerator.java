@@ -3,6 +3,7 @@ package net.dark.spv_addon.world.generation.level207;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevampedClient;
+import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -31,7 +32,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class Level207ChunkGenerator extends ChunkGenerator {
+public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
     public static final Codec<Level207ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -96,6 +97,11 @@ public final class Level207ChunkGenerator extends ChunkGenerator {
 
             template.place(world, basePos, basePos, placeData, random, 2);
         }
+    }
+
+    @Override
+    public void generate(StructureWorldAccess structureWorldAccess, Chunk chunk) {
+
     }
 
     @Override

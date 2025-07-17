@@ -2,9 +2,7 @@ package net.dark.spv_addon.world.levels.custom;
 
 import com.sp.entity.custom.SmilerEntity;
 import com.sp.init.ModEntities;
-import com.sp.world.events.level0.Level0Blackout;
 import com.sp.world.levels.BackroomsLevel;
-import com.sp.world.levels.custom.Level0BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
@@ -25,6 +23,7 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
     @Override
     public void register() {
 
+        super.register();
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
     }

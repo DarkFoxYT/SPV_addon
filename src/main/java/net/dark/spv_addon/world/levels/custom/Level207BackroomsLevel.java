@@ -3,7 +3,9 @@ package net.dark.spv_addon.world.levels.custom;
 import com.sp.SPBRevamped;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
+import com.sp.world.events.level0.Level0Blackout;
 import com.sp.world.levels.BackroomsLevel;
+import com.sp.world.levels.custom.Level0BackroomsLevel;
 import com.sp.world.levels.custom.Level1BackroomsLevel;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.deferred.light.DirectionalLight;
@@ -14,8 +16,8 @@ import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.ModSounds;
 import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
-import net.dark.spv_addon.world.events.level207.Level207MoveTracker;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
+import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +25,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.StructureTemplateManager;
@@ -43,28 +44,32 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     private final Map<UUID, Integer> stepsWalked = new HashMap<>();
     DirectionalLight light;
     float brightness;
-    int tick;
     private int STEPS_BEFORE_WARP = 300 + random.nextInt(701);
     private boolean exitPlaced = false;
 
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
-
-        com.sp.init.BackroomsLevels.LEVEL1_BACKROOMS_LEVEL.registerTransition(new BackroomsLevel.LevelTransition(110, (world, playerComponent, from) -> {
+        this.registerTransition(new BackroomsLevel.LevelTransition(30, (world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
 
             if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= 12.0F && playerComponent.player.isOnGround()) {
+                for (PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
+                    PlayerComponent otherPlayerComponent = InitializeComponents.PLAYER.get(player);
+                    double playerY = player.getPos().getY();
+                    if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY && playerY == 60.0 && player.isOnGround()) {
                         playerList.add(new BackroomsLevel.CrossDimensionTeleport(
-                    playerComponent.player.getWorld(),
-                    playerComponent,
-                    this.getSpawnPos(),
-                    com.sp.init.BackroomsLevels.LEVEL1_BACKROOMS_LEVEL,
-                    BackroomsLevels.LEVEL207_BACKROOMS_LEVEL
+                                player.getWorld(),
+                                otherPlayerComponent,
+                                this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()),
+                                BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
+                                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
                         ));
                     }
+                }
+            }
 
             return playerList;
-        }), "level1 -> level207");
+        }), "level207 -> poolrooms");
     }
 
     private Vec3d calculateLevel2TeleportCoords(PlayerEntity player, ChunkPos chunkPos) {
@@ -138,11 +143,9 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                 pc.sync();
             });
 
-            // Réinitialisation du seuil
             STEPS_BEFORE_WARP = 300 + random.nextInt(701);
         }
 
-        // Téléportation vers un autre niveau si le joueur tombe sous Y=30
         if (player.getY() < 30 && player instanceof ServerPlayerEntity serverPlayer) {
             PlayerComponent pc = InitializeComponents.PLAYER.get(serverPlayer);
 
@@ -206,7 +209,9 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        Level207MoveTracker.register(this);
+        super.register();
+        this.registerEvents("empty", HaHvavCustomEvent::new);
+
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
@@ -255,11 +260,21 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
             Level207AmbienceEvent ambienceEvent = new Level207AmbienceEvent();
             ambienceEvent.init(crossDimensionTeleport.world());
-
-            if (crossDimensionTeleport.world().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY) {
-            crossDimensionTeleport.playerComponent().player.playSound(ModSounds.LEVEL_207_AMBIANCE, SoundCategory.AMBIENT, 1.0F, 1.0F);
+            if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY) {
+                player.getServerWorld().playSound(
+                    null,
+                    player.getBlockPos(),
+                    ModSounds.LEVEL_207_AMBIANCE,
+                    net.minecraft.sound.SoundCategory.AMBIENT,
+                    1.0F,
+                    1.0F
+                );
             }
-
         }
+    }
+
+    @Override
+    public int getTransitionDuration() {
+        return 30;
     }
 }

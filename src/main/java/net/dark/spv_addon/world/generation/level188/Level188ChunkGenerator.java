@@ -2,11 +2,17 @@ package net.dark.spv_addon.world.generation.level188;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.sp.init.ModBlocks;
+import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.BlockState;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
@@ -27,7 +33,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class Level188ChunkGenerator extends ChunkGenerator {
+public class Level188ChunkGenerator extends BackroomsChunkGenerator {
     public static final Codec<Level188ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -50,28 +56,17 @@ public class Level188ChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
-
-    }
+    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {}
 
     @Override
-    public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
-
-    }
+    public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {}
 
     @Override
-    public void populateEntities(ChunkRegion region) {
-
-    }
+    public void populateEntities(ChunkRegion region) {}
 
     @Override
     public int getWorldHeight() {
-        return 0;
-    }
-
-    @Override
-    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
-        return null;
+        return 384;
     }
 
     @Override
@@ -85,25 +80,37 @@ public class Level188ChunkGenerator extends ChunkGenerator {
     }
 
     @Override
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        BlockState block = ModBlocks.CONCRETE_BLOCK_1.getDefaultState();
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                mutable.set(x, 0, z);
+                chunk.setBlockState(mutable, block, false);
+            }
+        }
+
+        return CompletableFuture.completedFuture(chunk);
+    }
+
+    @Override
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
-        return 0;
+        return 1;
     }
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        return null;
+        BlockState[] states = new BlockState[] { Blocks.STONE.getDefaultState() }; // You can use custom block here
+        return new VerticalBlockSample(0, states);
     }
 
     @Override
     public void getDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {
-
+        text.add("Flat world generator (Level 188)");
     }
 
-    public void generate(StructureWorldAccess world, Chunk chunk) {
-    }
-
-
-
+    public void generate(StructureWorldAccess world, Chunk chunk) {}
 
     private StructurePlacementData defaultPlacement() {
         return new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "spv_addon",
-  "version": "1.0.0 - BETA 1",
+  "version": "1.0.1 - BETA 4",
   "name": "The Volatile Addon",
   "description": "Adds a bunch of stuff to space potatoes found footage mod",
   "icon": "Volatileicon.png",

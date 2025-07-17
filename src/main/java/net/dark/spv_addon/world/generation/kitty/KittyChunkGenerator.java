@@ -3,6 +3,7 @@ package net.dark.spv_addon.world.generation.kitty;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevampedClient;
+import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -33,7 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class KittyChunkGenerator extends ChunkGenerator {
+public final class KittyChunkGenerator extends BackroomsChunkGenerator {
     public static final Codec<KittyChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -132,6 +133,11 @@ public final class KittyChunkGenerator extends ChunkGenerator {
                 optRoof.get().place(world, roofPos, roofPos, roofData, random, 16);
             }
         }
+    }
+
+    @Override
+    public void generate(StructureWorldAccess structureWorldAccess, Chunk chunk) {
+
     }
 
     @Override

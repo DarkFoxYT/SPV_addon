@@ -11,6 +11,7 @@
     "blocks.CeilingLightBlockEntityMixin",
     "blocks.CeilingLightMixin",
     "blocks.ClientWrapperMixin",
+    "blocks.EmergencyLightBlockEntityMixin",
     "blocks.EmergencyLightBlockMixin"
   ],
   "injectors": {

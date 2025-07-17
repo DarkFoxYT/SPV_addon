@@ -15,7 +15,8 @@ public class ModItems {
     // Block items
     public static final Item HOTEL_WALL = register("hotel_wall", new BlockItem(ModBlocks.HOTEL_WALL, new FabricItemSettings()));
     public static final Item PLATE1 = register("plate1", new BlockItem(ModBlocks.PLATE1, new FabricItemSettings()));
-    public static final Item SLOPE_WALL = register("slope_wall", new BlockItem(ModBlocks.SLOPE_WALL, new FabricItemSettings()));
+    public static final Item CON1_SLOPE = register("slope_wall", new BlockItem(ModBlocks.CON1_SLOPE, new FabricItemSettings()));
+    public static final Item HF_SLOPE = register("hf_slope", new BlockItem(ModBlocks.HF_SLOPE, new FabricItemSettings()));
     public static final Item RUN_ROOF = register("run_roof", new BlockItem(ModBlocks.RUN_ROOF, new FabricItemSettings()));
     public static final Item C_WALL = register("c_wall", new BlockItem(ModBlocks.C_WALL, new FabricItemSettings()));
     public static final Item HOTEL_FLOOR = register("hotel_floor", new BlockItem(ModBlocks.HOTEL_FLOOR, new FabricItemSettings()));

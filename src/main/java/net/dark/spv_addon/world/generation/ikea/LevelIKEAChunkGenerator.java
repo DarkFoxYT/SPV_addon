@@ -2,9 +2,8 @@ package net.dark.spv_addon.world.generation.ikea;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.sp.SPBRevampedClient;
 import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
-import com.sp.world.generation.chunk_generator.Level0ChunkGenerator;
-import com.sp.world.generation.maze_generator.MazeGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -29,7 +28,6 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
-
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -41,6 +39,7 @@ public final class LevelIKEAChunkGenerator extends BackroomsChunkGenerator {
                     ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(gen -> gen.settings)
             ).apply(instance, LevelIKEAChunkGenerator::new)
     );
+
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final Random random = Random.create();
