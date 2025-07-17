@@ -155,7 +155,7 @@ public class IKLegCompDark<C extends IKChain, E extends IKAnimatable<E>>
         Vec3d pos = entity.getPos();
         for (int i = 0; i < endPoints.size(); i++) {
             ServerLimb limb = endPoints.get(i);
-            limb.tick(this, i, this.settings.get(i).movementSpeed());
+            limb.tick(this, i);
             Vec3d offset = limb.baseOffset.multiply(this.getScale());
             if (hasMovedOverLastTick(entity)) {
                 offset = offset.add(0, 0, settings.get(i).stepInFront() * this.getScale());

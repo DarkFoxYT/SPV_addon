@@ -45,5 +45,7 @@ public class BackroomsLevels {
         //LEVEL_IKEA_BACKROOMS_LEVEL.register();
         LEVEL_KITTY_BACKROOMS_LEVEL.register();
         LEVEL207_BACKROOMS_LEVEL.register();
+
+
     }
 }

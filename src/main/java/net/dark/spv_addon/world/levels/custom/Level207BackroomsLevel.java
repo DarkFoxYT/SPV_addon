@@ -11,6 +11,7 @@ import net.dark.spv_addon.Spv_addon;
 import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModEntities;
+import net.dark.spv_addon.init.ModSounds;
 import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
 import net.dark.spv_addon.world.events.level207.Level207MoveTracker;
@@ -22,6 +23,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.StructureTemplateManager;
@@ -47,26 +49,22 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
-        this.registerTransition((world, playerComponent, from) -> {
+
+        com.sp.init.BackroomsLevels.LEVEL1_BACKROOMS_LEVEL.registerTransition(new BackroomsLevel.LevelTransition(110, (world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
+
             if (from instanceof Level1BackroomsLevel && playerComponent.player.getPos().getY() <= 12.0F && playerComponent.player.isOnGround()) {
-                for (PlayerEntity player : playerComponent.player.getWorld().getPlayers()) {
-                    PlayerComponent otherPlayerComponent = InitializeComponents.PLAYER.get(player);
-                    double playerY = player.getPos().getY();
-                    if (player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY && playerY == 60.0 && player.isOnGround()) {
                         playerList.add(new BackroomsLevel.CrossDimensionTeleport(
-                                player.getWorld(),
-                                otherPlayerComponent,
-                                this.calculateLevel2TeleportCoords(player, playerComponent.player.getChunkPos()),
-                                BackroomsLevels.LEVEL207_BACKROOMS_LEVEL,
-                                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
+                    playerComponent.player.getWorld(),
+                    playerComponent,
+                    this.getSpawnPos(),
+                    com.sp.init.BackroomsLevels.LEVEL1_BACKROOMS_LEVEL,
+                    BackroomsLevels.LEVEL207_BACKROOMS_LEVEL
                         ));
                     }
-                }
-            }
 
             return playerList;
-        }, "level207 -> poolrooms");
+        }), "level1 -> level207");
     }
 
     private Vec3d calculateLevel2TeleportCoords(PlayerEntity player, ChunkPos chunkPos) {
@@ -209,8 +207,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     @Override
     public void register() {
         Level207MoveTracker.register(this);
-        events.add(Level207BellWalkerEvent::new);
-
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
@@ -259,15 +255,11 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
             Level207AmbienceEvent ambienceEvent = new Level207AmbienceEvent();
             ambienceEvent.init(crossDimensionTeleport.world());
-            if (!events.contains(Level207AmbienceEvent.class)) {
-                this.events.add(Level207AmbienceEvent::new);
+
+            if (crossDimensionTeleport.world().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY) {
+            crossDimensionTeleport.playerComponent().player.playSound(ModSounds.LEVEL_207_AMBIANCE, SoundCategory.AMBIENT, 1.0F, 1.0F);
             }
 
         }
-    }
-
-    @Override
-    public int getTransitionDuration() {
-        return 30;
     }
 }

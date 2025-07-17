@@ -17,29 +17,29 @@ import java.util.List;
 
 public class LevelIKEA extends BackroomsLevel {
     public LevelIKEA() {
-
         super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(16, 2, 16), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
 
         com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.unregisterTransition("level2 -> poolrooms");
 
-        com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.registerTransition((world, playerComponent, from) -> {
+        com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.registerTransition(new BackroomsLevel.LevelTransition(110, (world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
             int exitRadius = ConfigStuff.exitSpawnRadius;
             if (world.getServer() != null && world.getServer().isDedicated()) {
                 exitRadius = ((NewServerProperties) ((MinecraftDedicatedServer) world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double) exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
+            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
                 playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL207_BACKROOMS_LEVEL));
             }
 
             return playerList;
-        }, "level2 -> level207");
+        }), "level2 -> level207");
     }
 
     @Override
     public void register() {
-        events.add(HaHvavCustomEvent::new);
+
+        this.registerEvents("empty_ikea", HaHvavCustomEvent::new);
 
     }
 

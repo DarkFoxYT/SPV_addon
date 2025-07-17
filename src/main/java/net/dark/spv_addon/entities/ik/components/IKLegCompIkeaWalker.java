@@ -126,7 +126,7 @@ public class IKLegCompIkeaWalker<C extends IKChain, E extends IKAnimatable<E>>
         Vec3d pos = entity.getPos();
         for (int i = 0; i < Math.min(endPoints.size(), settings.size()); i++) {
             ServerLimb limb = endPoints.get(i);
-            limb.tick(this, i, this.settings.get(i).movementSpeed());
+            limb.tick(this, i);
             Vec3d offset = limb.baseOffset.multiply(this.getScale());
 
             if (hasMovedOverLastTick(entity)) {

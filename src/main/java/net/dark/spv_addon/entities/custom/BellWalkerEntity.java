@@ -1,5 +1,6 @@
 package net.dark.spv_addon.entities.custom;
 
+import com.sp.entity.custom.SkinWalkerEntity;
 import com.sp.entity.ik.components.IKAnimatable;
 import com.sp.entity.ik.components.IKModelComponent;
 import com.sp.entity.ik.model.ModelAccessor;
@@ -46,13 +47,14 @@ public class BellWalkerEntity extends PathAwareEntity
         super(type, world);
         this.navigation = new SlightlyBetterMobNavigation(this, world);
 
+
         List<ServerLimb> endpoints = List.of(
-                new ServerLimb(1.25, 0.0, 1.25),
-                new ServerLimb(-1.25, 0.0, 1.25),
-                new ServerLimb(1.25, 0.0, 0.1),
-                new ServerLimb(-1.25, 0.0, 0.1),
-                new ServerLimb(1.25, 0.0, -1.25),
-                new ServerLimb(-1.25, 0.0, -1.25)
+                new ServerLimb(new Vec3d(1.25, 0.0, 1.25)),
+                new ServerLimb(new Vec3d(-1.25, 0.0, 1.25)),
+                new ServerLimb(new Vec3d(1.25, 0.0, 0.1)),
+                new ServerLimb(new Vec3d(-1.25, 0.0, 0.1)),
+                new ServerLimb(new Vec3d(1.25, 0.0, -1.25)),
+                new ServerLimb(new Vec3d(-1.25, 0.0, -1.25))
         );
         IKLegCompDark.LegSetting setting = new IKLegCompDark.LegSetting.Builder()
                 .maxDistance(0.5)

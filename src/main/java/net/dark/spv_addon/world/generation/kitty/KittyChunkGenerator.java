@@ -3,7 +3,6 @@ package net.dark.spv_addon.world.generation.kitty;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.SPBRevampedClient;
-import com.sp.world.generation.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;

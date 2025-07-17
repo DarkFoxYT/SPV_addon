@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public class KittyLightBlockEntity extends BlockEntity {
     public final int randInt;
     public BlockState currentState;
@@ -76,8 +78,8 @@ public class KittyLightBlockEntity extends BlockEntity {
                         world.setBlockState(pos, ModBlocks.KITTY_LIGHT.getDefaultState().with(FluorescentLightBlock.COPY, false));
                     }
 
-                    BackroomsLevel var8 = BackroomsLevels.getLevel(this.getWorld());
-                    if (!(var8 instanceof Level0BackroomsLevel level)) {
+                    Optional<BackroomsLevel> levelOpt = BackroomsLevels.getLevel(this.getWorld());
+                    if (levelOpt.isEmpty() || !(levelOpt.get() instanceof Level0BackroomsLevel level)) {
                         return;
                     }
 
@@ -112,15 +114,8 @@ public class KittyLightBlockEntity extends BlockEntity {
         }
     }
 
-    public boolean isPlayingSound() {
-        return this.playingSound;
-    }
 
     public void setPlayingSound(boolean playingSound) {
         this.playingSound = playingSound;
-    }
-
-    public BlockState getCurrentState() {
-        return this.currentState;
     }
 }
