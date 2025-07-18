@@ -1,0 +1,10 @@
+{
+  "vertex": "veil:fullscreen",
+  "fragment": "spv_addon:godray",
+  "textures": {
+    "CloudNoise1": {
+      "type": "location",
+      "location": "spv_addon:textures/environment/puddle_noise.png"
+    }
+  }
+}

@@ -2,6 +2,7 @@ package net.dark.spv_addon;
 
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
+import com.sp.world.levels.BackroomsLevel;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
@@ -19,9 +20,11 @@ import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.entities.custom.StalkerEntity;
+import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
+import net.dark.spv_addon.init.grass.GodrayRenderer;
 import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -43,6 +46,7 @@ import net.minecraft.world.World;
 public class Spv_addonClient implements ClientModInitializer {
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     private GrassRenderer grassRenderer;
+    private GodrayRenderer godrayRenderer;
 
     @Override
     public void onInitializeClient() {
@@ -115,6 +119,17 @@ public class Spv_addonClient implements ClientModInitializer {
                     }
 
                     this.grassRenderer.render();
+                }
+                if (client.world.getRegistryKey() != BackroomsLevels.LEVEL188_WORLD_KEY) {
+                    if (this.godrayRenderer != null) {
+                        this.godrayRenderer.close();
+                        this.godrayRenderer = null;
+                    }
+                } else if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
+                    if (this.godrayRenderer == null) {
+                        this.godrayRenderer = new GodrayRenderer();
+                    }
+                    this.godrayRenderer.render();
                 }
             }
         });

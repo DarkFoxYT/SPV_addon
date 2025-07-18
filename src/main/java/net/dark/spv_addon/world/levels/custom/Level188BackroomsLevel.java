@@ -13,15 +13,6 @@ public class Level188BackroomsLevel extends BackroomsLevel {
     public Level188BackroomsLevel() {
         super("level188", Level188ChunkGenerator.CODEC, new Vec3d(16, 50, 16), BackroomsLevels.LEVEL188_WORLD_KEY, "spv_addon");
     }
-    @Override
-    public boolean rendersSky() {
-    return false;
-}
-
-    @Override
-    public boolean rendersClouds() {
-        return false;
-    }
 
     @Override
     public boolean hasVanillaLighting() {
