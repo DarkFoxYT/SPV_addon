@@ -58,7 +58,6 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        super.register();
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
         ServerTickEvents.END_WORLD_TICK.register(world -> {

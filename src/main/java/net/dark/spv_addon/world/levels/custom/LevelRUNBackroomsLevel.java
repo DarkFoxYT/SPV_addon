@@ -23,7 +23,6 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
     @Override
     public void register() {
 
-        super.register();
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
     }

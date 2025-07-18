@@ -12,30 +12,11 @@ import net.minecraft.util.Identifier;
 
 public class ModChunkGenerators {
     public static void register() {
-        Registry.register(
-                Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level188_chunk_generator"),
-                Level188ChunkGenerator.CODEC
-        );
-        Registry.register(
-                Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level207_chunk_generator"),
-                Level207ChunkGenerator.CODEC
-        );
-        Registry.register(
-                Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level_run_chunk_generator"),
-                RunChunkGenerator.CODEC
-        );
-        Registry.register(
-                Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level_ikea"),
-                LevelIKEAChunkGenerator.CODEC
-        );
-        Registry.register(
-                Registries.CHUNK_GENERATOR,
-                new Identifier(Spv_addon.MOD_ID, "level_kitty"),
-                KittyChunkGenerator.CODEC
-        );
+        // Exemple pour Fabric
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level188_chunk_generator"), Level188ChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level207_chunk_generator"), Level207ChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level_run_chunk_generator"), RunChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level_ikea"), LevelIKEAChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level_kitty"), KittyChunkGenerator.CODEC);
     }
 }

@@ -209,7 +209,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        super.register();
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
     }

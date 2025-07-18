@@ -23,13 +23,11 @@ import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
-import net.dark.spv_addon.init.helper.ZoomRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -94,7 +92,7 @@ public class Spv_addonClient implements ClientModInitializer {
 
 
                         PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 2, 256));
-                        ZoomRegistry.registerZoom(ModBlocks.LE_FLOOR, new ZoomRegistry.ZoomData(2F));
+
                     }
 
                 });
@@ -104,6 +102,7 @@ public class Spv_addonClient implements ClientModInitializer {
             MinecraftClient client = MinecraftClient.getInstance();
             World clientWorld = client.world;
             if (clientWorld != null) {
+
 
                 if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
                     if (this.grassRenderer != null) {
