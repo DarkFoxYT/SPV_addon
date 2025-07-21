@@ -58,6 +58,8 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
+        // Register the enhanced kitty meow event that drops various items
+        this.registerEvents("kitty_drops", KittyMeowEvent::new);
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
         ServerTickEvents.END_WORLD_TICK.register(world -> {

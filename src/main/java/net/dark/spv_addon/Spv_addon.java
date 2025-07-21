@@ -52,6 +52,9 @@ public class Spv_addon implements ModInitializer {
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
+        // Initialize crawling system
+        net.dark.spv_addon.crawl.CrawlSystem.initialize();
+
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {

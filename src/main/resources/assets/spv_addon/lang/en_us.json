@@ -24,5 +24,7 @@
   "block.spv_addon.kitty_lamp": "Kitty Light",
   "block.spv_addon.kitty_light": "Kitty Lamp",
   "itemGroup.spv_addon": "The Volatile Addon",
-  "Flash.on": "Flashlight on"
+  "Flash.on": "Flashlight on",
+  "key.spv_addon.crawl": "Crawl",
+  "category.spv_addon.movement": "SPV Addon Movement"
 }

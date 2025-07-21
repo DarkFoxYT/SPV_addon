@@ -43,12 +43,14 @@ public class UnifiedHud implements HudRenderCallback {
         public float alpha;
         public boolean isVisible;
         public boolean shouldShow;
+        public int lastValue; // Track last value to detect changes
 
         public FadeState() {
             this.lastUpdateTime = 0;
             this.alpha = 0.0f;
             this.isVisible = false;
             this.shouldShow = false;
+            this.lastValue = -1; // Initialize to invalid value
         }
     }
     
@@ -98,9 +100,9 @@ public class UnifiedHud implements HudRenderCallback {
             yOffset += LINE_HEIGHT;
         }
 
-        // Update and render sanity with fade
-        boolean shouldShowSanity = sanity < 90;
-        float sanityAlpha = updateFadeState("sanity", shouldShowSanity);
+        // Update and render sanity with fade - show when value changes or is low
+        boolean shouldShowSanity = sanity < 90 || hasValueChanged("sanity", sanity);
+        float sanityAlpha = updateFadeStateWithValue("sanity", shouldShowSanity, sanity);
         if (sanityAlpha > 0.0f) {
             String sanityText = formatSanityText(sanity);
             int sanityColor = getSanityTextColor(sanity);
@@ -108,9 +110,9 @@ public class UnifiedHud implements HudRenderCallback {
             yOffset += LINE_HEIGHT;
         }
 
-        // Update and render thirst with fade
-        boolean shouldShowThirst = thirst < 90;
-        float thirstAlpha = updateFadeState("thirst", shouldShowThirst);
+        // Update and render thirst with fade - show when value changes or is low
+        boolean shouldShowThirst = thirst < 90 || hasValueChanged("thirst", thirst);
+        float thirstAlpha = updateFadeStateWithValue("thirst", shouldShowThirst, thirst);
         if (thirstAlpha > 0.0f) {
             String thirstText = formatThirstText(thirst);
             int thirstColor = getThirstTextColor(thirst);
@@ -119,7 +121,62 @@ public class UnifiedHud implements HudRenderCallback {
     }
     
     /**
-     * Update fade state for a HUD element
+     * Check if a value has changed since last update
+     */
+    private boolean hasValueChanged(String elementName, int currentValue) {
+        FadeState state = fadeStates.get(elementName);
+        if (state == null) return true; // First time seeing this value
+        return state.lastValue != currentValue;
+    }
+
+    /**
+     * Update fade state for a HUD element with value change detection
+     */
+    private float updateFadeStateWithValue(String elementName, boolean shouldShow, int currentValue) {
+        FadeState state = fadeStates.computeIfAbsent(elementName, k -> new FadeState());
+        long currentTime = Util.getMeasuringTimeMs();
+
+        // Check if value changed
+        boolean valueChanged = state.lastValue != currentValue;
+        if (valueChanged) {
+            state.lastValue = currentValue;
+            // Show UI when value changes
+            if (!shouldShow) shouldShow = true;
+        }
+
+        // Update should show state
+        if (shouldShow != state.shouldShow) {
+            state.shouldShow = shouldShow;
+            state.lastUpdateTime = currentTime;
+        }
+
+        // Calculate fade progress
+        long timeSinceUpdate = currentTime - state.lastUpdateTime;
+
+        if (state.shouldShow) {
+            // Fading in
+            if (state.alpha < 1.0f) {
+                float fadeProgress = Math.min(1.0f, timeSinceUpdate / (float)(FADE_IN_DURATION * 50)); // Convert ticks to ms
+                state.alpha = fadeProgress;
+            } else {
+                state.alpha = 1.0f;
+            }
+        } else {
+            // Fading out - use different durations for different elements
+            if (state.alpha > 0.0f) {
+                int fadeOutDuration = elementName.equals("thirst") ? THIRST_FADE_OUT_DURATION : FADE_OUT_DURATION;
+                float fadeProgress = Math.min(1.0f, timeSinceUpdate / (float)(fadeOutDuration * 50)); // Convert ticks to ms
+                state.alpha = 1.0f - fadeProgress;
+            } else {
+                state.alpha = 0.0f;
+            }
+        }
+
+        return Math.max(0.0f, Math.min(1.0f, state.alpha));
+    }
+
+    /**
+     * Update fade state for a HUD element (original method for battery)
      */
     private float updateFadeState(String elementName, boolean shouldShow) {
         FadeState state = fadeStates.computeIfAbsent(elementName, k -> new FadeState());

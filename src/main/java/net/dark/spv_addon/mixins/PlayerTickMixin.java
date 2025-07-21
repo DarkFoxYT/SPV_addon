@@ -29,7 +29,7 @@ public abstract class PlayerTickMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         tickCounter++;
-        if (tickCounter >= 200) {
+        if (tickCounter >= 140) { // 7 seconds at 20 TPS (140 ticks)
             tickCounter = 0;
 
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;

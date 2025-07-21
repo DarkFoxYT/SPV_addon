@@ -8,7 +8,6 @@ import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.blocks.entities.rend.PlateBlockEntityRenderer;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.gui.UnifiedHud;
-import net.dark.spv_addon.commands.WindowCutsceneCommand;
 import net.dark.spv_addon.sanity.SanityEffectsManager;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.IKEAWalkerRenderer;
@@ -46,15 +45,8 @@ public class Spv_addonClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
-                WindowCutsceneCommand.register(dispatcher));
 
         BlockEntityRendererFactories.register(ModBlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
-
-
-        ClientTickEvents.END_CLIENT_TICK.register(client ->
-                WindowCutsceneCommand.tick());
-
         UnifiedHud.register();
 
         // Old individual HUDs disabled:
@@ -64,6 +56,8 @@ public class Spv_addonClient implements ClientModInitializer {
         ThirstManager.register();
 
         SanityEffectsManager.initialize();
+
+        new net.dark.spv_addon.crawl.CrawlClient().onInitializeClient();
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

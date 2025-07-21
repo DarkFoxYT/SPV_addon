@@ -23,6 +23,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.biome.Biome;
 import org.slf4j.Logger;
@@ -35,9 +36,9 @@ import org.slf4j.LoggerFactory;
 public class ThirstManager {
     private static final Logger LOGGER = LoggerFactory.getLogger("ThirstManager");
 
-    // Enhanced timing system
-    private static final int INTERVAL_TICKS = 20 * 8; // 8 seconds (faster than before)
-    private static final int FAST_INTERVAL_TICKS = 20 * 3; // 3 seconds for critical states
+    // Enhanced timing system - slower drain as requested
+    private static final int INTERVAL_TICKS = 20 * 10; // 10 seconds (slower drain)
+    private static final int FAST_INTERVAL_TICKS = 20 * 5; // 5 seconds for critical states
 
     public static boolean enabled = true;
     private static int tickCounter = 0;
@@ -118,34 +119,45 @@ public class ThirstManager {
     }
 
     /**
-     * Calculate base thirst drain based on player activity
+     * Calculate base thirst drain based on player activity - only drains when moving
      */
     private static float calculateThirstDrain(ServerPlayerEntity player) {
-        float baseDrain = 1.0f;
+        // Check if player is moving
+        Vec3d velocity = player.getVelocity();
+        boolean isMoving = velocity.lengthSquared() > 0.01; // Small threshold to account for minor movements
 
-        // Activity-based drain
+        // No drain if not moving (standing still)
+        if (!isMoving) {
+            return 0.0f;
+        }
+
+        float baseDrain = 0.5f; // Reduced base drain
+
+        // Activity-based drain - only when moving
         if (player.isSprinting()) {
-            baseDrain += 2.0f; // Sprinting drains more
+            baseDrain += 1.0f; // Reduced from 2.0f
         } else if (player.isSwimming()) {
-            baseDrain += 1.5f; // Swimming is exhausting
+            baseDrain += 0.8f; // Reduced from 1.5f
         } else if (player.isSneaking()) {
-            baseDrain += 0.5f; // Sneaking is slightly more tiring
+            baseDrain += 0.3f; // Reduced from 0.5f
+        } else {
+            baseDrain += 0.2f; // Small drain for walking
         }
 
-        // Health-based drain
+        // Health-based drain (reduced)
         if (player.getHealth() < player.getMaxHealth() * 0.5f) {
-            baseDrain += 1.0f; // Injured players get thirsty faster
+            baseDrain += 0.3f; // Reduced from 1.0f
         }
 
-        // Status effect modifiers
+        // Status effect modifiers (reduced)
         if (player.hasStatusEffect(StatusEffects.POISON)) {
-            baseDrain += 2.0f; // Poison increases thirst
+            baseDrain += 0.5f; // Reduced from 2.0f
         }
         if (player.hasStatusEffect(StatusEffects.HUNGER)) {
-            baseDrain += 1.0f; // Hunger affects thirst
+            baseDrain += 0.3f; // Reduced from 1.0f
         }
         if (player.hasStatusEffect(StatusEffects.REGENERATION)) {
-            baseDrain += 0.5f; // Regeneration requires hydration
+            baseDrain += 0.2f; // Reduced from 0.5f
         }
 
         return baseDrain;
@@ -253,13 +265,13 @@ public class ThirstManager {
             sanityComp.decreaseSanity(5);
         }
 
-        // Moderate damage
-        if (random.nextFloat() < 0.4f) {
+        // Reduced damage - less lethal
+        if (random.nextFloat() < 0.2f) { // Reduced chance from 0.4f to 0.2f
             RegistryEntry<DamageType> entry = player.getWorld()
                     .getRegistryManager()
                     .get(RegistryKeys.DAMAGE_TYPE)
                     .entryOf(CustomDamageSources.THIRST_DAMAGE_ID);
-            player.damage(new DamageSource(entry), 3.0f);
+            player.damage(new DamageSource(entry), 1.5f); // Reduced damage from 3.0f to 1.5f
         }
 
         // Visual effects
@@ -273,31 +285,44 @@ public class ThirstManager {
     }
 
     /**
-     * Apply critical dehydration effects (11-20% thirst)
+     * Apply critical dehydration effects (11-20% thirst) - More progressive around 20%
      */
     private static void applyCriticalEffects(ServerPlayerEntity player, SanityComponent sanityComp) {
-        // Moderate status effects
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, INTERVAL_TICKS + 20, 1, true, false));
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, INTERVAL_TICKS + 20, 1, true, false));
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, INTERVAL_TICKS + 20, 0, true, false));
+        int currentThirst = InitializeComponents.THIRST.get(player).getThirst();
 
-        // Occasional nausea
-        if (random.nextFloat() < 0.3f) {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 80, 0, true, false));
+        // Progressive effects based on how close to 20% we are
+        float severity = (20 - currentThirst) / 9.0f; // 0.0 at 20%, 1.0 at 11%
+
+        // Moderate status effects - intensity based on severity
+        if (severity > 0.3f) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, INTERVAL_TICKS + 20, 0, true, false));
+        }
+        if (severity > 0.5f) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, INTERVAL_TICKS + 20, 0, true, false));
+        }
+        if (severity > 0.7f) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, INTERVAL_TICKS + 20, 0, true, false));
         }
 
-        // Sanity loss
-        if (random.nextFloat() < 0.15f) {
-            sanityComp.decreaseSanity(3);
+        // Occasional nausea - only at higher severity
+        if (severity > 0.6f && random.nextFloat() < 0.2f) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 60, 0, true, false));
         }
 
-        // Visual effects
-        spawnDehydrationParticles(player, 5);
-        playDehydrationSound(player, "critical");
+        // Reduced sanity loss
+        if (random.nextFloat() < 0.1f * severity) {
+            sanityComp.decreaseSanity(2);
+        }
 
-        // Warning message
-        if (random.nextFloat() < 0.03f) {
-            player.sendMessage(Text.literal("You are critically dehydrated").formatted(Formatting.GOLD), true);
+        // Visual effects based on severity
+        spawnDehydrationParticles(player, Math.round(3 + severity * 2));
+        if (severity > 0.5f) {
+            playDehydrationSound(player, "critical");
+        }
+
+        // Warning message - less frequent
+        if (random.nextFloat() < 0.02f) {
+            player.sendMessage(Text.literal("You are getting dehydrated").formatted(Formatting.YELLOW), true);
         }
     }
 

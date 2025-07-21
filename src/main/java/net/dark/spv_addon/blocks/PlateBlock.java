@@ -50,16 +50,32 @@ public class PlateBlock extends Block implements BlockEntityProvider {
             if (plate == null) return ActionResult.PASS;
 
             ItemStack heldItem = player.getStackInHand(hand);
+
+            // Item frame behavior: place item if holding one and plate is empty
             if (plate.getItem().isEmpty() && !heldItem.isEmpty()) {
-                plate.setItem(heldItem.split(1));
-                world.playSound(null, pos, SoundEvents.BLOCK_AZALEA_LEAVES_PLACE, SoundCategory.BLOCKS, 0.8f, 1f);
+                // Take one item from the stack and place it in the plate
+                ItemStack itemToPlace = heldItem.copy();
+                itemToPlace.setCount(1);
+                plate.setItem(itemToPlace);
+
+                // Remove one item from player's hand
+                heldItem.decrement(1);
+
+                // Play placement sound (similar to item frame)
+                world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 plate.markDirty();
                 return ActionResult.SUCCESS;
+
+            // Item frame behavior: retrieve item if plate has one and hand is empty or same item
             } else if (!plate.getItem().isEmpty()) {
-                player.giveItemStack(plate.getItem());
-                plate.setItem(ItemStack.EMPTY);
-                world.playSound(null, pos, SoundEvents.BLOCK_AZALEA_LEAVES_BREAK, SoundCategory.BLOCKS, 0.8f, 1f);
-                plate.markDirty();
+                ItemStack storedItem = plate.removeItem(player);
+
+                // Give the stored item back to the player
+                if (!player.giveItemStack(storedItem)) {
+                    // If inventory is full, drop the item
+                    player.dropItem(storedItem, false);
+                }
+
                 return ActionResult.SUCCESS;
             }
         }
