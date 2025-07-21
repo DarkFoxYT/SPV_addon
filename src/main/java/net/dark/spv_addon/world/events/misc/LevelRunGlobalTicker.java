@@ -1,22 +1,14 @@
-package net.dark.spv_addon.world.events;
+package net.dark.spv_addon.world.events.misc;
 
-import com.sp.cca_stuff.InitializeComponents;
-import com.sp.cca_stuff.PlayerComponent;
-import net.dark.spv_addon.init.BackroomsLevels;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import static com.sp.init.BackroomsLevels.LEVEL0_WORLD_KEY;
 import static com.sp.init.BackroomsLevels.LEVEL1_WORLD_KEY;

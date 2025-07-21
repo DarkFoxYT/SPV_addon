@@ -1,6 +1,6 @@
-package net.dark.spv_addon.sanity;
+package net.dark.spv_addon.Additions.sanity;
 
-import static net.dark.spv_addon.sanity.SanityEffectsConfig.Presets.applyNormalPreset;
+import static net.dark.spv_addon.Additions.sanity.SanityEffectsConfig.Presets.applyNormalPreset;
 
 public class SanityEffectsConfig {
 

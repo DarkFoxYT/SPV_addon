@@ -3,7 +3,7 @@ package net.dark.spv_addon.Additions.thirst;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
-import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.CustomDamageSources;
 import net.dark.spv_addon.init.ModSounds;
@@ -176,7 +176,7 @@ public class ThirstManager {
         // Dimension-based multipliers
         if (world.getRegistryKey().getValue().equals(com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY.getValue())) {
             return POOLROOMS_MULTIPLIER; // Humid but still dehydrating
-        } else if (world.getRegistryKey().getValue().equals(BackroomsLevels.LEVEL188_WORLD_KEY.getValue())) {
+        } else if (world.getRegistryKey().getValue().equals(BackroomsLevels.LEVEL105_WORLD_KEY.getValue())) {
             return LEVEL188_MULTIPLIER; // Cooler environment
         }
 

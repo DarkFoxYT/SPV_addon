@@ -1,4 +1,4 @@
-package net.dark.spv_addon.mixins;
+package net.dark.spv_addon.mixins.misc;
 
 import net.dark.spv_addon.client.gui.CustomDeathScreen;
 import net.minecraft.client.MinecraftClient;

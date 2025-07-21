@@ -1,4 +1,4 @@
-package net.dark.spv_addon.mixins;
+package net.dark.spv_addon.mixins.player;
 
 /**
  * Player movement mixin temporarily disabled to avoid compilation issues

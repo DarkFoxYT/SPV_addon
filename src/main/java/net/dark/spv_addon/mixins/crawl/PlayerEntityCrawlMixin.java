@@ -1,7 +1,7 @@
 package net.dark.spv_addon.mixins.crawl;
 
-import net.dark.spv_addon.config.SpvAddonConfig;
-import net.dark.spv_addon.crawl.CrawlSystem;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.init.crawl.CrawlSystem;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

@@ -1,4 +1,4 @@
-package net.dark.spv_addon.mixins;
+package net.dark.spv_addon.mixins.misc;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sp.SPBRevampedClient;

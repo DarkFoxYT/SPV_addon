@@ -119,29 +119,24 @@ public class DirtyWaterItem extends Item {
             }
         }
         
-        // 10% chance of severe effects (multiple at once)
         if (random.nextFloat() < 0.1f) {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 0)); // 40 seconds slowness II
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 10, 0)); // 40 seconds fatigue II
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 10, 0));
             player.sendMessage(Text.literal("The contaminated water severely affects your body!").formatted(Formatting.DARK_RED), true);
         }
-        
-        // 5% chance of very severe effects
+
         if (random.nextFloat() < 0.05f) {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 0)); // 10 seconds blindness
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 300, 0)); // 15 seconds confusion
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 300, 0));
             player.sendMessage(Text.literal("The toxic water overwhelms your senses!").formatted(Formatting.BLACK), true);
-            
-            // Additional sanity loss for severe effects
+
             try {
                 var sanityComp = InitializeComponents.SANITY.get(player);
-                sanityComp.decreaseSanity(15 + random.nextInt(15)); // 15-30 sanity loss
+                sanityComp.decreaseSanity(15 + random.nextInt(15));
             } catch (Exception e) {
-                // Silently handle sanity errors
             }
         }
-        
-        // Always show a warning message if no other effects triggered
+
         if (random.nextFloat() < 0.1f) {
             String[] warnings = {
                 "This water doesn't taste right...",
@@ -162,11 +157,11 @@ public class DirtyWaterItem extends Item {
     
     @Override
     public int getMaxUseTime(ItemStack stack) {
-        return 40; // Slightly longer than clean water (hesitation)
+        return 40;
     }
-    
+
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return false; // No glint for dirty water
+        return false;
     }
 }

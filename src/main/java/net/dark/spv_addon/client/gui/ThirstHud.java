@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.ThirstComponent;
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -122,27 +123,9 @@ public class ThirstHud implements HudRenderCallback {
     }
 
     /**
-     * Get color tint based on thirst level
+     * Get color tint based on thirst level using configuration presets
      */
     private float[] getColorForThirst(int thirst) {
-        if (thirst <= 0) {
-            // Dark red for dying
-            return new float[]{0.5f, 0.1f, 0.1f};
-        } else if (thirst <= 10) {
-            // Red for dangerous
-            return new float[]{1.0f, 0.2f, 0.2f};
-        } else if (thirst <= 20) {
-            // Orange red for critical
-            return new float[]{1.0f, 0.3f, 0.1f};
-        } else if (thirst <= 40) {
-            // Orange for low
-            return new float[]{1.0f, 0.6f, 0.2f};
-        } else if (thirst <= 60) {
-            // Yellow for moderate
-            return new float[]{1.0f, 0.9f, 0.4f};
-        } else {
-            // Blue for hydrated
-            return new float[]{0.4f, 0.8f, 1.0f};
-        }
+        return SpvAddonConfig.getThirstColorFloat(thirst);
     }
 }

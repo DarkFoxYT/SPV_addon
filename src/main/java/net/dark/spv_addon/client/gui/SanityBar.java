@@ -2,7 +2,7 @@ package net.dark.spv_addon.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.sanity.SanityEffectsManager;
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -106,25 +106,10 @@ public class SanityBar implements HudRenderCallback {
     }
 
     /**
-     * Get color tint based on sanity level
+     * Get color tint based on sanity level using configuration presets
      */
     private float[] getColorForSanity(int sanity) {
-        if (sanity <= 5) {
-            // Dark red for nightmare
-            return new float[]{0.8f, 0.1f, 0.1f};
-        } else if (sanity <= 15) {
-            // Red for critical
-            return new float[]{1.0f, 0.3f, 0.3f};
-        } else if (sanity <= 30) {
-            // Orange for low
-            return new float[]{1.0f, 0.6f, 0.2f};
-        } else if (sanity <= 50) {
-            // Yellow for moderate
-            return new float[]{1.0f, 0.9f, 0.4f};
-        } else {
-            // White for good
-            return new float[]{1.0f, 1.0f, 1.0f};
-        }
+        return SpvAddonConfig.getSanityColorFloat(sanity);
     }
 
     /**

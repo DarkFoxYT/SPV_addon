@@ -6,9 +6,9 @@ import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.blocks.entities.rend.PlateBlockEntityRenderer;
-import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
+import net.dark.spv_addon.Additions.api.ClientFlashlightRendererAddon;
 import net.dark.spv_addon.client.gui.UnifiedHud;
-import net.dark.spv_addon.sanity.SanityEffectsManager;
+import net.dark.spv_addon.Additions.sanity.SanityEffectsManager;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.IKEAWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
@@ -23,7 +23,6 @@ import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -49,15 +48,11 @@ public class Spv_addonClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(ModBlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
         UnifiedHud.register();
 
-        // Old individual HUDs disabled:
-        // BatteryHud.register();
-        // ThirstHud.register();
-        // SanityBar.register();
         ThirstManager.register();
 
         SanityEffectsManager.initialize();
 
-        new net.dark.spv_addon.crawl.CrawlClient().onInitializeClient();
+        new net.dark.spv_addon.init.crawl.CrawlClient().onInitializeClient();
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

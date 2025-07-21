@@ -2,7 +2,7 @@ package net.dark.spv_addon.init;
 
 import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.Spv_addon;
-import net.dark.spv_addon.world.levels.custom.Level188BackroomsLevel;
+import net.dark.spv_addon.world.levels.custom.Level105BackroomsLevel;
 import net.dark.spv_addon.world.levels.custom.Level207BackroomsLevel;
 import net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel;
 import net.dark.spv_addon.world.levels.custom.LevelRUNBackroomsLevel;
@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 
 public class BackroomsLevels {
     // === SPV DIMENSIONS ===
-    public static final RegistryKey<World> LEVEL188_WORLD_KEY =
-            RegistryKey.of(RegistryKeys.WORLD, new Identifier(Spv_addon.MOD_ID, "level188"));
+    public static final RegistryKey<World> LEVEL105_WORLD_KEY =
+            RegistryKey.of(RegistryKeys.WORLD, new Identifier(Spv_addon.MOD_ID, "level105"));
     public static final RegistryKey<World> LEVELRUN_WORLD_KEY =
             RegistryKey.of(RegistryKeys.WORLD, new Identifier(Spv_addon.MOD_ID, "run"));
     public static final RegistryKey<World> LEVEL_IKEA_WORLD_KEY =
@@ -25,7 +25,7 @@ public class BackroomsLevels {
             RegistryKey.of(RegistryKeys.WORLD, new Identifier(Spv_addon.MOD_ID, "level207"));
 
     // === SPV LEVELs ===
-    public static final BackroomsLevel LEVEL188_BACKROOMS_LEVEL = new Level188BackroomsLevel();
+    public static final BackroomsLevel LEVEL105_BACKROOMS_LEVEL = new Level105BackroomsLevel();
     public static final BackroomsLevel LEVELRUN_BACKROOMS_LEVEL = new LevelRUNBackroomsLevel();
     //public static final BackroomsLevel LEVEL_IKEA_BACKROOMS_LEVEL = new LevelIKEA();
     public static final BackroomsLevel LEVEL_KITTY_BACKROOMS_LEVEL = new LevelKittyBackroomsLevel();
@@ -33,14 +33,14 @@ public class BackroomsLevels {
 
 
     public static void init() {
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL188_BACKROOMS_LEVEL);
+        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL105_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVELRUN_BACKROOMS_LEVEL);
         //com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_IKEA_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_KITTY_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL207_BACKROOMS_LEVEL);
 
 
-        LEVEL188_BACKROOMS_LEVEL.register();
+        LEVEL105_BACKROOMS_LEVEL.register();
         LEVELRUN_BACKROOMS_LEVEL.register();
         //LEVEL_IKEA_BACKROOMS_LEVEL.register();
         LEVEL_KITTY_BACKROOMS_LEVEL.register();

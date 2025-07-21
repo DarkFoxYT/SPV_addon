@@ -1,6 +1,5 @@
-package net.dark.spv_addon.sanity.effects;
+package net.dark.spv_addon.Additions.sanity.effects;
 
-import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.shader.program.ShaderProgram;
 import foundry.veil.platform.VeilEventPlatform;
 import net.minecraft.client.MinecraftClient;

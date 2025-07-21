@@ -1,6 +1,6 @@
-package net.dark.spv_addon.mixins;
+package net.dark.spv_addon.mixins.player;
 
-import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
+import net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

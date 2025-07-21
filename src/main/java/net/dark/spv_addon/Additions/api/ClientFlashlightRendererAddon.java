@@ -1,4 +1,4 @@
-package net.dark.spv_addon.client;
+package net.dark.spv_addon.Additions.api;
 
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;

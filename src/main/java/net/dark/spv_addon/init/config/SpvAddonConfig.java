@@ -1,4 +1,4 @@
-package net.dark.spv_addon.config;
+package net.dark.spv_addon.init.config;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.EnvType;

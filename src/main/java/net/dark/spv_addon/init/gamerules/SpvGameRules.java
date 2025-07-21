@@ -1,4 +1,4 @@
-package net.dark.spv_addon.gamerules;
+package net.dark.spv_addon.init.gamerules;
 
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;

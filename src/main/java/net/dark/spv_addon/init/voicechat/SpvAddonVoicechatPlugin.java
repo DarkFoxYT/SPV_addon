@@ -1,4 +1,4 @@
-package net.dark.spv_addon.voicechat;
+package net.dark.spv_addon.init.voicechat;
 
 import de.maxhenkel.voicechat.api.VoicechatApi;
 import de.maxhenkel.voicechat.api.VoicechatConnection;

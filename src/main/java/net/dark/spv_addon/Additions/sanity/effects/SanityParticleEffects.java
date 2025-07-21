@@ -1,4 +1,4 @@
-package net.dark.spv_addon.sanity.effects;
+package net.dark.spv_addon.Additions.sanity.effects;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;

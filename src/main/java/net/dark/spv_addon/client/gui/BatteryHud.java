@@ -5,7 +5,7 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.sanity.SanityEffectsManager;
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -114,20 +114,10 @@ public class BatteryHud implements HudRenderCallback {
     }
 
     /**
-     * Get battery color based on level and health
+     * Get battery color based on level and health using configuration presets
      */
     private float[] getBatteryColor(int level, int health) {
-        if (level <= 0) {
-            return new float[]{0.3f, 0.3f, 0.3f}; // Dark gray for dead
-        } else if (level <= 5) {
-            return new float[]{1.0f, 0.2f, 0.2f}; // Red for critical
-        } else if (level <= 15) {
-            return new float[]{1.0f, 0.6f, 0.2f}; // Orange for low
-        } else if (health <= 30) {
-            return new float[]{1.0f, 1.0f, 0.4f}; // Yellow for degraded health
-        } else {
-            return new float[]{1.0f, 1.0f, 1.0f}; // White for good
-        }
+        return SpvAddonConfig.getBatteryColorFloat(level, health, false);
     }
 
     /**

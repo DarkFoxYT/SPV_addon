@@ -7,11 +7,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
-public class Level188BackroomsLevel extends BackroomsLevel {
+public class Level105BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
-    public Level188BackroomsLevel() {
-        super("level188", Level188ChunkGenerator.CODEC, new Vec3d(16, 50, 16), BackroomsLevels.LEVEL188_WORLD_KEY, "spv_addon");
+    public Level105BackroomsLevel() {
+        super("level105", Level188ChunkGenerator.CODEC, new Vec3d(16, 60, 16), BackroomsLevels.LEVEL105_WORLD_KEY, "spv_addon");
     }
 
     @Override

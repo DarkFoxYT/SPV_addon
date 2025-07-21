@@ -1,12 +1,10 @@
-package net.dark.spv_addon.sanity.effects;
+package net.dark.spv_addon.Additions.sanity.effects;
 
 import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

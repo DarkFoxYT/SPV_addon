@@ -1,11 +1,10 @@
-package net.dark.spv_addon.events;
+package net.dark.spv_addon.world.events.level207;
 
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModSounds;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +18,9 @@ import java.util.UUID;
 public class Level207AmbianceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("Level207AmbianceHandler");
     private static final Map<UUID, Boolean> playersInLevel207 = new HashMap<>();
-    private static final int AMBIANCE_LOOP_INTERVAL = 440; // 22 seconds (440 ticks)
+    private static final int AMBIANCE_LOOP_INTERVAL = 440;
     
     public static void register() {
-        // Register player dimension change event
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             checkPlayerDimension(newPlayer);
         });
@@ -39,12 +37,10 @@ public class Level207AmbianceHandler {
         boolean wasInLevel207 = playersInLevel207.getOrDefault(playerId, false);
         
         if (isInLevel207 && !wasInLevel207) {
-            // Player just entered Level 207
             startAmbianceForPlayer(player);
             playersInLevel207.put(playerId, true);
             LOGGER.debug("Player {} entered Level 207, starting ambiance", player.getName().getString());
         } else if (!isInLevel207 && wasInLevel207) {
-            // Player left Level 207
             playersInLevel207.put(playerId, false);
             LOGGER.debug("Player {} left Level 207", player.getName().getString());
         }
@@ -55,7 +51,6 @@ public class Level207AmbianceHandler {
      */
     private static void startAmbianceForPlayer(ServerPlayerEntity player) {
         try {
-            // Play ambiance immediately
             player.getServerWorld().playSound(
                 null,
                 player.getBlockPos(),
@@ -64,8 +59,7 @@ public class Level207AmbianceHandler {
                 1.0F,
                 1.0F
             );
-            
-            // Schedule looping ambiance
+
             scheduleAmbianceLoop(player);
             
         } catch (Exception e) {
@@ -78,7 +72,6 @@ public class Level207AmbianceHandler {
      */
     private static void scheduleAmbianceLoop(ServerPlayerEntity player) {
         player.getServer().execute(() -> {
-            // Create a repeating task to play ambiance
             scheduleRepeatingAmbiance(player, 0);
         });
     }
@@ -88,18 +81,14 @@ public class Level207AmbianceHandler {
      */
     private static void scheduleRepeatingAmbiance(ServerPlayerEntity player, int iteration) {
         if (player.isRemoved() || !player.getServerWorld().getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
-            // Player left or was removed, stop scheduling
             return;
         }
-        
-        // Schedule next ambiance play
+
         player.getServer().execute(() -> {
             try {
-                Thread.sleep(AMBIANCE_LOOP_INTERVAL * 50); // Convert ticks to milliseconds
-                
-                // Check if player is still in Level 207
+                Thread.sleep(AMBIANCE_LOOP_INTERVAL * 50);
+
                 if (!player.isRemoved() && player.getServerWorld().getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
-                    // Play ambiance
                     player.getServerWorld().playSound(
                         null,
                         player.getBlockPos(),
@@ -108,8 +97,7 @@ public class Level207AmbianceHandler {
                         1.0F,
                         1.0F
                     );
-                    
-                    // Schedule next iteration
+
                     scheduleRepeatingAmbiance(player, iteration + 1);
                 }
             } catch (InterruptedException e) {

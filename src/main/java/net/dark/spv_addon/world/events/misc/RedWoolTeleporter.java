@@ -1,4 +1,4 @@
-package net.dark.spv_addon.world.events;
+package net.dark.spv_addon.world.events.misc;
 
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.minecraft.block.Blocks;

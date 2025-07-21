@@ -6,19 +6,17 @@ import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
-import net.dark.spv_addon.config.SpvAddonConfig;
-import net.dark.spv_addon.crawl.CrawlSystem;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.init.crawl.CrawlSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Unified HUD system displaying Battery, Sanity, Thirst, and Crawling status as clean text in the top-right corner

@@ -1,11 +1,10 @@
-package net.dark.spv_addon.sanity;
+package net.dark.spv_addon.Additions.sanity;
 
-import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.sanity.effects.SanityAudioEffects;
-import net.dark.spv_addon.sanity.effects.SanityGameplayEffects;
-import net.dark.spv_addon.sanity.effects.SanityParticleEffects;
-import net.dark.spv_addon.sanity.effects.SanityVisualEffects;
+import net.dark.spv_addon.Additions.sanity.effects.SanityAudioEffects;
+import net.dark.spv_addon.Additions.sanity.effects.SanityGameplayEffects;
+import net.dark.spv_addon.Additions.sanity.effects.SanityParticleEffects;
+import net.dark.spv_addon.Additions.sanity.effects.SanityVisualEffects;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import org.slf4j.Logger;

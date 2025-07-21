@@ -43,6 +43,9 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final BiomeSource biomeSource;
+    private static final int STRUCTURE_X = 0;
+    private static final int STRUCTURE_Y = 60;
+    private static final int STRUCTURE_Z = 0;
 
     public Level188ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
@@ -81,28 +84,37 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        BlockState block = ModBlocks.CONCRETE_BLOCK_1.getDefaultState();
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                mutable.set(x, 0, z);
-                chunk.setBlockState(mutable, block, false);
-            }
-        }
-
-        return CompletableFuture.completedFuture(chunk);
+        return CompletableFuture.supplyAsync(() -> {
+            generateLevel188Terrain(chunk);
+            return chunk;
+        }, executor);
     }
 
     @Override
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
-        return 1;
+        // Check if we're at the structure location
+        if (x == STRUCTURE_X && z == STRUCTURE_Z) {
+            return STRUCTURE_Y + 10; // Structure height estimate
+        }
+        return 1; // Flat ground level
     }
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        BlockState[] states = new BlockState[] { Blocks.STONE.getDefaultState() }; // You can use custom block here
-        return new VerticalBlockSample(0, states);
+        BlockState[] states = new BlockState[world.getHeight()];
+
+        for (int y = 0; y < states.length; y++) {
+            int worldY = world.getBottomY() + y;
+            if (worldY == 0) {
+                states[y] = ModBlocks.CONCRETE_BLOCK_1.getDefaultState(); // Flat ground
+            } else if (x == STRUCTURE_X && z == STRUCTURE_Z && worldY >= STRUCTURE_Y && worldY < STRUCTURE_Y + 10) {
+                states[y] = ModBlocks.CONCRETE_BLOCK_1.getDefaultState(); // Structure blocks
+            } else {
+                states[y] = Blocks.AIR.getDefaultState(); // Air everywhere else
+            }
+        }
+
+        return new VerticalBlockSample(world.getBottomY(), states);
     }
 
     @Override
@@ -111,6 +123,79 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
     }
 
     public void generate(StructureWorldAccess world, Chunk chunk) {}
+
+    private void generateLevel188Terrain(Chunk chunk) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        BlockState groundBlock = ModBlocks.CONCRETE_BLOCK_1.getDefaultState();
+
+        // Generate flat ground at Y=0
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                mutable.set(x, 0, z);
+                chunk.setBlockState(mutable, groundBlock, false);
+            }
+        }
+
+        // Generate single structure at 0, 60, 0 if this chunk contains that position
+        int chunkX = chunk.getPos().x;
+        int chunkZ = chunk.getPos().z;
+
+        // Check if structure coordinates fall within this chunk
+        if (STRUCTURE_X >= chunkX * 16 && STRUCTURE_X < (chunkX + 1) * 16 &&
+            STRUCTURE_Z >= chunkZ * 16 && STRUCTURE_Z < (chunkZ + 1) * 16) {
+
+            // Convert world coordinates to chunk-local coordinates
+            int localX = STRUCTURE_X - (chunkX * 16);
+            int localZ = STRUCTURE_Z - (chunkZ * 16);
+
+            generateStructure(chunk, localX, localZ);
+        }
+    }
+
+    private void generateStructure(Chunk chunk, int localX, int localZ) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        BlockState structureBlock = ModBlocks.CONCRETE_BLOCK_1.getDefaultState();
+
+        // Generate a simple tower structure at the specified location
+        for (int y = STRUCTURE_Y; y < STRUCTURE_Y + 10; y++) {
+            // Create a 3x3 platform at the base
+            if (y == STRUCTURE_Y) {
+                for (int x = localX - 1; x <= localX + 1; x++) {
+                    for (int z = localZ - 1; z <= localZ + 1; z++) {
+                        if (x >= 0 && x < 16 && z >= 0 && z < 16) {
+                            mutable.set(x, y, z);
+                            chunk.setBlockState(mutable, structureBlock, false);
+                        }
+                    }
+                }
+            }
+            // Create walls for the tower
+            else if (y < STRUCTURE_Y + 9) {
+                for (int x = localX - 1; x <= localX + 1; x++) {
+                    for (int z = localZ - 1; z <= localZ + 1; z++) {
+                        if (x >= 0 && x < 16 && z >= 0 && z < 16) {
+                            // Only place blocks on the edges (walls)
+                            if (x == localX - 1 || x == localX + 1 || z == localZ - 1 || z == localZ + 1) {
+                                mutable.set(x, y, z);
+                                chunk.setBlockState(mutable, structureBlock, false);
+                            }
+                        }
+                    }
+                }
+            }
+            // Create roof
+            else if (y == STRUCTURE_Y + 9) {
+                for (int x = localX - 1; x <= localX + 1; x++) {
+                    for (int z = localZ - 1; z <= localZ + 1; z++) {
+                        if (x >= 0 && x < 16 && z >= 0 && z < 16) {
+                            mutable.set(x, y, z);
+                            chunk.setBlockState(mutable, structureBlock, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private StructurePlacementData defaultPlacement() {
         return new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setIgnoreEntities(true);

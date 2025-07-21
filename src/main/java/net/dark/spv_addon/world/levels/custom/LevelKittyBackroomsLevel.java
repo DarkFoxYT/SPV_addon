@@ -3,6 +3,7 @@ package net.dark.spv_addon.world.levels.custom;
 import com.sp.compat.modmenu.ConfigStuff;
 import com.sp.mixininterfaces.NewServerProperties;
 import com.sp.world.levels.BackroomsLevel;
+import com.sp.world.levels.custom.Level2BackroomsLevel;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModEntities;
@@ -27,6 +28,20 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     public LevelKittyBackroomsLevel() {
         super("kitty", KittyChunkGenerator.CODEC, new Vec3d(21, 2, 13), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
 
+        com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.unregisterTransition("level2 -> poolrooms");
+        com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL.registerTransition(new BackroomsLevel.LevelTransition(110, (world, playerComponent, from) -> {
+            List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
+            int exitRadius = ConfigStuff.exitSpawnRadius;
+            if (world.getServer() != null && world.getServer().isDedicated()) {
+                exitRadius = ((NewServerProperties) ((MinecraftDedicatedServer) world.getServer()).getProperties()).getExitSpawnRadius();
+            }
+
+            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double) exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
+                playerList.add(new BackroomsLevel.CrossDimensionTeleport(playerComponent.player.getWorld(), playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL));
+            }
+
+            return playerList;
+        }), "level2 -> kitty");
         this.registerTransition(new BackroomsLevel.LevelTransition(110, (world, playerComponent, from) -> {
             List<BackroomsLevel.CrossDimensionTeleport> playerList = new ArrayList<>();
             int exitRadius = ConfigStuff.exitSpawnRadius;

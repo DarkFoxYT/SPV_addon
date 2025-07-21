@@ -2,9 +2,9 @@ package net.dark.spv_addon.mixins.crawl;
 
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
-import net.dark.spv_addon.config.SpvAddonConfig;
-import net.dark.spv_addon.crawl.CrawlClient;
-import net.dark.spv_addon.crawl.CrawlSystem;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.init.crawl.CrawlClient;
+import net.dark.spv_addon.init.crawl.CrawlSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;

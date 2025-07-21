@@ -20,10 +20,10 @@
       "net.dark.spv_addon.cca.InitializeComponents"
     ],
     "voicechat": [
-      "net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin"
+      "net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin"
     ],
     "modmenu": [
-      "net.dark.spv_addon.config.ModMenuIntegration"
+      "net.dark.spv_addon.init.config.ModMenuIntegration"
     ]
   },
   "custom": {

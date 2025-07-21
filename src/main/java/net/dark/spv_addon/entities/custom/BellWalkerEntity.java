@@ -138,7 +138,7 @@ public class BellWalkerEntity extends PathAwareEntity
         if (!this.getWorld().isClient) {
             double detectRadius = 18.0;
             for (PlayerEntity player : this.getWorld().getPlayers()) {
-                if (net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin.justMadeNoise.contains(player.getUuid())
+                if (net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin.justMadeNoise.contains(player.getUuid())
                         && player.squaredDistanceTo(this) < detectRadius * detectRadius
                         && !player.isSpectator() && player.isAlive()) {
                     this.onPlayerSoundHeard(player, player.getPos());

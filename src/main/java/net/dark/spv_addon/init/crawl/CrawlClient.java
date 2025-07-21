@@ -1,4 +1,4 @@
-package net.dark.spv_addon.crawl;
+package net.dark.spv_addon.init.crawl;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

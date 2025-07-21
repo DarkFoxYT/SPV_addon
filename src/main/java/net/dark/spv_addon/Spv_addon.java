@@ -1,21 +1,19 @@
 package net.dark.spv_addon;
 
-import com.sp.SPBRevamped;
-import com.sp.SPBRevampedClient;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.commands.SpvCommands;
-import net.dark.spv_addon.config.SpvAddonConfig;
-import net.dark.spv_addon.events.Level207AmbianceHandler;
-import net.dark.spv_addon.gamerules.SpvGameRules;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.world.events.level207.Level207AmbianceHandler;
+import net.dark.spv_addon.init.gamerules.SpvGameRules;
 import net.dark.spv_addon.init.*;
-import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
-import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
-import net.dark.spv_addon.world.events.RedWoolTeleporter;
-import net.dark.spv_addon.world.events.level207.WoolTeleporter207;
+import net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin;
+import net.dark.spv_addon.world.events.misc.LevelRunGlobalTicker;
+import net.dark.spv_addon.world.events.misc.RedWoolTeleporter;
+import net.dark.spv_addon.world.events.misc.WoolTeleporter207;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -39,10 +37,8 @@ public class Spv_addon implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Initialize configuration
         SpvAddonConfig.init("spv_addon", SpvAddonConfig.class);
 
-        // Initialize game rules
         SpvGameRules.initialize();
 
         ModBlockEntities.register();
@@ -59,8 +55,7 @@ public class Spv_addon implements ModInitializer {
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
-        // Initialize crawling system
-        net.dark.spv_addon.crawl.CrawlSystem.initialize();
+        net.dark.spv_addon.init.crawl.CrawlSystem.initialize();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
@@ -83,28 +78,49 @@ public class Spv_addon implements ModInitializer {
                 return;
             }
             try {
-                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 PlayerComponent playerComponent = InitializeComponents.PLAYER.get(newPlayer);
 
-                sendBlackScreenPacket(newPlayer, 500, true, false);
-                boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
-                newPlayer.getAbilities().invulnerable = true;
-                playerComponent.setShouldRender(false);
+                // Stop any existing blackscreen and sounds
+                com.sp.SPBRevamped.sendBlackScreenPacket(newPlayer, 0, false, false);
+
+
+                // Reset player state
+                playerComponent.setShouldRender(true);
+                playerComponent.setShouldDoStatic(false);
                 playerComponent.sync();
 
-                executorService.schedule(() -> {
-                    playerComponent.setShouldRender(true);
-                    playerComponent.setShouldDoStatic(true);
-                    playerComponent.sync();
-                    newPlayer.getAbilities().invulnerable = backupInvulnerable;
-                    executorService.shutdown();
-                }, 600000000, TimeUnit.DAYS);
+                // Brief respawn effect
+                com.sp.SPBRevamped.sendBlackScreenPacket(newPlayer, 60, true, false);
+                boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
+                newPlayer.getAbilities().invulnerable = true;
 
+                // Schedule restoration after brief blackscreen
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 executorService.schedule(() -> {
-                    playerComponent.setShouldDoStatic(false);
-                    playerComponent.sync();
-                    executorService.shutdown();
-                }, 800000000, TimeUnit.DAYS);
+                    try {
+                        playerComponent.setShouldRender(true);
+                        playerComponent.setShouldDoStatic(true);
+                        playerComponent.sync();
+                        newPlayer.getAbilities().invulnerable = backupInvulnerable;
+
+                        // Stop static effect after a short time
+                        executorService.schedule(() -> {
+                            try {
+                                playerComponent.setShouldDoStatic(false);
+                                playerComponent.sync();
+                            } catch (Exception e) {
+                                LOGGER.error("Error stopping static effect: ", e);
+                            } finally {
+                                executorService.shutdown();
+                            }
+                        }, 4, TimeUnit.SECONDS);
+
+                    } catch (Exception e) {
+                        LOGGER.error("Error in respawn restoration: ", e);
+                        executorService.shutdown();
+                    }
+                }, 3, TimeUnit.SECONDS);
+
             } catch (Exception e) {
                 LOGGER.error("Error in AFTER_RESPAWN event: ", e);
             }

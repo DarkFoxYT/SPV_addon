@@ -1,9 +1,9 @@
-package net.dark.spv_addon.mixins;
+package net.dark.spv_addon.mixins.player;
 
 import com.sp.init.BackroomsLevels;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;

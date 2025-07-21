@@ -1,4 +1,4 @@
-package net.dark.spv_addon.mixins;
+package net.dark.spv_addon.mixins.player;
 
 import net.dark.spv_addon.cca.DeathTeleportComponent;
 import net.minecraft.entity.damage.DamageSource;

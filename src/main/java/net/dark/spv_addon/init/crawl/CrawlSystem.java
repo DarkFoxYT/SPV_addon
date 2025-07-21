@@ -1,6 +1,6 @@
-package net.dark.spv_addon.crawl;
+package net.dark.spv_addon.init.crawl;
 
-import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
