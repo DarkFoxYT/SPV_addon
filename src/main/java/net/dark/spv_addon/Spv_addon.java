@@ -79,22 +79,13 @@ public class Spv_addon implements ModInitializer {
             }
             try {
                 PlayerComponent playerComponent = InitializeComponents.PLAYER.get(newPlayer);
-
-                // Stop any existing blackscreen and sounds
                 com.sp.SPBRevamped.sendBlackScreenPacket(newPlayer, 0, false, false);
-
-
-                // Reset player state
                 playerComponent.setShouldRender(true);
                 playerComponent.setShouldDoStatic(false);
                 playerComponent.sync();
-
-                // Brief respawn effect
                 com.sp.SPBRevamped.sendBlackScreenPacket(newPlayer, 60, true, false);
                 boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
                 newPlayer.getAbilities().invulnerable = true;
-
-                // Schedule restoration after brief blackscreen
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 executorService.schedule(() -> {
                     try {
@@ -103,7 +94,6 @@ public class Spv_addon implements ModInitializer {
                         playerComponent.sync();
                         newPlayer.getAbilities().invulnerable = backupInvulnerable;
 
-                        // Stop static effect after a short time
                         executorService.schedule(() -> {
                             try {
                                 playerComponent.setShouldDoStatic(false);

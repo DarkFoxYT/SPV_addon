@@ -22,11 +22,14 @@ public class DeathTeleportComponent implements Component, AutoSyncedComponent {
         globalDeathCount++;
         if (globalDeathCount >= 3) {
             hasTeleported = true;
-            ServerWorld level207 = player.getServer().getWorld(BackroomsLevels.LEVEL207_WORLD_KEY);
-            if (level207 != null) {
-                Vec3d spawn = new Vec3d(16, 66, 16);
-                for (ServerPlayerEntity p : player.getServer().getPlayerManager().getPlayerList()) {
-                    p.teleport(level207, spawn.x, spawn.y, spawn.z, p.getYaw(), p.getPitch());
+            var server = player.getWorld().getServer();
+            if (server != null) {
+                ServerWorld level207 = server.getWorld(BackroomsLevels.LEVEL207_WORLD_KEY);
+                if (level207 != null) {
+                    Vec3d spawn = new Vec3d(16, 66, 16);
+                    for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {
+                        p.teleport(level207, spawn.x, spawn.y, spawn.z, p.getYaw(), p.getPitch());
+                    }
                 }
             }
         }

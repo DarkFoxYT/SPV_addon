@@ -180,33 +180,35 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
 
-            if (!stack.isOf(ModBlocks.KITTY_PLUSHIE1.asItem())) {
-                return super.interactMob(player, hand);
-            }
-
-            if (!player.getWorld().isClient && player instanceof ServerPlayerEntity serverPlayer) {
-                if (serverPlayer.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
-                    var level = (LevelKittyBackroomsLevel) net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL;
-                    var pc = InitializeComponents.PLAYER.get(serverPlayer);
-                    var tp = new BackroomsLevel.CrossDimensionTeleport(
-                            serverPlayer.getWorld(),
-                            pc,
-                            level.getSpawnPos(),
-                            net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL,
-                            BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL
-                    );
-
-                    if (level.transitionOut(tp)) {
-                                serverPlayer.teleport(
-                                        serverPlayer.getServer().getWorld(BackroomsLevels.POOLROOMS_WORLD_KEY),
-                                        15, 90, 15,
-                                        serverPlayer.getYaw(), -90);
-
-                        return ActionResult.success(true);
-                    }
-                }
-            }
-
+        // Check if player is holding the correct item (Kitty Plushie)
+        if (!stack.isOf(ModBlocks.KITTY_PLUSHIE1.asItem())) {
             return super.interactMob(player, hand);
         }
+
+        if (!player.getWorld().isClient && player instanceof ServerPlayerEntity serverPlayer) {
+            // Only work in the Kitty level
+            if (serverPlayer.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+                var level = (LevelKittyBackroomsLevel) net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL;
+                var pc = InitializeComponents.PLAYER.get(serverPlayer);
+
+                // Create the transition using the proper SPB-Revamped system
+                var transition = level.getPoolRoomsTransition(pc);
+
+                // Execute the transition
+                if (transition != null) {
+                    // Consume the item
+                    if (!serverPlayer.getAbilities().creativeMode) {
+                        stack.decrement(1);
+                    }
+
+                    // Start the transition
+                    level.executeTransition(transition);
+
+                    return ActionResult.SUCCESS;
+                }
+            }
+        }
+
+        return super.interactMob(player, hand);
     }
+}

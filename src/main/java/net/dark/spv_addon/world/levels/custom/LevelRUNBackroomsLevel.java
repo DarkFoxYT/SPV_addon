@@ -57,8 +57,7 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
     }
 
     @Override
-    public boolean transitionOut(CrossDimensionTeleport teleport) {
-        return teleport.playerComponent().player.isSneaking();
+    public void transitionOut(CrossDimensionTeleport teleport) {
     }
 
     @Override
@@ -66,8 +65,4 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
         teleport.playerComponent().loadPlayerSavedInventory();
     }
 
-    @Override
-    public int getTransitionDuration() {
-        return 40;
-    }
 }
