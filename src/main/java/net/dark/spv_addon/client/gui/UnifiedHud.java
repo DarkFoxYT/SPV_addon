@@ -6,6 +6,8 @@ import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
+import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.crawl.CrawlSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -19,14 +21,15 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Unified HUD system displaying Battery, Sanity, and Thirst as clean text in the top-right corner
- * Features smooth fade in/out animations
+ * Unified HUD system displaying Battery, Sanity, Thirst, and Crawling status as clean text in the top-right corner
+ * Features smooth fade in/out animations and full configuration support
  */
 public class UnifiedHud implements HudRenderCallback {
 
-    private static final int MARGIN_RIGHT = 10;
-    private static final int MARGIN_TOP = 10;
-    private static final int LINE_HEIGHT = 12;
+    // Configuration-based constants (updated from config)
+    private static int MARGIN_RIGHT = 10;
+    private static int MARGIN_TOP = 10;
+    private static int LINE_HEIGHT = 12;
 
     // Fade animation settings
     private static final int FADE_IN_DURATION = 10; // 0.5 seconds (10 ticks)
@@ -57,6 +60,15 @@ public class UnifiedHud implements HudRenderCallback {
     public static void register() {
         HudRenderCallback.EVENT.register(new UnifiedHud());
     }
+
+    /**
+     * Update configuration values
+     */
+    private static void updateConfigValues() {
+        MARGIN_RIGHT = SpvAddonConfig.hudMarginRight;
+        MARGIN_TOP = SpvAddonConfig.hudMarginTop;
+        LINE_HEIGHT = SpvAddonConfig.hudLineHeight;
+    }
     
     @Override
     public void onHudRender(DrawContext context, float tickDelta) {
@@ -65,9 +77,15 @@ public class UnifiedHud implements HudRenderCallback {
 
         if (player == null || client.options.hudHidden) return;
 
-        // Hide HUD when sanity is below 25% (adds to the disorientation)
+        // Update config values
+        updateConfigValues();
+
+        // Check if unified HUD is enabled
+        if (!SpvAddonConfig.enableUnifiedHud) return;
+
+        // Hide HUD when sanity is below configured threshold (adds to the disorientation)
         int sanity = getSanityLevel(player);
-        if (sanity < 25) {
+        if (sanity < SpvAddonConfig.hideBelowSanity) {
             // Clear all fade states when HUD is hidden
             fadeStates.clear();
             return;
@@ -81,42 +99,60 @@ public class UnifiedHud implements HudRenderCallback {
         sanity = getSanityLevel(player);
         int thirst = getThirstLevel(player);
         boolean flashlightOn = isFlashlightOn(player);
+        boolean isCrawling = isCrawling(player);
 
         // Update and render battery with fade
-        boolean isBatteryChanging = BatteryManager.isBatteryChanging(player.getUuid());
-        boolean shouldShowBattery = flashlightOn || battery <= 25 || isBatteryChanging;
-        float batteryAlpha = updateFadeState("battery", shouldShowBattery);
-        if (batteryAlpha > 0.0f) {
-            String batteryText = formatBatteryText(battery, player);
-            int batteryColor = getBatteryTextColor(battery, player);
+        if (SpvAddonConfig.showBatteryHud && SpvAddonConfig.enableBatterySystem) {
+            boolean isBatteryChanging = BatteryManager.isBatteryChanging(player.getUuid());
+            boolean shouldShowBattery = flashlightOn || battery <= SpvAddonConfig.showBatteryThreshold || isBatteryChanging;
+            float batteryAlpha = updateFadeState("battery", shouldShowBattery);
+            if (batteryAlpha > 0.0f) {
+                String batteryText = formatBatteryText(battery, player);
+                int batteryColor = getBatteryTextColor(battery, player);
 
-            // Add pulsing effect when changing battery
-            if (isBatteryChanging) {
-                float pulseAlpha = getPulseAlpha();
-                batteryAlpha *= pulseAlpha;
+                // Add pulsing effect when changing battery
+                if (isBatteryChanging && SpvAddonConfig.batteryPulseEffect) {
+                    float pulseAlpha = getPulseAlpha();
+                    batteryAlpha *= pulseAlpha;
+                }
+
+                drawRightAlignedTextWithAlpha(context, batteryText, screenWidth, yOffset, batteryColor, batteryAlpha);
+                yOffset += LINE_HEIGHT;
             }
-
-            drawRightAlignedTextWithAlpha(context, batteryText, screenWidth, yOffset, batteryColor, batteryAlpha);
-            yOffset += LINE_HEIGHT;
         }
 
         // Update and render sanity with fade - show when value changes or is low
-        boolean shouldShowSanity = sanity < 90 || hasValueChanged("sanity", sanity);
-        float sanityAlpha = updateFadeStateWithValue("sanity", shouldShowSanity, sanity);
-        if (sanityAlpha > 0.0f) {
-            String sanityText = formatSanityText(sanity);
-            int sanityColor = getSanityTextColor(sanity);
-            drawRightAlignedTextWithAlpha(context, sanityText, screenWidth, yOffset, sanityColor, sanityAlpha);
-            yOffset += LINE_HEIGHT;
+        if (SpvAddonConfig.showSanityHud && SpvAddonConfig.enableSanitySystem) {
+            boolean shouldShowSanity = sanity < 90 || hasValueChanged("sanity", sanity);
+            float sanityAlpha = updateFadeStateWithValue("sanity", shouldShowSanity, sanity);
+            if (sanityAlpha > 0.0f) {
+                String sanityText = formatSanityText(sanity);
+                int sanityColor = getSanityTextColor(sanity);
+                drawRightAlignedTextWithAlpha(context, sanityText, screenWidth, yOffset, sanityColor, sanityAlpha);
+                yOffset += LINE_HEIGHT;
+            }
         }
 
         // Update and render thirst with fade - show when value changes or is low
-        boolean shouldShowThirst = thirst < 90 || hasValueChanged("thirst", thirst);
-        float thirstAlpha = updateFadeStateWithValue("thirst", shouldShowThirst, thirst);
-        if (thirstAlpha > 0.0f) {
-            String thirstText = formatThirstText(thirst);
-            int thirstColor = getThirstTextColor(thirst);
-            drawRightAlignedTextWithAlpha(context, thirstText, screenWidth, yOffset, thirstColor, thirstAlpha);
+        if (SpvAddonConfig.showThirstHud && SpvAddonConfig.enableThirstSystem) {
+            boolean shouldShowThirst = thirst < 90 || hasValueChanged("thirst", thirst);
+            float thirstAlpha = updateFadeStateWithValue("thirst", shouldShowThirst, thirst);
+            if (thirstAlpha > 0.0f) {
+                String thirstText = formatThirstText(thirst);
+                int thirstColor = getThirstTextColor(thirst);
+                drawRightAlignedTextWithAlpha(context, thirstText, screenWidth, yOffset, thirstColor, thirstAlpha);
+                yOffset += LINE_HEIGHT;
+            }
+        }
+
+        // Update and render crawling status with fade - show only when crawling
+        if (SpvAddonConfig.showCrawlingHud && SpvAddonConfig.enableCrawling) {
+            float crawlingAlpha = updateFadeState("crawling", isCrawling);
+            if (crawlingAlpha > 0.0f) {
+                String crawlingText = Text.translatable("hud.spv_addon.crawling").getString();
+                int crawlingColor = SpvAddonConfig.getCrawlingColor();
+                drawRightAlignedTextWithAlpha(context, crawlingText, screenWidth, yOffset, crawlingColor, crawlingAlpha);
+            }
         }
     }
     
@@ -214,19 +250,39 @@ public class UnifiedHud implements HudRenderCallback {
     }
 
     /**
-     * Draw text aligned to the right side of the screen with alpha
+     * Draw text aligned to the right side of the screen with alpha and configurable options
      */
     private void drawRightAlignedTextWithAlpha(DrawContext context, String text, int screenWidth, int y, int color, float alpha) {
         MinecraftClient client = MinecraftClient.getInstance();
+
+        // Apply text scale
+        context.getMatrices().push();
+        context.getMatrices().scale(SpvAddonConfig.hudTextScale, SpvAddonConfig.hudTextScale, 1.0f);
+
+        // Adjust positions for scale
+        float scaledScreenWidth = screenWidth / SpvAddonConfig.hudTextScale;
+        float scaledMarginRight = MARGIN_RIGHT / SpvAddonConfig.hudTextScale;
+        float scaledY = y / SpvAddonConfig.hudTextScale;
+
         int textWidth = client.textRenderer.getWidth(text);
-        int x = screenWidth - textWidth - MARGIN_RIGHT;
+        int x = (int)(scaledScreenWidth - textWidth - scaledMarginRight);
+        int adjustedY = (int)scaledY;
+
+        // Draw background if configured
+        if (SpvAddonConfig.hudBackgroundOpacity > 0) {
+            int bgAlpha = (int)((SpvAddonConfig.hudBackgroundOpacity / 100.0f) * alpha * 255) << 24;
+            int bgColor = bgAlpha | 0x000000; // Black background
+            context.fill(x - 2, adjustedY - 1, x + textWidth + 2, adjustedY + client.textRenderer.fontHeight + 1, bgColor);
+        }
 
         // Apply alpha to color
         int alphaInt = (int)(alpha * 255);
         int colorWithAlpha = (alphaInt << 24) | (color & 0x00FFFFFF);
 
         // Draw text with shadow and alpha for better visibility
-        context.drawText(client.textRenderer, text, x, y, colorWithAlpha, true);
+        context.drawText(client.textRenderer, text, x, adjustedY, colorWithAlpha, true);
+
+        context.getMatrices().pop();
     }
 
     /**
@@ -309,67 +365,40 @@ public class UnifiedHud implements HudRenderCallback {
             return false;
         }
     }
+
+    /**
+     * Check if player is crawling
+     */
+    private boolean isCrawling(PlayerEntity player) {
+        try {
+            return player.getPose() == CrawlSystem.Shared.CRAWLING;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
     /**
-     * Get battery text color
+     * Get battery text color using configurable colors
      */
     private int getBatteryTextColor(int battery, PlayerEntity player) {
-        // Check if battery is being changed first
-        if (BatteryManager.isBatteryChanging(player.getUuid())) {
-            return 0x00AAFF; // Bright blue for changing
-        }
-
         int health = BatteryManager.getBatteryHealth(player.getUuid());
+        boolean isChanging = BatteryManager.isBatteryChanging(player.getUuid());
 
-        if (battery <= 0) {
-            return 0x666666; // Dark gray for dead
-        } else if (battery <= 5) {
-            return 0xFF4444; // Red for critical
-        } else if (battery <= 15) {
-            return 0xFFAA44; // Orange for low
-        } else if (health <= 30) {
-            return 0xFFFF66; // Yellow for degraded health
-        } else {
-            return 0x88FF88; // Light green for good
-        }
+        return SpvAddonConfig.getBatteryColor(battery, health, isChanging);
     }
     
     /**
-     * Get sanity text color
+     * Get sanity text color using configurable colors
      */
     private int getSanityTextColor(int sanity) {
-        if (sanity <= 5) {
-            return 0xFF4444; // Dark red
-        } else if (sanity <= 15) {
-            return 0xFF6666; // Red
-        } else if (sanity <= 30) {
-            return 0xFFAA44; // Orange
-        } else if (sanity <= 50) {
-            return 0xFFDD66; // Yellow
-        } else if (sanity <= 75) {
-            return 0xAAFFAA; // Light green
-        } else {
-            return 0x88FF88; // Green
-        }
+        return SpvAddonConfig.getSanityColor(sanity);
     }
     
     /**
-     * Get thirst text color
+     * Get thirst text color using configurable colors
      */
     private int getThirstTextColor(int thirst) {
-        if (thirst <= 0) {
-            return 0x8B0000; // Dark red
-        } else if (thirst <= 10) {
-            return 0xFF0000; // Red
-        } else if (thirst <= 20) {
-            return 0xFF4500; // Orange red
-        } else if (thirst <= 40) {
-            return 0xFFA500; // Orange
-        } else if (thirst <= 60) {
-            return 0xFFD700; // Gold
-        } else {
-            return 0x00BFFF; // Deep sky blue
-        }
+        return SpvAddonConfig.getThirstColor(thirst);
     }
     
     /**

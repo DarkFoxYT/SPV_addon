@@ -21,6 +21,9 @@
     ],
     "voicechat": [
       "net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin"
+    ],
+    "modmenu": [
+      "net.dark.spv_addon.config.ModMenuIntegration"
     ]
   },
   "custom": {
@@ -40,6 +43,10 @@
     "fabricloader": "*",
     "fabric-api": "*",
     "cardinal-components-base": "*",
-    "spb-revamped": "*"
+    "spb-revamped": "*",
+    "midnightlib": ">=1.4.1"
+  },
+  "suggests": {
+    "modmenu": "*"
   }
 }

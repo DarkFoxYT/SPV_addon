@@ -8,7 +8,9 @@ import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.commands.SpvCommands;
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.dark.spv_addon.events.Level207AmbianceHandler;
+import net.dark.spv_addon.gamerules.SpvGameRules;
 import net.dark.spv_addon.init.*;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
@@ -37,6 +39,11 @@ public class Spv_addon implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Initialize configuration
+        SpvAddonConfig.init("spv_addon", SpvAddonConfig.class);
+
+        // Initialize game rules
+        SpvGameRules.initialize();
 
         ModBlockEntities.register();
         ThirstManager.register();

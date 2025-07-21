@@ -3,6 +3,7 @@ package net.dark.spv_addon.Additions.thirst;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.CustomDamageSources;
 import net.dark.spv_addon.init.ModSounds;
@@ -91,15 +92,18 @@ public class ThirstManager {
      */
     private static void tickPlayer(ServerPlayerEntity player) {
         try {
+            // Check if thirst system is enabled
+            if (!SpvAddonConfig.enableThirstSystem) return;
+
             ThirstComponent comp = InitializeComponents.THIRST.get(player);
             SanityComponent sanityComp = InitializeComponents.SANITY.get(player);
             int currentThirst = comp.getThirst();
 
             // Calculate thirst drain based on multiple factors
-            float drainAmount = calculateThirstDrain(player);
+            float drainAmount = calculateThirstDrain(player) * SpvAddonConfig.thirstDrainRate;
 
             // Apply environmental multipliers
-            drainAmount *= getEnvironmentalMultiplier(player);
+            drainAmount *= getEnvironmentalMultiplier(player) * SpvAddonConfig.thirstEnvironmentalMultiplier;
 
             // Apply the drain
             int newThirst = MathHelper.clamp(currentThirst - Math.round(drainAmount), 0, 100);
@@ -265,13 +269,13 @@ public class ThirstManager {
             sanityComp.decreaseSanity(5);
         }
 
-        // Reduced damage - less lethal
-        if (random.nextFloat() < 0.2f) { // Reduced chance from 0.4f to 0.2f
+        // Configurable damage
+        if (SpvAddonConfig.thirstDamageEnabled && random.nextFloat() < 0.2f) {
             RegistryEntry<DamageType> entry = player.getWorld()
                     .getRegistryManager()
                     .get(RegistryKeys.DAMAGE_TYPE)
                     .entryOf(CustomDamageSources.THIRST_DAMAGE_ID);
-            player.damage(new DamageSource(entry), 1.5f); // Reduced damage from 3.0f to 1.5f
+            player.damage(new DamageSource(entry), SpvAddonConfig.thirstDamageAmount);
         }
 
         // Visual effects

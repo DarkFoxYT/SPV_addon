@@ -3,6 +3,7 @@ package net.dark.spv_addon.mixins;
 import com.sp.init.BackroomsLevels;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
@@ -28,6 +29,9 @@ public abstract class PlayerTickMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
+        // Check if sanity system is enabled
+        if (!SpvAddonConfig.enableSanitySystem) return;
+
         tickCounter++;
         if (tickCounter >= 140) { // 7 seconds at 20 TPS (140 ticks)
             tickCounter = 0;
@@ -57,10 +61,11 @@ public abstract class PlayerTickMixin {
             }
 
             boolean nearSanityLight = false;
+            int lightRange = SpvAddonConfig.sanityLightRange;
 
-            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 5, 10)) {
+            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, lightRange, 5, lightRange)) {
                 if (world.getBlockState(pos).isIn(SANITY_LIGHT_TAG)) {
-                    if (pos.getSquaredDistance(playerPos) <= 100) {
+                    if (pos.getSquaredDistance(playerPos) <= lightRange * lightRange) {
                         nearSanityLight = true;
                         break;
                     }
@@ -68,7 +73,7 @@ public abstract class PlayerTickMixin {
             }
 
 
-            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, 10, 10, 10)) {
+            for (BlockPos pos : BlockPos.iterateOutwards(playerPos, lightRange, lightRange, lightRange)) {
                 BlockState state = world.getBlockState(pos);
 
                 if (!state.isIn(SANITY_LIGHT_TAG)) continue;
@@ -81,7 +86,7 @@ public abstract class PlayerTickMixin {
                     active = state.get(BooleanProperty.of("stopped"));
                 }
 
-                if (active && pos.getSquaredDistance(playerPos) <= 100) {
+                if (active && pos.getSquaredDistance(playerPos) <= lightRange * lightRange) {
                     nearSanityLight = true;
                     break;
                 }
@@ -89,7 +94,7 @@ public abstract class PlayerTickMixin {
 
 
             if (!nearSanityLight) {
-                sanity.decreaseSanity(1);
+                sanity.decreaseSanity(Math.round(SpvAddonConfig.sanityDrainRate));
             }
         }
     }

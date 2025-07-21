@@ -1,5 +1,6 @@
 package net.dark.spv_addon.mixins.crawl;
 
+import net.dark.spv_addon.config.SpvAddonConfig;
 import net.dark.spv_addon.crawl.CrawlSystem;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -36,10 +37,10 @@ public abstract class PlayerEntityCrawlMixin extends LivingEntity {
         at = @At(value = "INVOKE", target = "net/minecraft/entity/player/PlayerEntity.setPose(Lnet/minecraft/entity/EntityPose;)V")
     )
     public EntityPose onPreSetPose(EntityPose pose) {
-        if (!isFallFlying() && !this.isSpectator() && !this.hasVehicle() && !this.abilities.flying) {
+        if (SpvAddonConfig.enableCrawling && !isFallFlying() && !this.isSpectator() && !this.hasVehicle() && !this.abilities.flying) {
             boolean requested = getDataTracker().get(CrawlSystem.Shared.CRAWL_REQUEST);
             boolean swimming = isSwimming() || isTouchingWater();
-            
+
             if (requested) {
                 if (!swimming) {
                     pose = CrawlSystem.Shared.CRAWLING;
@@ -56,7 +57,7 @@ public abstract class PlayerEntityCrawlMixin extends LivingEntity {
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
     public void onGetActiveEyeHeight(EntityPose pose, net.minecraft.entity.EntityDimensions size, CallbackInfoReturnable<Float> cir) {
         if (pose == CrawlSystem.Shared.CRAWLING) {
-            cir.setReturnValue(0.6F);
+            cir.setReturnValue(SpvAddonConfig.crawlingEyeHeight);
         }
     }
 }
