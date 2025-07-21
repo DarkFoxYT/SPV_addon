@@ -148,4 +148,3 @@ public class CustomDeathScreen extends Screen {
 
     }
 }
-

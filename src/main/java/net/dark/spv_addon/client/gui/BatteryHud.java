@@ -4,6 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import net.dark.spv_addon.Additions.battery.BatteryManager;
+import net.dark.spv_addon.cca.SanityComponent;
+import net.dark.spv_addon.sanity.SanityEffectsManager;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -29,7 +31,18 @@ public class BatteryHud implements HudRenderCallback {
         PlayerEntity player = client.player;
         if (player == null) return;
 
+        // Hide battery HUD when sanity is below 25%
+        try {
+            var sanityOpt = SanityComponent.KEY1.maybeGet(player);
+            if (sanityOpt.isPresent() && sanityOpt.get().getSanityLevel() < 25) {
+                return; // Don't show battery HUD at low sanity
+            }
+        } catch (Exception e) {
+            // Continue if sanity check fails
+        }
+
         int level = BatteryManager.getBattery(player.getUuid());
+        int health = BatteryManager.getBatteryHealth(player.getUuid());
         PlayerComponent comp = InitializeComponents.PLAYER.getNullable(player);
 
         if (level != 0 && (comp == null || !comp.isFlashLightOn())) return;
@@ -37,7 +50,9 @@ public class BatteryHud implements HudRenderCallback {
         float norm = Math.max(0, Math.min(level, 100)) / 100f;
         int filledHeight = Math.round(norm * BAR_H);
 
+        // Enhanced visual feedback
         float alpha = (level <= 15) ? getPulseAlpha() : 1f;
+        float[] color = getBatteryColor(level, health);
 
         int sw = client.getWindow().getScaledWidth();
         int x = sw - (int) (BAR_W * SCALE) - 16;
@@ -54,6 +69,8 @@ public class BatteryHud implements HudRenderCallback {
         dc.drawTexture(BATTERY_1, 0, 0, 0, 0, BAR_W, BAR_H, 44, 44);
 
         if (filledHeight > 0) {
+            // Apply color tinting based on battery condition
+            RenderSystem.setShaderColor(color[0], color[1], color[2], alpha);
             dc.drawTexture(BATTERY_2, 0, BAR_H - filledHeight, 0, BAR_H - filledHeight, BAR_W, filledHeight, 44, 44);
         }
 
@@ -61,16 +78,72 @@ public class BatteryHud implements HudRenderCallback {
         RenderSystem.disableBlend();
         dc.getMatrices().pop();
 
+        // Enhanced battery display with status
         String txt = level + "%";
+        String statusText = BatteryManager.getBatteryStatusText(player.getUuid());
+        String healthText = health < 100 ? "(" + health + "% health)" : "";
+
         int tw = client.textRenderer.getWidth(txt);
+        int statusTw = client.textRenderer.getWidth(statusText);
+        int healthTw = client.textRenderer.getWidth(healthText);
+
         int tx = x + (int) (BAR_W * SCALE) / 2 - tw / 2;
         int ty = y + (int) (BAR_H * SCALE) + 2;
-        dc.drawText(client.textRenderer, txt, tx, ty, 0xFFFFFF, true);
+
+        // Main percentage text
+        int textColor = getBatteryTextColor(level, health);
+        dc.drawText(client.textRenderer, txt, tx, ty, textColor, true);
+
+        // Status text
+        if (!statusText.isEmpty()) {
+            int statusTx = x + (int) (BAR_W * SCALE) / 2 - statusTw / 2;
+            dc.drawText(client.textRenderer, statusText, statusTx, ty + 12, textColor, true);
+        }
+
+        // Health text (if degraded)
+        if (!healthText.isEmpty()) {
+            int healthTx = x + (int) (BAR_W * SCALE) / 2 - healthTw / 2;
+            dc.drawText(client.textRenderer, healthText, healthTx, ty + 24, 0xFFAA00, true);
+        }
     }
 
     private float getPulseAlpha() {
         double t = Util.getMeasuringTimeMs() / 600.0;
         double sway = (Math.sin(t) + 1.0) / 2.0;
         return 0.3f + (float) (sway * 0.7f);
+    }
+
+    /**
+     * Get battery color based on level and health
+     */
+    private float[] getBatteryColor(int level, int health) {
+        if (level <= 0) {
+            return new float[]{0.3f, 0.3f, 0.3f}; // Dark gray for dead
+        } else if (level <= 5) {
+            return new float[]{1.0f, 0.2f, 0.2f}; // Red for critical
+        } else if (level <= 15) {
+            return new float[]{1.0f, 0.6f, 0.2f}; // Orange for low
+        } else if (health <= 30) {
+            return new float[]{1.0f, 1.0f, 0.4f}; // Yellow for degraded health
+        } else {
+            return new float[]{1.0f, 1.0f, 1.0f}; // White for good
+        }
+    }
+
+    /**
+     * Get battery text color based on level and health
+     */
+    private int getBatteryTextColor(int level, int health) {
+        if (level <= 0) {
+            return 0x666666; // Dark gray for dead
+        } else if (level <= 5) {
+            return 0xFF4444; // Red for critical
+        } else if (level <= 15) {
+            return 0xFFAA44; // Orange for low
+        } else if (health <= 30) {
+            return 0xFFFF66; // Yellow for degraded health
+        } else {
+            return 0xFFFFFF; // White for good
+        }
     }
 }

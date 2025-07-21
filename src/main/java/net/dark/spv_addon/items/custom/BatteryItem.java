@@ -27,6 +27,8 @@ public class BatteryItem extends Item {
             ItemStack stack = user.getStackInHand(hand);
             playBatterySound(world, user);
 
+            // Start the battery changing process
+            BatteryManager.startBatteryChanging(user.getUuid());
             BatteryManager.setBattery(user.getUuid(), 0);
             user.sendMessage(Text.literal("Changing Battery"), true);
 

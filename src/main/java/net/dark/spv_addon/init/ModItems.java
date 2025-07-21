@@ -3,6 +3,8 @@ package net.dark.spv_addon.init;
 import net.dark.spv_addon.items.custom.BatteryItem;
 import net.dark.spv_addon.items.custom.SanityRestoringItem;
 import net.dark.spv_addon.items.custom.TapeItem;
+import net.dark.spv_addon.items.custom.WaterBottleItem;
+import net.dark.spv_addon.items.custom.DirtyWaterItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -51,6 +53,12 @@ public class ModItems {
     // Tape items
     public static final Item TAPE1 = new TapeItem(new Item.Settings().maxCount(1), ModSounds.TAPE1);
 
+    // Enhanced thirst items
+    public static final Item WATER_BOTTLE = new WaterBottleItem(new Item.Settings().maxCount(16), 25, false);
+    public static final Item DIRTY_WATER = new DirtyWaterItem(new Item.Settings().maxCount(16), 10, true);
+    public static final Item PURIFIED_WATER = new WaterBottleItem(new Item.Settings().maxCount(16), 40, false);
+    public static final Item ENERGY_DRINK = new WaterBottleItem(new Item.Settings().maxCount(8), 60, false);
+
 
     public static void registerItems() {
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "battery_item"), BATTERY_ITEM);
@@ -60,6 +68,12 @@ public class ModItems {
 
 
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "tape1"), TAPE1);
+
+        // Register thirst items
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "water_bottle"), WATER_BOTTLE);
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "dirty_water"), DIRTY_WATER);
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "purified_water"), PURIFIED_WATER);
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "energy_drink"), ENERGY_DRINK);
     }
 
     private static Item register(String name, Item item) {

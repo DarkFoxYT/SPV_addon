@@ -15,11 +15,6 @@ public class Level188BackroomsLevel extends BackroomsLevel {
     }
 
     @Override
-    public boolean hasVanillaLighting() {
-        return true;
-    }
-
-    @Override
     public void register() {
     }
 

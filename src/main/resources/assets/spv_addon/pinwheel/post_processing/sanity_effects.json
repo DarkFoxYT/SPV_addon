@@ -1,0 +1,26 @@
+{
+  "stages": [
+    {
+      "type": "veil:blit",
+      "shader": "spv_addon:sanity_effects",
+      "in": "veil:post",
+      "out": "swap"
+    },
+    {
+      "type": "veil:copy",
+      "in": "swap",
+      "out": "veil:post"
+    }
+  ],
+  "framebuffers": {
+    "swap": {
+      "depth": true
+    }
+  },
+  "textures": {
+    "DepthSampler": {
+      "type": "framebuffer",
+      "name": "veil:opaque_final:depth"
+    }
+  }
+}

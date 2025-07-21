@@ -2,6 +2,7 @@ package net.dark.spv_addon.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.dark.spv_addon.cca.SanityComponent;
+import net.dark.spv_addon.sanity.SanityEffectsManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -37,7 +38,9 @@ public class SanityBar implements HudRenderCallback {
         float norm = sanity / 100f;
         int fillWidth = Math.round(norm * ICON_W);
 
-        float alpha = (sanity <= 15) ? getPulseAlpha() : 1f;
+        // Enhanced visual feedback based on sanity level
+        float alpha = getAlphaForSanity(sanity);
+        float[] color = getColorForSanity(sanity);
 
         int sh = client.getWindow().getScaledHeight();
         int x = X_MARGIN; // Juste à droite de la ThirstHud
@@ -48,12 +51,12 @@ public class SanityBar implements HudRenderCallback {
         dc.getMatrices().scale(SCALE, SCALE, SCALE);
 
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
+        RenderSystem.setShaderColor(color[0], color[1], color[2], alpha);
 
         // Fond vide
         dc.drawTexture(SANITY_EMPTY, 0, 0, 0, 0, ICON_W, ICON_H, ICON_W, ICON_H);
 
-        // Remplissage horizontal
+        // Remplissage horizontal with color tinting
         if (fillWidth > 0) {
             dc.drawTexture(
                     SANITY_FULL,
@@ -78,5 +81,83 @@ public class SanityBar implements HudRenderCallback {
         double t = Util.getMeasuringTimeMs() / 600.0;
         double sway = (Math.sin(t) + 1.0) / 2.0;
         return 0.3f + (float) (sway * 0.7f);
+    }
+
+    /**
+     * Get alpha value based on sanity level with enhanced effects
+     */
+    private float getAlphaForSanity(int sanity) {
+        if (sanity <= 5) {
+            // Extreme flashing at nightmare levels
+            double t = Util.getMeasuringTimeMs() / 200.0;
+            double flash = (Math.sin(t * 3.0) + 1.0) / 2.0;
+            return 0.2f + (float) (flash * 0.8f);
+        } else if (sanity <= 15) {
+            // Fast pulsing at critical levels
+            return getPulseAlpha();
+        } else if (sanity <= 30) {
+            // Slow pulsing at low levels
+            double t = Util.getMeasuringTimeMs() / 1000.0;
+            double sway = (Math.sin(t) + 1.0) / 2.0;
+            return 0.6f + (float) (sway * 0.4f);
+        } else {
+            return 1.0f;
+        }
+    }
+
+    /**
+     * Get color tint based on sanity level
+     */
+    private float[] getColorForSanity(int sanity) {
+        if (sanity <= 5) {
+            // Dark red for nightmare
+            return new float[]{0.8f, 0.1f, 0.1f};
+        } else if (sanity <= 15) {
+            // Red for critical
+            return new float[]{1.0f, 0.3f, 0.3f};
+        } else if (sanity <= 30) {
+            // Orange for low
+            return new float[]{1.0f, 0.6f, 0.2f};
+        } else if (sanity <= 50) {
+            // Yellow for moderate
+            return new float[]{1.0f, 0.9f, 0.4f};
+        } else {
+            // White for good
+            return new float[]{1.0f, 1.0f, 1.0f};
+        }
+    }
+
+    /**
+     * Get text color based on sanity level
+     */
+    private int getTextColorForSanity(int sanity) {
+        if (sanity <= 5) {
+            return 0xFF4444; // Dark red
+        } else if (sanity <= 15) {
+            return 0xFF6666; // Red
+        } else if (sanity <= 30) {
+            return 0xFFAA44; // Orange
+        } else if (sanity <= 50) {
+            return 0xFFDD66; // Yellow
+        } else {
+            return 0xFFFFFF; // White
+        }
+    }
+
+    /**
+     * Get status text based on sanity level
+     */
+    private String getSanityStatusText(int sanity) {
+        if (sanity <= 5) {
+            return "NIGHTMARE";
+        } else if (sanity <= 15) {
+            return "CRITICAL";
+        } else if (sanity <= 30) {
+            return "UNSTABLE";
+        } else if (sanity <= 50) {
+            return "STRESSED";
+        } else {
+            return "";
+        }
     }
 }

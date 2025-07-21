@@ -57,6 +57,12 @@ public class ModItemGroups {
                         entries.add(ModItems.CANTEEN);
                         entries.add(ModItems.TAPE1);
 
+                        // Enhanced thirst items
+                        entries.add(ModItems.WATER_BOTTLE);
+                        entries.add(ModItems.DIRTY_WATER);
+                        entries.add(ModItems.PURIFIED_WATER);
+                        entries.add(ModItems.ENERGY_DRINK);
+
                     })
                     .build()
     );

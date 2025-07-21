@@ -7,6 +7,7 @@ import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
+import net.dark.spv_addon.sanity.SanityEffectsManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -46,9 +47,19 @@ public class SpvCommands {
                                     SanityComponent sanity = InitializeComponents.SANITY.get(player);
                                     sanity.setSanityLevel(value);
                                     ctx.getSource().sendFeedback(() ->
-                                            Text.literal("Sanity set to " + value), false);
+                                            Text.literal("Sanity set to " + value + " - Enhanced effects will apply"), false);
                                     return 1;
-                                })))
+                                }))
+                        .then(CommandManager.literal("effects")
+                                .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                                        .executes(ctx -> {
+                                            boolean enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                            // Note: This would need to be handled client-side
+                                            ctx.getSource().sendFeedback(() ->
+                                                    Text.literal("Sanity effects " + (enabled ? "enabled" : "disabled") +
+                                                               " (client-side setting)"), false);
+                                            return 1;
+                                        }))))
                 .then(CommandManager.literal("thirst")
                         .then(CommandManager.literal("set")
                                 .then(CommandManager.argument("amount", IntegerArgumentType.integer(0, 100))

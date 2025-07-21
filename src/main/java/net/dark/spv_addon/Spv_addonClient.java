@@ -2,17 +2,14 @@ package net.dark.spv_addon;
 
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
-import com.sp.world.levels.BackroomsLevel;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.blocks.entities.rend.PlateBlockEntityRenderer;
 import net.dark.spv_addon.client.ClientFlashlightRendererAddon;
-import net.dark.spv_addon.client.ShaderPuddleHook;
-import net.dark.spv_addon.client.gui.BatteryHud;
-import net.dark.spv_addon.client.gui.SanityBar;
-import net.dark.spv_addon.client.gui.ThirstHud;
+import net.dark.spv_addon.client.gui.UnifiedHud;
 import net.dark.spv_addon.commands.WindowCutsceneCommand;
+import net.dark.spv_addon.sanity.SanityEffectsManager;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.IKEAWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
@@ -20,11 +17,9 @@ import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.entities.custom.StalkerEntity;
-import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
-import net.dark.spv_addon.init.grass.GodrayRenderer;
 import net.dark.spv_addon.init.grass.GrassRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -36,6 +31,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -46,26 +42,34 @@ import net.minecraft.world.World;
 public class Spv_addonClient implements ClientModInitializer {
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     private GrassRenderer grassRenderer;
-    private GodrayRenderer godrayRenderer;
+    public static Camera camera;
 
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
                 WindowCutsceneCommand.register(dispatcher));
 
-        ShaderPuddleHook.registerShaderHook();
         BlockEntityRendererFactories.register(ModBlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WindowCutsceneCommand.tick());
 
-        BatteryHud.register();
-        ThirstHud.register();
-        SanityBar.register();
+        UnifiedHud.register();
+
+        // Old individual HUDs disabled:
+        // BatteryHud.register();
+        // ThirstHud.register();
+        // SanityBar.register();
         ThirstManager.register();
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> flashlightRenderer.tick(client.getTickDelta()));
+        SanityEffectsManager.initialize();
+
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            flashlightRenderer.tick(client.getTickDelta());
+            SanityEffectsManager.getInstance().updateEffects(client.getTickDelta());
+        });
 
         FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
@@ -74,8 +78,6 @@ public class Spv_addonClient implements ClientModInitializer {
         FabricDefaultAttributeRegistry.register(ModEntities.IKEA_WALKER, IkeaWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.IKEA_WALKER, IKEAWalkerRenderer::new);
         FabricDefaultAttributeRegistry.register(ModEntities.STALKER_ENTITY, StalkerEntity.createAttributes());
-
-
 
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
@@ -107,7 +109,6 @@ public class Spv_addonClient implements ClientModInitializer {
             World clientWorld = client.world;
             if (clientWorld != null) {
 
-
                 if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
                     if (this.grassRenderer != null) {
                         this.grassRenderer.close();
@@ -120,18 +121,9 @@ public class Spv_addonClient implements ClientModInitializer {
 
                     this.grassRenderer.render();
                 }
-                if (client.world.getRegistryKey() != BackroomsLevels.LEVEL188_WORLD_KEY) {
-                    if (this.godrayRenderer != null) {
-                        this.godrayRenderer.close();
-                        this.godrayRenderer = null;
-                    }
-                } else if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
-                    if (this.godrayRenderer == null) {
-                        this.godrayRenderer = new GodrayRenderer();
-                    }
-                    this.godrayRenderer.render();
-                }
+
             }
         });
+
     }
 }

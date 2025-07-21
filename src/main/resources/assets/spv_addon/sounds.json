@@ -86,5 +86,119 @@
         "stream": false
       }
     ]
+  },
+  "sanity.whisper_1": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/whisper_1",
+        "volume": 0.6,
+        "pitch": 0.8,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.whisper_2": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/whisper_2",
+        "volume": 0.6,
+        "pitch": 0.9,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.whisper_3": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/whisper_3",
+        "volume": 0.6,
+        "pitch": 0.7,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.ambient_low": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/ambient_low",
+        "volume": 0.7,
+        "stream": true
+      }
+    ]
+  },
+  "sanity.ambient_critical": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/ambient_critical",
+        "volume": 0.8,
+        "stream": true
+      }
+    ]
+  },
+  "sanity.ambient_nightmare": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/ambient_nightmare",
+        "volume": 0.9,
+        "stream": true
+      }
+    ]
+  },
+  "sanity.heartbeat": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/heartbeat",
+        "volume": 0.4,
+        "pitch": 1.0,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.breathing": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/breathing",
+        "volume": 0.3,
+        "pitch": 0.9,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.static": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/static",
+        "volume": 0.2,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.footsteps_phantom": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/footsteps_phantom",
+        "volume": 0.4,
+        "pitch": 0.8,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.transition_critical": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/transition_critical",
+        "volume": 0.6,
+        "stream": false
+      }
+    ]
+  },
+  "sanity.transition_nightmare": {
+    "sounds": [
+      {
+        "name": "spv_addon:sanity/transition_nightmare",
+        "volume": 0.7,
+        "stream": false
+      }
+    ]
   }
 }

@@ -1,0 +1,4 @@
+{
+  "vertex": "veil:blit_screen",
+  "fragment": "spv_addon:sanity_effects"
+}

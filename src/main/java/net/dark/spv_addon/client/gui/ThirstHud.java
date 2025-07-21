@@ -1,6 +1,7 @@
 package net.dark.spv_addon.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.ThirstComponent;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -35,7 +36,9 @@ public class ThirstHud implements HudRenderCallback {
         float norm = Math.max(0, Math.min(level, 100)) / 100f;
         int filledHeight = Math.round(norm * ICON_H);
 
-        float alpha = (level <= 15) ? getPulseAlpha() : 1f;
+        // Enhanced visual feedback based on thirst level
+        float alpha = getAlphaForThirst(level);
+        float[] color = getColorForThirst(level);
 
         int sw = client.getWindow().getScaledWidth();
         int sh = client.getWindow().getScaledHeight();
@@ -53,6 +56,8 @@ public class ThirstHud implements HudRenderCallback {
         dc.drawTexture(THIRST_EMPTY, 0, 0, 0, 0, ICON_W, ICON_H, ICON_W, ICON_H);
 
         if (filledHeight > 0) {
+            // Apply color tinting based on thirst level
+            RenderSystem.setShaderColor(color[0], color[1], color[2], alpha);
             dc.drawTexture(
                     THIRST_FULL,
                     0, ICON_H - filledHeight,
@@ -66,15 +71,78 @@ public class ThirstHud implements HudRenderCallback {
         RenderSystem.disableBlend();
         dc.getMatrices().pop();
 
-        // Texte %
+        // Enhanced thirst display with status
         String txt = level + "%";
+        String statusText = ThirstManager.getThirstStatusText(level);
+
         int tw = client.textRenderer.getWidth(txt);
-        dc.drawText(client.textRenderer, txt, x + (int) (ICON_W * SCALE) / 2 - tw / 2, y + (int) (ICON_H * SCALE) + 2, 0xFFFFFF, true);
+        int statusTw = client.textRenderer.getWidth(statusText);
+
+        // Main percentage text
+        int textColor = ThirstManager.getThirstColor(level);
+        dc.drawText(client.textRenderer, txt, x + (int) (ICON_W * SCALE) / 2 - tw / 2, y + (int) (ICON_H * SCALE) + 2, textColor, true);
+
+        // Status text below percentage
+        if (!statusText.isEmpty()) {
+            dc.drawText(client.textRenderer, statusText, x + (int) (ICON_W * SCALE) / 2 - statusTw / 2, y + (int) (ICON_H * SCALE) + 14, textColor, true);
+        }
     }
 
     private float getPulseAlpha() {
         double t = Util.getMeasuringTimeMs() / 600.0;
         double sway = (Math.sin(t) + 1.0) / 2.0;
         return 0.3f + (float) (sway * 0.7f);
+    }
+
+    /**
+     * Get alpha value based on thirst level with enhanced effects
+     */
+    private float getAlphaForThirst(int thirst) {
+        if (thirst <= 0) {
+            // Extreme flashing when dying of thirst
+            double t = Util.getMeasuringTimeMs() / 150.0;
+            double flash = (Math.sin(t * 4.0) + 1.0) / 2.0;
+            return 0.1f + (float) (flash * 0.9f);
+        } else if (thirst <= 10) {
+            // Fast pulsing at dangerous levels
+            double t = Util.getMeasuringTimeMs() / 300.0;
+            double pulse = (Math.sin(t * 2.0) + 1.0) / 2.0;
+            return 0.2f + (float) (pulse * 0.8f);
+        } else if (thirst <= 20) {
+            // Regular pulsing at critical levels
+            return getPulseAlpha();
+        } else if (thirst <= 40) {
+            // Slow pulsing at low levels
+            double t = Util.getMeasuringTimeMs() / 1000.0;
+            double sway = (Math.sin(t) + 1.0) / 2.0;
+            return 0.6f + (float) (sway * 0.4f);
+        } else {
+            return 1.0f;
+        }
+    }
+
+    /**
+     * Get color tint based on thirst level
+     */
+    private float[] getColorForThirst(int thirst) {
+        if (thirst <= 0) {
+            // Dark red for dying
+            return new float[]{0.5f, 0.1f, 0.1f};
+        } else if (thirst <= 10) {
+            // Red for dangerous
+            return new float[]{1.0f, 0.2f, 0.2f};
+        } else if (thirst <= 20) {
+            // Orange red for critical
+            return new float[]{1.0f, 0.3f, 0.1f};
+        } else if (thirst <= 40) {
+            // Orange for low
+            return new float[]{1.0f, 0.6f, 0.2f};
+        } else if (thirst <= 60) {
+            // Yellow for moderate
+            return new float[]{1.0f, 0.9f, 0.4f};
+        } else {
+            // Blue for hydrated
+            return new float[]{0.4f, 0.8f, 1.0f};
+        }
     }
 }

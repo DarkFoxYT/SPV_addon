@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -127,8 +129,34 @@ public class TapeRecorderBlock extends Block implements BlockEntityProvider {
 
         ItemStack held = player.getStackInHand(hand);
         if (recorder.hasTape()) {
-            player.giveItemStack(recorder.removeTape());
-            world.setBlockState(pos, state.with(PLAYING, false));
+            // Check if tape can be removed
+            if (!recorder.canRemoveTape()) {
+                // Tape is still playing, show remaining time
+                int remainingSeconds = recorder.getRemainingPlayTimeSeconds();
+                String timeText = formatTime(remainingSeconds);
+                player.sendMessage(
+                    net.minecraft.text.Text.literal("♪ Tape is playing - " + timeText + " remaining")
+                        .formatted(net.minecraft.util.Formatting.GOLD),
+                    true
+                );
+                return ActionResult.SUCCESS;
+            }
+
+            // Stop playing when tape is removed
+            if (state.get(PLAYING)) {
+                recorder.setPlaying(false);
+            }
+
+            ItemStack removedTape = recorder.removeTape();
+            if (!removedTape.isEmpty()) {
+                player.giveItemStack(removedTape);
+                world.setBlockState(pos, state.with(PLAYING, false));
+                player.sendMessage(
+                    net.minecraft.text.Text.literal("Tape removed")
+                        .formatted(net.minecraft.util.Formatting.GREEN),
+                    true
+                );
+            }
             return ActionResult.SUCCESS;
         }
 
@@ -137,9 +165,42 @@ public class TapeRecorderBlock extends Block implements BlockEntityProvider {
             recorder.insertTape(inserted);
             SoundEvent sound = tape.getSound();
             world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            recorder.setPlaying(true);
             world.setBlockState(pos, state.with(PLAYING, true));
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return world.isClient ? null : (world1, pos, state1, blockEntity) -> {
+            if (blockEntity instanceof TapeRecorderBlockEntity recorder) {
+                recorder.tick();
+
+                // Update block state if tape finished playing
+                if (state1.get(PLAYING) && !recorder.isPlaying()) {
+                    world1.setBlockState(pos, state1.with(PLAYING, false));
+                }
+            }
+        };
+    }
+
+    /**
+     * Format time in seconds to a readable format (MM:SS)
+     */
+    private static String formatTime(int seconds) {
+        if (seconds <= 0) {
+            return "0:00";
+        }
+
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+
+        if (minutes > 0) {
+            return String.format("%d:%02d", minutes, remainingSeconds);
+        } else {
+            return String.format("0:%02d", remainingSeconds);
+        }
     }
 }

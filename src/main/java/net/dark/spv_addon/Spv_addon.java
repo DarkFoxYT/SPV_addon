@@ -8,6 +8,7 @@ import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.commands.SpvCommands;
+import net.dark.spv_addon.events.Level207AmbianceHandler;
 import net.dark.spv_addon.init.*;
 import net.dark.spv_addon.voicechat.SpvAddonVoicechatPlugin;
 import net.dark.spv_addon.world.events.LevelRunGlobalTicker;
@@ -40,6 +41,7 @@ public class Spv_addon implements ModInitializer {
         ModBlockEntities.register();
         ThirstManager.register();
         FlashlightBatteryEvents.register();
+        Level207AmbianceHandler.register();
         ModChunkGenerators.register();
         BackroomsLevels.init();
         ModItems.registerItems();
