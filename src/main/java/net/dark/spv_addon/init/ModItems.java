@@ -53,6 +53,9 @@ public class ModItems {
     // Tape items
     public static final Item TAPE1 = new TapeItem(new Item.Settings().maxCount(1), ModSounds.TAPE1);
 
+    // Cosmetic items
+    public static final Item COSMETIC_MIRROR = new net.dark.spv_addon.items.CosmeticMirrorItem(new Item.Settings().maxCount(1));
+
     // Enhanced thirst items
     public static final Item WATER_BOTTLE = new WaterBottleItem(new Item.Settings().maxCount(16), 25, false);
     public static final Item DIRTY_WATER = new DirtyWaterItem(new Item.Settings().maxCount(16), 10, true);
@@ -74,6 +77,9 @@ public class ModItems {
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "dirty_water"), DIRTY_WATER);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "purified_water"), PURIFIED_WATER);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "energy_drink"), ENERGY_DRINK);
+
+        // Register cosmetic items
+        Registry.register(Registries.ITEM, new Identifier("spv_addon", "cosmetic_mirror"), COSMETIC_MIRROR);
     }
 
     private static Item register(String name, Item item) {

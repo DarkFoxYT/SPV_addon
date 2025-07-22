@@ -2,7 +2,7 @@ package net.dark.spv_addon.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -30,6 +30,11 @@ public class SanityBar implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         PlayerEntity player = client.player;
         if (player == null) return;
+
+        // Only render if legacy sanity HUD is enabled
+        if (!SpvAddonConfig.enableLegacyHuds || !SpvAddonConfig.legacySanityHud) {
+            return;
+        }
 
         var compOpt = SanityComponent.KEY1.maybeGet(player);
         if (compOpt.isEmpty()) return;

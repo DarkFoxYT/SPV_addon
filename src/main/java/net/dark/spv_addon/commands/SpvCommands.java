@@ -51,5 +51,8 @@ public class SpvCommands {
                                     return 1;
                                 })))
         );
+
+        // Register separate cosmetics command
+        CosmeticsCommand.register(dispatcher);
     }
 }

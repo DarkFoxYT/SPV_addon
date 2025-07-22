@@ -79,6 +79,19 @@ public class SpvAddonConfig extends MidnightConfig {
     @Entry(category = "hud")
     public static int hideBelowSanity = 25;
 
+    // Legacy HUD System Configuration
+    @Entry(category = "legacy_huds")
+    public static boolean enableLegacyHuds = false;
+
+    @Entry(category = "legacy_huds")
+    public static boolean legacyBatteryHud = false;
+
+    @Entry(category = "legacy_huds")
+    public static boolean legacySanityHud = false;
+
+    @Entry(category = "legacy_huds")
+    public static boolean legacyThirstHud = false;
+
 
     @Entry(category = "hud")
     public static ColorPreset batteryColorPreset = ColorPreset.GREEN;
@@ -107,7 +120,7 @@ public class SpvAddonConfig extends MidnightConfig {
     public static float crawlingSpeedMultiplier = 0.3f;
 
     @Entry(category = "systems")
-    public static boolean allowCrawlingInWater = true;
+    public static boolean allowCrawlingInWater = false;
 
 
     @Entry(category = "systems")

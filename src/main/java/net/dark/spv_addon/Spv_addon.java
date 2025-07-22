@@ -57,6 +57,10 @@ public class Spv_addon implements ModInitializer {
 
         net.dark.spv_addon.init.crawl.CrawlSystem.initialize();
 
+        // Initialize cosmetics system
+        net.dark.spv_addon.cosmetics.SpvCosmetics.initialize();
+        net.dark.spv_addon.networking.CosmeticsUpdatePacket.registerServerReceiver();
+
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {

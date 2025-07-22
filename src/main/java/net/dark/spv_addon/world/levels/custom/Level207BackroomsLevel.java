@@ -20,6 +20,7 @@ import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,6 +48,12 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     DirectionalLight light;
     float brightness;
 
+    // Distance tracking for auto-exit
+    private static final Map<UUID, Vec3d> playerStartPositions = new HashMap<>();
+    private static final Map<UUID, Double> playerDistancesTraveled = new HashMap<>();
+    private static final double EXIT_DISTANCE = 300.0;
+    private static boolean groupExitTriggered = false;
+
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
         this.registerTransition((world, playerComponent, from) -> {
@@ -57,7 +64,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)server).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof LevelIKEA && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius) {
+            if (from instanceof Level207BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius) {
                 playerList.add(this.getPoolRoomsTransition(playerComponent));
             }
 
@@ -93,8 +100,16 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
+        this.registerEvents("ambience", net.dark.spv_addon.world.events.level207.Level207AmbienceEvent::new);
+        this.registerEvents("bellwalker_spawn", net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent::new);
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
+        // Register distance tracking system
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            if (world.getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
+                trackPlayerDistances(world);
+            }
+        });
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
@@ -110,7 +125,9 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return 100;
+        // Variable delay for more dynamic events
+        // Shorter delays for common events, longer for rare ones
+        return this.random.nextBetween(300, 1200); // 15 seconds to 1 minute
     }
 
     @Override
@@ -135,5 +152,79 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     @Override
     public int getTransitionDuration() {
         return 30;
+    }
+
+    private void trackPlayerDistances(ServerWorld world) {
+        if (groupExitTriggered) return;
+
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            UUID playerId = player.getUuid();
+            Vec3d currentPos = player.getPos();
+
+            if (!playerStartPositions.containsKey(playerId)) {
+                playerStartPositions.put(playerId, currentPos);
+                playerDistancesTraveled.put(playerId, 0.0);
+                continue;
+            }
+
+            Vec3d startPos = playerStartPositions.get(playerId);
+            double totalDistance = startPos.distanceTo(currentPos);
+            playerDistancesTraveled.put(playerId, totalDistance);
+
+            if (totalDistance >= EXIT_DISTANCE) {
+                triggerGroupExit(world);
+                break;
+            }
+        }
+
+        cleanupDisconnectedPlayers(world);
+    }
+
+    private void triggerGroupExit(ServerWorld world) {
+        groupExitTriggered = true;
+
+        List<ServerPlayerEntity> playersToTransition = new ArrayList<>();
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            playersToTransition.add(player);
+        }
+
+        for (ServerPlayerEntity player : playersToTransition) {
+            try {
+                var playerComponent = com.sp.cca_stuff.InitializeComponents.PLAYER.get(player);
+                var transition = this.getPoolRoomsTransition(playerComponent);
+
+                if (transition != null) {
+                    this.getPoolRoomsTransition(playerComponent);
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to transition player " + player.getName().getString() + ": " + e.getMessage());
+            }
+        }
+
+        playerStartPositions.clear();
+        playerDistancesTraveled.clear();
+
+        world.getServer().execute(() -> {
+            try {
+                Thread.sleep(5000);
+                groupExitTriggered = false;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+    }
+
+    /**
+     * Clean up tracking data for players who have disconnected
+     */
+    private void cleanupDisconnectedPlayers(ServerWorld world) {
+        Set<UUID> connectedPlayerIds = new HashSet<>();
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            connectedPlayerIds.add(player.getUuid());
+        }
+
+        // Remove data for disconnected players
+        playerStartPositions.entrySet().removeIf(entry -> !connectedPlayerIds.contains(entry.getKey()));
+        playerDistancesTraveled.entrySet().removeIf(entry -> !connectedPlayerIds.contains(entry.getKey()));
     }
 }

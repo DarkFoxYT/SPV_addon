@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelKittyBackroomsLevel extends BackroomsLevel {
-    private static boolean kittySpawned = false;
+    public static boolean kittySpawned = false;
     private final Random random = Random.create();
 
     public LevelKittyBackroomsLevel() {
@@ -126,8 +126,9 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        // Register the enhanced kitty meow event that drops various items
+        // Register enhanced kitty events
         this.registerEvents("kitty_drops", KittyMeowEvent::new);
+        this.registerEvents("phantom_kitty", net.dark.spv_addon.world.events.levelkitty.PhantomKittyEvent::new);
         this.registerEvents("empty", HaHvavCustomEvent::new);
 
         ServerTickEvents.END_WORLD_TICK.register(world -> {
@@ -143,7 +144,8 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
 
     @Override
     public int nextEventDelay() {
-        return this.random.nextBetween(100, 1000);
+        // More frequent events since we have more variety now
+        return this.random.nextBetween(200, 800); // Slightly more frequent than before
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -30,6 +30,11 @@ public class BatteryHud implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         PlayerEntity player = client.player;
         if (player == null) return;
+
+        // Only render if legacy battery HUD is enabled
+        if (!SpvAddonConfig.enableLegacyHuds || !SpvAddonConfig.legacyBatteryHud) {
+            return;
+        }
 
         // Hide battery HUD when sanity is below 25%
         try {

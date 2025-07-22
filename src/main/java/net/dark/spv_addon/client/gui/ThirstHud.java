@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.ThirstComponent;
-import net.dark.spv_addon.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -29,6 +29,11 @@ public class ThirstHud implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         PlayerEntity player = client.player;
         if (player == null) return;
+
+        // Only render if legacy thirst HUD is enabled
+        if (!SpvAddonConfig.enableLegacyHuds || !SpvAddonConfig.legacyThirstHud) {
+            return;
+        }
 
         ThirstComponent thirst = InitializeComponents.THIRST.getNullable(player);
         if (thirst == null) return;

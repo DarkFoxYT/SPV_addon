@@ -34,6 +34,7 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
     private boolean isAggressive = false;
     private PlayerEntity targetPlayer = null;
     private static final int AGGRO_TICKS = 3600;
+    private int disconnectionCheckTicks = 0;
 
     public KittyEntity(EntityType<? extends KittyEntity> type, World world) {
         super(type, world);
@@ -46,7 +47,8 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 40000.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0);
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0); // Complete knockback immunity
     }
 
     public double getSize() {
@@ -149,8 +151,61 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
             this.headYaw += MathHelper.wrapDegrees(targetYaw + this.headYaw) * 0.2F;
             this.headPitch += (targetPitch + this.headPitch) * 0.2F;
         }
+
+        // Check for disconnected players every 5 seconds (100 ticks)
+        disconnectionCheckTicks++;
+        if (disconnectionCheckTicks >= 100) {
+            disconnectionCheckTicks = 0;
+            checkForDisconnectedPlayers();
+        }
     }
 
+    /**
+     * Check if all players have disconnected and remove kitty if so
+     */
+    private void checkForDisconnectedPlayers() {
+        if (!this.getWorld().isClient && this.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+            // Check if there are any players in the Kitty level
+            boolean hasPlayers = !this.getWorld().getPlayers().isEmpty();
+
+            if (!hasPlayers) {
+                // No players in the level, remove the kitty
+                this.discard();
+                // Reset the spawn flag so a new kitty can spawn when players return
+                net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel.kittySpawned = false;
+            }
+        }
+    }
+
+    @Override
+    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+        // Kitty is completely immune to all damage
+        return false;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(net.minecraft.entity.damage.DamageSource damageSource) {
+        // Kitty is invulnerable to all damage sources including suffocation
+        return true;
+    }
+
+    @Override
+    public boolean cannotDespawn() {
+        // Prevent natural despawning
+        return true;
+    }
+
+    @Override
+    public boolean canBreatheInWater() {
+        // Can breathe in water (no drowning)
+        return true;
+    }
+
+    @Override
+    public boolean isFireImmune() {
+        // Immune to fire damage
+        return true;
+    }
 
     @Override
     public float getHeadYaw() {

@@ -35,6 +35,14 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.dark.spv_addon.client.render.feature.CosmeticFeatureRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 
 @Environment(EnvType.CLIENT)
 public class Spv_addonClient implements ClientModInitializer {
@@ -46,13 +54,21 @@ public class Spv_addonClient implements ClientModInitializer {
     public void onInitializeClient() {
 
         BlockEntityRendererFactories.register(ModBlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
+
         UnifiedHud.register();
+
+        net.dark.spv_addon.client.gui.BatteryHud.register();
+        net.dark.spv_addon.client.gui.SanityBar.register();
+        net.dark.spv_addon.client.gui.ThirstHud.register();
 
         ThirstManager.register();
 
         SanityEffectsManager.initialize();
 
         new net.dark.spv_addon.init.crawl.CrawlClient().onInitializeClient();
+
+        // Register cosmetic feature renderer
+        registerCosmeticRenderer();
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -86,7 +102,7 @@ public class Spv_addonClient implements ClientModInitializer {
                         });
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 2, 256));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 1, 128));
 
                     }
 
@@ -114,5 +130,15 @@ public class Spv_addonClient implements ClientModInitializer {
             }
         });
 
+    }
+
+    private void registerCosmeticRenderer() {
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+            if (entityType == EntityType.PLAYER) {
+                if (entityRenderer instanceof PlayerEntityRenderer playerRenderer) {
+                    registrationHelper.register(new CosmeticFeatureRenderer<>(playerRenderer, context.getHeldItemRenderer()));
+                }
+            }
+        });
     }
 }

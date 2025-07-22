@@ -99,8 +99,9 @@ public class UnifiedHud implements HudRenderCallback {
         boolean flashlightOn = isFlashlightOn(player);
         boolean isCrawling = isCrawling(player);
 
-        // Update and render battery with fade
-        if (SpvAddonConfig.showBatteryHud && SpvAddonConfig.enableBatterySystem) {
+        // Update and render battery with fade (only if legacy battery HUD is not enabled)
+        if (SpvAddonConfig.showBatteryHud && SpvAddonConfig.enableBatterySystem &&
+            !(SpvAddonConfig.enableLegacyHuds && SpvAddonConfig.legacyBatteryHud)) {
             boolean isBatteryChanging = BatteryManager.isBatteryChanging(player.getUuid());
             boolean shouldShowBattery = flashlightOn || battery <= SpvAddonConfig.showBatteryThreshold || isBatteryChanging;
             float batteryAlpha = updateFadeState("battery", shouldShowBattery);
@@ -119,8 +120,9 @@ public class UnifiedHud implements HudRenderCallback {
             }
         }
 
-        // Update and render sanity with fade - show when value changes or is low
-        if (SpvAddonConfig.showSanityHud && SpvAddonConfig.enableSanitySystem) {
+        // Update and render sanity with fade - show when value changes or is low (only if legacy sanity HUD is not enabled)
+        if (SpvAddonConfig.showSanityHud && SpvAddonConfig.enableSanitySystem &&
+            !(SpvAddonConfig.enableLegacyHuds && SpvAddonConfig.legacySanityHud)) {
             boolean shouldShowSanity = sanity < 90 || hasValueChanged("sanity", sanity);
             float sanityAlpha = updateFadeStateWithValue("sanity", shouldShowSanity, sanity);
             if (sanityAlpha > 0.0f) {
@@ -131,8 +133,9 @@ public class UnifiedHud implements HudRenderCallback {
             }
         }
 
-        // Update and render thirst with fade - show when value changes or is low
-        if (SpvAddonConfig.showThirstHud && SpvAddonConfig.enableThirstSystem) {
+        // Update and render thirst with fade - show when value changes or is low (only if legacy thirst HUD is not enabled)
+        if (SpvAddonConfig.showThirstHud && SpvAddonConfig.enableThirstSystem &&
+            !(SpvAddonConfig.enableLegacyHuds && SpvAddonConfig.legacyThirstHud)) {
             boolean shouldShowThirst = thirst < 90 || hasValueChanged("thirst", thirst);
             float thirstAlpha = updateFadeStateWithValue("thirst", shouldShowThirst, thirst);
             if (thirstAlpha > 0.0f) {
