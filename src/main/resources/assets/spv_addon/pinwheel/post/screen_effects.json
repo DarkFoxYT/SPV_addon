@@ -1,0 +1,62 @@
+{
+  "stages": [
+    {
+      "type": "veil:blit",
+      "shader": "spv_addon:screen_effects/glitch",
+      "in": "minecraft:main",
+      "out": "spv_addon:glitch_pass"
+    },
+    {
+      "type": "veil:blit",
+      "shader": "spv_addon:screen_effects/static",
+      "in": "spv_addon:glitch_pass",
+      "out": "spv_addon:static_pass"
+    },
+    {
+      "type": "veil:blit",
+      "shader": "spv_addon:screen_effects/flicker",
+      "in": "spv_addon:static_pass",
+      "out": "spv_addon:flicker_pass"
+    },
+    {
+      "type": "veil:blit",
+      "shader": "spv_addon:screen_effects/final",
+      "in": "spv_addon:flicker_pass",
+      "out": "veil:post"
+    }
+  ],
+  "framebuffers": {
+    "spv_addon:glitch_pass": {
+      "depth": true
+    },
+    "spv_addon:static_pass": {
+      "depth": true
+    },
+    "spv_addon:flicker_pass": {
+      "depth": true
+    }
+  },
+  "textures": {
+    "DepthSampler": {
+      "type": "framebuffer",
+      "name": "veil:opaque_final:depth"
+    },
+    "NormalSampler": {
+      "type": "framebuffer",
+      "name": "veil:opaque",
+      "sampler": 2
+    },
+    "NoiseTexture": {
+      "type": "location",
+      "location": "spv_addon:textures/shaders/noise.png"
+    },
+    "StaticTexture": {
+      "type": "location",
+      "location": "spv_addon:textures/shaders/static.png"
+    },
+    "GlitchTexture": {
+      "type": "location",
+      "location": "spv_addon:textures/shaders/glitch.png"
+    }
+  }
+}
