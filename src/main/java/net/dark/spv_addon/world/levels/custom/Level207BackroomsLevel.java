@@ -20,6 +20,7 @@ import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
+import net.dark.spv_addon.world.levels.managers.Level207Manager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -56,6 +57,11 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
+
+        // Initialize Level 207 manager
+        Level207Manager.initialize();
+
+        // Keep the old transition system as a backup/alternative exit method
         this.registerTransition((world, playerComponent, from) -> {
             List<BackroomsLevel.LevelTransition> playerList = new ArrayList();
             int exitRadius = ConfigStuff.exitSpawnRadius;
@@ -141,12 +147,15 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
 
     public void transitionOut(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
-
+        // Handle player leaving Level 207
+        if (crossDimensionTeleport.playerComponent().player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
+            Level207Manager.handlePlayerLeaveLevel207(serverPlayer);
+        }
     }
 
     @Override
     public void transitionIn(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
-
+        // Level 207 initialization is handled automatically by the manager
     }
 
     @Override

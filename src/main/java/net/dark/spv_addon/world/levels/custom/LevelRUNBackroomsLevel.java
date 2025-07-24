@@ -6,6 +6,7 @@ import com.sp.world.levels.BackroomsLevel;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.run.RunChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
+import net.dark.spv_addon.world.levels.managers.LevelRunManager;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
@@ -18,6 +19,9 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
 
     public LevelRUNBackroomsLevel() {
         super("run", RunChunkGenerator.CODEC, new Vec3d(-7.5, 1, 7.5), BackroomsLevels.LEVELRUN_WORLD_KEY, "spv_addon");
+
+        // Initialize Level RUN manager
+        LevelRunManager.initialize();
     }
 
     @Override
@@ -58,11 +62,16 @@ public class LevelRUNBackroomsLevel extends BackroomsLevel {
 
     @Override
     public void transitionOut(CrossDimensionTeleport teleport) {
+        // Handle player leaving Level RUN
+        if (teleport.playerComponent().player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
+            LevelRunManager.handlePlayerLeaveLevelRun(serverPlayer);
+        }
     }
 
     @Override
     public void transitionIn(CrossDimensionTeleport teleport) {
         teleport.playerComponent().loadPlayerSavedInventory();
+        // Level RUN initialization is handled automatically by the manager
     }
 
 }

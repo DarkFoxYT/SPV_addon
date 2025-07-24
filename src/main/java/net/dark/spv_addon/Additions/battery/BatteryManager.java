@@ -1,7 +1,9 @@
 package net.dark.spv_addon.Additions.battery;
 
 import com.sp.init.BackroomsLevels;
+import net.dark.spv_addon.init.config.ServerConfig;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.random.Random;
 import org.slf4j.Logger;
@@ -53,8 +55,8 @@ public class BatteryManager {
     /**
      * Check if battery is enabled for the player's current dimension
      */
-    public static boolean isBatteryEnabledForPlayer(PlayerEntity player) {
-        if (!batteryEnabled) return false;
+    public static boolean isBatteryEnabledForPlayer(PlayerEntity player, MinecraftServer server) {
+        if (!batteryEnabled || !ServerConfig.isBatterySystemEnabled(server)) return false;
 
         // Disable battery in poolrooms
         if (player instanceof ServerPlayerEntity serverPlayer) {
@@ -66,18 +68,29 @@ public class BatteryManager {
         return true;
     }
 
+    /**
+     * Legacy method for backward compatibility
+     */
+    public static boolean isBatteryEnabledForPlayer(PlayerEntity player) {
+        return isBatteryEnabledForPlayer(player, null);
+    }
+
     public static void drainBattery(UUID uuid, int amount) {
-        drainBattery(uuid, amount, null);
+        drainBattery(uuid, amount, null, null);
+    }
+
+    public static void drainBattery(UUID uuid, int amount, PlayerEntity player) {
+        drainBattery(uuid, amount, player, null);
     }
 
     /**
      * Enhanced battery drain with health degradation and poolrooms check
      */
-    public static void drainBattery(UUID uuid, int amount, PlayerEntity player) {
+    public static void drainBattery(UUID uuid, int amount, PlayerEntity player, MinecraftServer server) {
         if (!batteryEnabled) return;
 
         // Check if battery should be disabled for this player
-        if (player != null && !isBatteryEnabledForPlayer(player)) {
+        if (player != null && !isBatteryEnabledForPlayer(player, server)) {
             return;
         }
 
@@ -89,10 +102,11 @@ public class BatteryManager {
         }
         lastDrainTime.put(uuid, currentTime);
 
-        // Calculate effective drain based on battery health
+        // Calculate effective drain based on battery health and server settings
         int health = getBatteryHealth(uuid);
         float healthMultiplier = health / (float)MAX_BATTERY_HEALTH;
-        int effectiveDrain = Math.round(amount / healthMultiplier);
+        float drainRateMultiplier = server != null ? ServerConfig.getBatteryDrainRate(server) : 1.0f;
+        int effectiveDrain = Math.round(amount * drainRateMultiplier / healthMultiplier);
 
         // Apply drain
         int newValue = Math.max(0, getBattery(uuid) - effectiveDrain);
@@ -102,7 +116,7 @@ public class BatteryManager {
         if (random.nextFloat() < HEALTH_DEGRADATION_CHANCE) {
             int newHealth = Math.max(20, health - 1); // Minimum 20% health
             setBatteryHealth(uuid, newHealth);
-            LOGGER.debug("Battery health degraded to {}% for player {}", newHealth, uuid);
+            // Removed debug logging for production
         }
 
         // Special effects based on battery level
@@ -147,7 +161,7 @@ public class BatteryManager {
         int newValue = Math.min(maxCapacity, currentBattery + amount);
         batteryLevels.put(uuid, newValue);
 
-        LOGGER.debug("Recharged battery to {}% (max capacity: {}%) for player {}", newValue, maxCapacity, uuid);
+        // Removed debug logging for production
     }
 
     /**
@@ -158,7 +172,7 @@ public class BatteryManager {
         int newHealth = Math.min(MAX_BATTERY_HEALTH, currentHealth + healthAmount);
         setBatteryHealth(uuid, newHealth);
 
-        LOGGER.debug("Repaired battery health to {}% for player {}", newHealth, uuid);
+        // Removed debug logging for production
     }
 
     /**
@@ -181,7 +195,7 @@ public class BatteryManager {
      */
     public static void startBatteryChanging(UUID uuid) {
         batteryChangingTime.put(uuid, System.currentTimeMillis());
-        LOGGER.debug("Started battery changing for player {}", uuid);
+        // Removed debug logging for production
     }
 
     /**

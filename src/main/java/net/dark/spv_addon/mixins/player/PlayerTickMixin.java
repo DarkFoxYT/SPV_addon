@@ -3,7 +3,7 @@ package net.dark.spv_addon.mixins.player;
 import com.sp.init.BackroomsLevels;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
-import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.ServerConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
@@ -29,14 +29,15 @@ public abstract class PlayerTickMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
-        // Check if sanity system is enabled
-        if (!SpvAddonConfig.enableSanitySystem) return;
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+
+        // Check if sanity system is enabled via server config
+        if (!ServerConfig.isSanitySystemEnabled(player.getServer())) return;
 
         tickCounter++;
         if (tickCounter >= 140) { // 7 seconds at 20 TPS (140 ticks)
             tickCounter = 0;
 
-            ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
             ServerWorld world = player.getServerWorld();
             BlockPos playerPos = player.getBlockPos();
             SanityComponent sanity = InitializeComponents.SANITY.get(player);
@@ -61,7 +62,7 @@ public abstract class PlayerTickMixin {
             }
 
             boolean nearSanityLight = false;
-            int lightRange = SpvAddonConfig.sanityLightRange;
+            int lightRange = 10; // Default sanity light range
 
             for (BlockPos pos : BlockPos.iterateOutwards(playerPos, lightRange, 5, lightRange)) {
                 if (world.getBlockState(pos).isIn(SANITY_LIGHT_TAG)) {
@@ -94,7 +95,8 @@ public abstract class PlayerTickMixin {
 
 
             if (!nearSanityLight) {
-                sanity.decreaseSanity(Math.round(SpvAddonConfig.sanityDrainRate));
+                float drainRate = ServerConfig.getSanityDrainRate(player.getServer());
+                sanity.decreaseSanity(Math.round(drainRate));
             }
         }
     }

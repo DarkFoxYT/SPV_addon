@@ -24,10 +24,16 @@ public class InitializeComponents implements EntityComponentInitializer {
             ComponentRegistry.getOrCreate(new Identifier("spv_addon", "sanity"), SanityComponent.class);
     public static final ComponentKey<RunTimerComponent> RUN_TIMER =
             ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "run_timer"), RunTimerComponent.class);
+
+    public static final ComponentKey<LevelRunComponent> LEVEL_RUN =
+            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "level_run"), LevelRunComponent.class);
+
+    public static final ComponentKey<Level207Component> LEVEL207 =
+            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "level207"), Level207Component.class);
+
     public static final ComponentKey<net.dark.spv_addon.cca.DeathTeleportComponent> DEATH_TELEPORT =
             ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "death_teleport"), net.dark.spv_addon.cca.DeathTeleportComponent.class);
-    public static final ComponentKey<net.dark.spv_addon.cca.CosmeticsComponent> COSMETICS =
-            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Spv_addon.MOD_ID, "cosmetics"), net.dark.spv_addon.cca.CosmeticsComponent.class);
+
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
@@ -37,7 +43,9 @@ public class InitializeComponents implements EntityComponentInitializer {
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
         registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);
         registry.registerForPlayers(RUN_TIMER, player -> new RunTimerComponent(), RespawnCopyStrategy.ALWAYS_COPY);
-        registry.registerForPlayers(COSMETICS, player -> new net.dark.spv_addon.cca.CosmeticsComponent(), RespawnCopyStrategy.ALWAYS_COPY);
+        registry.registerForPlayers(LEVEL_RUN, player -> new LevelRunComponent(player), RespawnCopyStrategy.NEVER_COPY);
+        registry.registerForPlayers(LEVEL207, player -> new Level207Component(player), RespawnCopyStrategy.NEVER_COPY);
+
 
 
     }

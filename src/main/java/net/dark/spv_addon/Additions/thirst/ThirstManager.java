@@ -3,7 +3,7 @@ package net.dark.spv_addon.Additions.thirst;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
-import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.ServerConfig;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.CustomDamageSources;
 import net.dark.spv_addon.init.ModSounds;
@@ -65,7 +65,8 @@ public class ThirstManager {
     }
 
     private static void onServerTick(MinecraftServer server) {
-        if (!enabled) return;
+        // Check if thirst system is enabled via server config/gamerules
+        if (!enabled || !ServerConfig.isThirstSystemEnabled(server)) return;
 
         tickCounter++;
 
@@ -77,7 +78,7 @@ public class ThirstManager {
             int requiredTicks = (thirst <= THIRST_CRITICAL) ? FAST_INTERVAL_TICKS : INTERVAL_TICKS;
 
             if (tickCounter >= requiredTicks) {
-                tickPlayer(player);
+                tickPlayer(player, server);
             }
         }
 
@@ -90,27 +91,24 @@ public class ThirstManager {
     /**
      * Enhanced player thirst processing with environmental effects and progressive symptoms
      */
-    private static void tickPlayer(ServerPlayerEntity player) {
+    private static void tickPlayer(ServerPlayerEntity player, MinecraftServer server) {
         try {
-            // Check if thirst system is enabled
-            if (!SpvAddonConfig.enableThirstSystem) return;
-
             ThirstComponent comp = InitializeComponents.THIRST.get(player);
             SanityComponent sanityComp = InitializeComponents.SANITY.get(player);
             int currentThirst = comp.getThirst();
 
             // Calculate thirst drain based on multiple factors
-            float drainAmount = calculateThirstDrain(player) * SpvAddonConfig.thirstDrainRate;
+            float drainAmount = calculateThirstDrain(player) * ServerConfig.getThirstDrainRate(server);
 
-            // Apply environmental multipliers
-            drainAmount *= getEnvironmentalMultiplier(player) * SpvAddonConfig.thirstEnvironmentalMultiplier;
+            // Apply environmental multipliers (using default 1.5f multiplier)
+            drainAmount *= getEnvironmentalMultiplier(player) * 1.5f;
 
             // Apply the drain
             int newThirst = MathHelper.clamp(currentThirst - Math.round(drainAmount), 0, 100);
             comp.setThirst(newThirst);
 
             // Apply progressive effects based on thirst level
-            applyThirstEffects(player, newThirst, currentThirst);
+            applyThirstEffects(player, newThirst, currentThirst, server);
 
             // Handle thirst level changes
             if (newThirst != currentThirst) {
@@ -196,7 +194,7 @@ public class ThirstManager {
     /**
      * Apply progressive thirst effects based on current thirst level
      */
-    private static void applyThirstEffects(ServerPlayerEntity player, int thirst, int previousThirst) {
+    private static void applyThirstEffects(ServerPlayerEntity player, int thirst, int previousThirst, MinecraftServer server) {
         SanityComponent sanityComp = InitializeComponents.SANITY.get(player);
 
         // Clear previous thirst effects first
@@ -204,10 +202,10 @@ public class ThirstManager {
 
         if (thirst <= THIRST_DYING) {
             // 0% - Dying of thirst
-            applyDyingEffects(player, sanityComp);
+            applyDyingEffects(player, sanityComp, server);
         } else if (thirst <= THIRST_DANGEROUS) {
             // 1-10% - Dangerous dehydration
-            applyDangerousEffects(player, sanityComp);
+            applyDangerousEffects(player, sanityComp, server);
         } else if (thirst <= THIRST_CRITICAL) {
             // 11-20% - Critical dehydration
             applyCriticalEffects(player, sanityComp);
@@ -224,7 +222,7 @@ public class ThirstManager {
     /**
      * Apply dying of thirst effects (0% thirst)
      */
-    private static void applyDyingEffects(ServerPlayerEntity player, SanityComponent sanityComp) {
+    private static void applyDyingEffects(ServerPlayerEntity player, SanityComponent sanityComp, MinecraftServer server) {
         // Severe status effects
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, FAST_INTERVAL_TICKS + 20, 3, true, false));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, FAST_INTERVAL_TICKS + 20, 2, true, false));
@@ -257,7 +255,7 @@ public class ThirstManager {
     /**
      * Apply dangerous dehydration effects (1-10% thirst)
      */
-    private static void applyDangerousEffects(ServerPlayerEntity player, SanityComponent sanityComp) {
+    private static void applyDangerousEffects(ServerPlayerEntity player, SanityComponent sanityComp, MinecraftServer server) {
         // Strong status effects
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, FAST_INTERVAL_TICKS + 20, 2, true, false));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, FAST_INTERVAL_TICKS + 20, 1, true, false));
@@ -270,12 +268,12 @@ public class ThirstManager {
         }
 
         // Configurable damage
-        if (SpvAddonConfig.thirstDamageEnabled && random.nextFloat() < 0.2f) {
+        if (ServerConfig.isThirstDamageEnabled(server) && random.nextFloat() < 0.2f) {
             RegistryEntry<DamageType> entry = player.getWorld()
                     .getRegistryManager()
                     .get(RegistryKeys.DAMAGE_TYPE)
                     .entryOf(CustomDamageSources.THIRST_DAMAGE_ID);
-            player.damage(new DamageSource(entry), SpvAddonConfig.thirstDamageAmount);
+            player.damage(new DamageSource(entry), 1.5f); // Default damage amount
         }
 
         // Visual effects

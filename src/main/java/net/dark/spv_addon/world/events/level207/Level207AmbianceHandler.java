@@ -39,10 +39,10 @@ public class Level207AmbianceHandler {
         if (isInLevel207 && !wasInLevel207) {
             startAmbianceForPlayer(player);
             playersInLevel207.put(playerId, true);
-            LOGGER.debug("Player {} entered Level 207, starting ambiance", player.getName().getString());
+            // Removed debug logging for production
         } else if (!isInLevel207 && wasInLevel207) {
             playersInLevel207.put(playerId, false);
-            LOGGER.debug("Player {} left Level 207", player.getName().getString());
+            // Removed debug logging for production
         }
     }
     

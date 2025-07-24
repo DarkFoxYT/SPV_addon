@@ -35,14 +35,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.dark.spv_addon.client.render.feature.CosmeticFeatureRenderer;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
+
 
 @Environment(EnvType.CLIENT)
 public class Spv_addonClient implements ClientModInitializer {
@@ -67,8 +60,7 @@ public class Spv_addonClient implements ClientModInitializer {
 
         new net.dark.spv_addon.init.crawl.CrawlClient().onInitializeClient();
 
-        // Register cosmetic feature renderer
-        registerCosmeticRenderer();
+
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -132,13 +124,5 @@ public class Spv_addonClient implements ClientModInitializer {
 
     }
 
-    private void registerCosmeticRenderer() {
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-            if (entityType == EntityType.PLAYER) {
-                if (entityRenderer instanceof PlayerEntityRenderer playerRenderer) {
-                    registrationHelper.register(new CosmeticFeatureRenderer<>(playerRenderer, context.getHeldItemRenderer()));
-                }
-            }
-        });
-    }
+
 }

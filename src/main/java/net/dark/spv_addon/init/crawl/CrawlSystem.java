@@ -1,6 +1,6 @@
 package net.dark.spv_addon.init.crawl;
 
-import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.init.config.ServerConfig;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -20,8 +20,8 @@ public class CrawlSystem {
         ServerPlayNetworking.registerGlobalReceiver(CRAWL_IDENTIFIER, (server, player, handler, buf, responseSender) -> {
             boolean val = buf.readBoolean();
             server.execute(() -> {
-                // Check if crawling is enabled
-                if (SpvAddonConfig.enableCrawling) {
+                // Check if crawling is enabled via server config
+                if (ServerConfig.isCrawlingEnabled(server)) {
                     player.getDataTracker().set(Shared.CRAWL_REQUEST, val);
                 }
             });
@@ -34,10 +34,10 @@ public class CrawlSystem {
         public static final TrackedData<Boolean> CRAWL_REQUEST = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
         /**
-         * Get crawling dimensions from config
+         * Get crawling dimensions - using default values for server compatibility
          */
         public static EntityDimensions getCrawlingDimensions() {
-            return new EntityDimensions(SpvAddonConfig.crawlingWidth, SpvAddonConfig.crawlingHeight, false);
+            return new EntityDimensions(0.6f, 0.6f, false); // Default dimensions
         }
     }
 }

@@ -25,9 +25,7 @@ import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
 
 import static com.sp.SPBRevamped.sendBlackScreenPacket;
 
@@ -57,9 +55,11 @@ public class Spv_addon implements ModInitializer {
 
         net.dark.spv_addon.init.crawl.CrawlSystem.initialize();
 
-        // Initialize cosmetics system
-        net.dark.spv_addon.cosmetics.SpvCosmetics.initialize();
-        net.dark.spv_addon.networking.CosmeticsUpdatePacket.registerServerReceiver();
+        // Initialize level managers
+        net.dark.spv_addon.world.levels.managers.LevelRunManager.initialize();
+        net.dark.spv_addon.world.levels.managers.Level207Manager.initialize();
+
+
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
@@ -88,32 +88,8 @@ public class Spv_addon implements ModInitializer {
                 playerComponent.setShouldDoStatic(false);
                 playerComponent.sync();
                 com.sp.SPBRevamped.sendBlackScreenPacket(newPlayer, 60, true, false);
-                boolean backupInvulnerable = newPlayer.getAbilities().invulnerable;
                 newPlayer.getAbilities().invulnerable = true;
-                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-                executorService.schedule(() -> {
-                    try {
-                        playerComponent.setShouldRender(true);
-                        playerComponent.setShouldDoStatic(true);
-                        playerComponent.sync();
-                        newPlayer.getAbilities().invulnerable = backupInvulnerable;
 
-                        executorService.schedule(() -> {
-                            try {
-                                playerComponent.setShouldDoStatic(false);
-                                playerComponent.sync();
-                            } catch (Exception e) {
-                                LOGGER.error("Error stopping static effect: ", e);
-                            } finally {
-                                executorService.shutdown();
-                            }
-                        }, 4, TimeUnit.SECONDS);
-
-                    } catch (Exception e) {
-                        LOGGER.error("Error in respawn restoration: ", e);
-                        executorService.shutdown();
-                    }
-                }, 3, TimeUnit.SECONDS);
 
             } catch (Exception e) {
                 LOGGER.error("Error in AFTER_RESPAWN event: ", e);

@@ -10,12 +10,11 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-import static com.sp.init.BackroomsLevels.LEVEL0_WORLD_KEY;
-import static com.sp.init.BackroomsLevels.LEVEL1_WORLD_KEY;
+import static com.sp.init.BackroomsLevels.*;
 import static net.dark.spv_addon.init.BackroomsLevels.LEVELRUN_WORLD_KEY;
 
 public class LevelRunGlobalTicker {
-    private static final boolean IS_DEV = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+    private static final boolean IS_DEV = false; // Disabled for production
     private static final Random RANDOM = new Random();
     private static boolean levelRunUsed = false;
     private static final int LEVEL_RUN_CHANCE = IS_DEV ? 1000 : 50000;
@@ -42,9 +41,8 @@ public class LevelRunGlobalTicker {
     }
 
     private static boolean isEligibleForLevelRunTransition(RegistryKey<World> worldKey) {
-        return worldKey.equals(LEVEL0_WORLD_KEY) ||
-               worldKey.equals(LEVEL1_WORLD_KEY) ||
-               worldKey.equals(com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY);
+        return worldKey.equals(LEVEL1_WORLD_KEY) || worldKey.equals(LEVEL2_WORLD_KEY) ||
+               worldKey.equals(com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY) || worldKey.equals(INFINITE_FIELD_WORLD_KEY);
     }
 
     private static void checkForRareLevelRunTransition(MinecraftServer server, ServerPlayerEntity triggerPlayer) {

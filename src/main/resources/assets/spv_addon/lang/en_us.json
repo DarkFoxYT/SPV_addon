@@ -33,10 +33,10 @@
   "Flash.on": "Flashlight on",
 
 
-  "key.spv_addon.crawl": "Crawl",
+  "key.spv_addon.crawl": "Crawl Key",
 
 
-  "category.spv_addon.movement": "SPV Addon Movement",
+  "category.spv_addon.movement": "The Volatile Addon",
 
   "hud.spv_addon.crawling": "Crawling",
   "hud.spv_addon.battery": "Battery",
@@ -49,6 +49,7 @@
   "spv_addon.midnightconfig.category.systems": "Game Systems (Singleplayer Only)",
   "spv_addon.midnightconfig.category.visual_effects": "Visual Effects",
   "spv_addon.midnightconfig.category.audio": "Audio Settings",
+  "spv_addon.midnightconfig.category.legacy_huds": "Legacy HUD",
   "spv_addon.midnightconfig.category.performance": "Performance",
 
 
@@ -61,6 +62,14 @@
 
   "spv_addon.midnightconfig.enableUnifiedHud": "Enable Unified HUD",
   "spv_addon.midnightconfig.enableUnifiedHud.tooltip": "Shows battery, sanity, and thirst as clean text in the top-right corner",
+  "spv_addon.midnightconfig.enableLegacyHuds": "Enable Legacy HUD's",
+  "spv_addon.midnightconfig.enableLegacyHuds.tooltip": "Shows battery, sanity, and thirst's old ui's",
+  "spv_addon.midnightconfig.legacyBatteryHud": "Enable Legacy Battery HUD",
+  "spv_addon.midnightconfig.legacyBatteryHud.tooltip": "Shows battery's old ui's",
+  "spv_addon.midnightconfig.legacySanityHud": "Enable Legacy Sanity HUD",
+  "spv_addon.midnightconfig.legacySanityHud.tooltip": "Shows sanity's old ui's",
+  "spv_addon.midnightconfig.legacyThirstHud": "Enable Legacy Thirst HUD",
+  "spv_addon.midnightconfig.legacyThirstHud.tooltip": "Shows thirst's old ui's",
   "spv_addon.midnightconfig.hudFadeDuration": "HUD Fade Duration",
   "spv_addon.midnightconfig.hudFadeDuration.tooltip": "How long HUD elements take to fade in/out (in milliseconds)",
   "spv_addon.midnightconfig.hudMarginTop": "HUD Top Margin",
@@ -168,21 +177,21 @@
   "spv_addon.midnightconfig.updateFrequency": "Update Frequency",
   "spv_addon.midnightconfig.optimizeRendering": "Optimize Rendering",
   "spv_addon.midnightconfig.reduceParticles": "Reduce Particles",
-  "spv_addon.midnightconfig.enum.colorpreset.RED": "Red Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.GREEN": "Green Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.BLUE": "Blue Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.YELLOW": "Yellow Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.ORANGE": "Orange Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.PURPLE": "Purple Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.CYAN": "Cyan Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.MAGENTA": "Magenta Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.WHITE": "White Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.GRAY": "Gray Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.LIME": "Lime Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.PINK": "Pink Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.TEAL": "Teal Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.INDIGO": "Indigo Theme",
-  "spv_addon.midnightconfig.enum.colorpreset.GOLD": "Gold Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.RED": "Red Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.GREEN": "Green Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.BLUE": "Blue Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.YELLOW": "Yellow Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.ORANGE": "Orange Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.PURPLE": "Purple Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.CYAN": "Cyan Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.MAGENTA": "Magenta Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.WHITE": "White Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.GRAY": "Gray Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.LIME": "Lime Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.PINK": "Pink Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.TEAL": "Teal Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.INDIGO": "Indigo Theme",
+  "spv_addon.midnightconfig.enum.ColorPreset.GOLD": "Gold Theme",
 
   "spv_addon.hud.state.good": "Good",
   "spv_addon.hud.state.low": "Low",
@@ -209,21 +218,6 @@
 
   "commands.spv.battery.success": "Battery set to %s%%",
   "commands.spv.sanity.success": "Sanity set to %s%%",
-  "commands.spv.thirst.success": "Thirst set to %s%%",
+  "commands.spv.thirst.success": "Thirst set to %s%%"
 
-  "item.spv_addon.cosmetic_mirror": "Cosmetic Mirror",
-  "gui.spv_addon.cosmetics.title": "Cosmetics",
-  "gui.spv_addon.cosmetics.apply": "Apply",
-  "gui.cancel": "Cancel",
-
-  "cosmetic.spv_addon.head.kitty_plush_head": "Kitty Plushie Hat",
-  "cosmetic.spv_addon.head.battery_hat": "Battery Hat",
-  "cosmetic.spv_addon.head.canteen_hat": "Canteen Hat",
-  "cosmetic.spv_addon.head.almond_bottle_hat": "Almond Water Hat",
-  "cosmetic.spv_addon.back.tape_recorder_back": "Tape Recorder Backpack",
-  "cosmetic.spv_addon.back.battery_pack": "Battery Pack",
-  "cosmetic.spv_addon.chest.cross_pendant": "Cross Pendant",
-  "cosmetic.spv_addon.accessory.water_bottle_accessory": "Water Bottle Charm",
-  "cosmetic.spv_addon.accessory.energy_drink_accessory": "Energy Drink Charm",
-  "cosmetic.spv_addon.none": "None"
 }

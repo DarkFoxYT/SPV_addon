@@ -6,6 +6,8 @@ import net.dark.spv_addon.Additions.battery.BatteryManager;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
+import net.dark.spv_addon.world.levels.managers.LevelRunManager;
+import net.dark.spv_addon.world.levels.managers.Level207Manager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,7 +20,7 @@ import net.minecraft.text.Text;
 public class SpvCommands {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("spv")
+        dispatcher.register(CommandManager.literal("volatile")
                 .then(CommandManager.literal("battery")
                         .then(CommandManager.argument("value", IntegerArgumentType.integer(0, 100))
                                 .executes(ctx -> {
@@ -50,9 +52,8 @@ public class SpvCommands {
                                             Text.literal("Thirst set to " + value + "%"), false);
                                     return 1;
                                 })))
+
         );
 
-        // Register separate cosmetics command
-        CosmeticsCommand.register(dispatcher);
     }
 }

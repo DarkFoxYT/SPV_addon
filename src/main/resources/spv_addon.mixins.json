@@ -3,23 +3,22 @@
   "package": "net.dark.spv_addon.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "misc.MixinMinecraftClient",
-    "player.PlayerDeathMixin",
-    "player.PlayerEntityMixin",
-    "player.PlayerTickMixin",
-    "misc.TitleTextMixin",
-    "crawl.PlayerEntityCrawlMixin",
     "blocks.CeilingLightBlockEntityMixin",
     "blocks.CeilingLightMixin",
-    "blocks.ClientWrapperMixin",
     "blocks.EmergencyLightBlockEntityMixin",
-    "blocks.EmergencyLightBlockMixin"
+    "blocks.EmergencyLightBlockMixin",
+    "crawl.PlayerEntityCrawlMixin",
+    "player.PlayerDeathMixin",
+    "player.PlayerEntityMixin",
+    "player.PlayerTickMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
+    "blocks.ClientWrapperMixin",
+    "crawl.ClientPlayerEntityCrawlMixin",
     "misc.MixinMinecraftClient",
-    "crawl.ClientPlayerEntityCrawlMixin"
+    "misc.TitleTextMixin"
   ]
 }

@@ -33,7 +33,7 @@ public class BackroomsLevels {
 
 
     public static void init() {
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL105_BACKROOMS_LEVEL);
+        //com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL105_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVELRUN_BACKROOMS_LEVEL);
         //com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_IKEA_BACKROOMS_LEVEL);
         com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_KITTY_BACKROOMS_LEVEL);
