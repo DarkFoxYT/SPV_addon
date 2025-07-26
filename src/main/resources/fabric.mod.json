@@ -34,8 +34,7 @@
       "spv_addon:sanity",
       "spv_addon:run_timer",
       "spv_addon:death_teleport",
-      "spv_addon:level_run",
-      "spv_addon:level207"
+      "spv_addon:level_run"
     ]
   },
   "mixins": [

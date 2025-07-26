@@ -38,7 +38,7 @@ public abstract class CeilingLightBlockEntityMixin {
                 light.setColor(1.0F, 0.0F, 0.8F);
 
                 System.out.println("[Mixin] Adjusted light properties for Kitty world.");
-            }if (world.getRegistryKey().equals(BackroomsLevels.LEVEL105_WORLD_KEY)) {
+            }if (world.getRegistryKey().equals(BackroomsLevels.LEVEL188_WORLD_KEY)) {
                 light.setBrightness(brightness);
                 light.setAngle((float) Math.toRadians(angle));
                 light.setColor(1.0F, 1.0F, 1.0F);

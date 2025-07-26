@@ -49,24 +49,45 @@ public class LevelRunManager {
     }
     
     private static boolean isPlayerInLevelRun(ServerPlayerEntity player) {
-        return player.getWorld().getRegistryKey().equals(BackroomsLevels.LEVELRUN_WORLD_KEY);
+        try {
+            if (player == null || player.getWorld() == null || BackroomsLevels.LEVELRUN_WORLD_KEY == null) {
+                return false;
+            }
+            return player.getWorld().getRegistryKey().equals(BackroomsLevels.LEVELRUN_WORLD_KEY);
+        } catch (Exception e) {
+            LOGGER.warn("Error checking if player is in Level RUN: {}", e.getMessage());
+            return false;
+        }
     }
     
     private static void processLevelRunPlayer(ServerPlayerEntity player) {
-        LevelRunComponent runComponent = net.dark.spv_addon.cca.InitializeComponents.LEVEL_RUN.get(player);
-        
-        // Initialize if player just entered
-        if (!runComponent.isInLevelRun()) {
-            runComponent.enterLevelRun();
-            sendWelcomeMessage(player);
-        }
-        
-        // Tick the component (handles damage and distance tracking)
-        runComponent.tick();
-        
-        // Send progress updates periodically
-        if (player.age % 200 == 0) { // Every 10 seconds
-            sendProgressUpdate(player, runComponent);
+        try {
+            if (player == null) {
+                return;
+            }
+
+            LevelRunComponent runComponent = net.dark.spv_addon.cca.InitializeComponents.LEVEL_RUN.get(player);
+            if (runComponent == null) {
+                LOGGER.warn("LevelRunComponent is null for player {}", player.getName().getString());
+                return;
+            }
+
+            // Initialize if player just entered
+            if (!runComponent.isInLevelRun()) {
+                runComponent.enterLevelRun();
+                sendWelcomeMessage(player);
+            }
+
+            // Tick the component (handles damage and distance tracking)
+            runComponent.tick();
+
+            // Send progress updates periodically (removed as requested)
+            if (player.age % 200 == 0) { // Every 10 seconds
+                sendProgressUpdate(player, runComponent);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error processing Level RUN player {}: {}",
+                player != null ? player.getName().getString() : "null", e.getMessage());
         }
     }
     

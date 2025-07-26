@@ -1,5 +1,6 @@
 package net.dark.spv_addon;
 
+import com.sp.render.ShadowMapRenderer;
 import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
@@ -16,6 +17,7 @@ import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.entities.custom.StalkerEntity;
+import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
@@ -94,7 +96,7 @@ public class Spv_addonClient implements ClientModInitializer {
                         });
 
 
-                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 1, 128));
+                        PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 2, 256));
 
                     }
 
@@ -105,6 +107,14 @@ public class Spv_addonClient implements ClientModInitializer {
             MinecraftClient client = MinecraftClient.getInstance();
             World clientWorld = client.world;
             if (clientWorld != null) {
+
+                if (clientWorld.getRegistryKey() == BackroomsLevels.LEVEL188_WORLD_KEY) {
+                    if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
+                        if (camera != null) {
+                            ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
+                        }
+                    }
+                }
 
                 if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
                     if (this.grassRenderer != null) {

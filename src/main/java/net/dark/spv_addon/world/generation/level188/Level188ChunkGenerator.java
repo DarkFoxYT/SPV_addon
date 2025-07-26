@@ -4,12 +4,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sp.init.ModBlocks;
 import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
+import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
+import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
@@ -30,6 +35,7 @@ import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -43,9 +49,13 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final BiomeSource biomeSource;
+    private final Random random = Random.create();
     private static final int STRUCTURE_X = 0;
-    private static final int STRUCTURE_Y = 60;
+    private static final int STRUCTURE_Y = 0;
     private static final int STRUCTURE_Z = 0;
+    private static final int STRUCTURE_WIDTH = 64;
+    private static final int STRUCTURE_HEIGHT = 100;
+    private static final int STRUCTURE_DEPTH = 64;
 
     public Level188ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
@@ -56,6 +66,23 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
     @Override
     protected Codec<? extends ChunkGenerator> getCodec() {
         return CODEC;
+    }
+
+    @Override
+    public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
+        int chunkX = chunk.getPos().x;
+        int chunkZ = chunk.getPos().z;
+        int chunkStartX = chunkX * 16;
+        int chunkStartZ = chunkZ * 16;
+        int chunkEndX = chunkStartX + 16;
+        int chunkEndZ = chunkStartZ + 16;
+
+        // Check if this chunk intersects with the structure bounds
+        if (chunkStartX < STRUCTURE_X + STRUCTURE_WIDTH && chunkEndX > STRUCTURE_X &&
+            chunkStartZ < STRUCTURE_Z + STRUCTURE_DEPTH && chunkEndZ > STRUCTURE_Z) {
+
+            generateLargeStructureFromTemplate(world, chunk, chunkStartX, chunkStartZ);
+        }
     }
 
     @Override
@@ -84,17 +111,15 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
-        return CompletableFuture.supplyAsync(() -> {
-            generateLevel188Terrain(chunk);
-            return chunk;
-        }, executor);
+        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
-        // Check if we're at the structure location
-        if (x == STRUCTURE_X && z == STRUCTURE_Z) {
-            return STRUCTURE_Y + 10; // Structure height estimate
+        // Check if we're within the structure bounds
+        if (x >= STRUCTURE_X && x < STRUCTURE_X + STRUCTURE_WIDTH &&
+            z >= STRUCTURE_Z && z < STRUCTURE_Z + STRUCTURE_DEPTH) {
+            return STRUCTURE_Y + STRUCTURE_HEIGHT; // Structure height
         }
         return 1; // Flat ground level
     }
@@ -107,7 +132,9 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
             int worldY = world.getBottomY() + y;
             if (worldY == 0) {
                 states[y] = ModBlocks.CONCRETE_BLOCK_1.getDefaultState(); // Flat ground
-            } else if (x == STRUCTURE_X && z == STRUCTURE_Z && worldY >= STRUCTURE_Y && worldY < STRUCTURE_Y + 10) {
+            } else if (x >= STRUCTURE_X && x < STRUCTURE_X + STRUCTURE_WIDTH &&
+                       z >= STRUCTURE_Z && z < STRUCTURE_Z + STRUCTURE_DEPTH &&
+                       worldY >= STRUCTURE_Y && worldY < STRUCTURE_Y + STRUCTURE_HEIGHT) {
                 states[y] = ModBlocks.CONCRETE_BLOCK_1.getDefaultState(); // Structure blocks
             } else {
                 states[y] = Blocks.AIR.getDefaultState(); // Air everywhere else
@@ -124,73 +151,87 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     public void generate(StructureWorldAccess world, Chunk chunk) {}
 
-    private void generateLevel188Terrain(Chunk chunk) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        BlockState groundBlock = ModBlocks.CONCRETE_BLOCK_1.getDefaultState();
+    private void generateLargeStructureFromTemplate(StructureWorldAccess world, Chunk chunk, int chunkStartX, int chunkStartZ) {
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
 
-        // Generate flat ground at Y=0
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                mutable.set(x, 0, z);
-                chunk.setBlockState(mutable, groundBlock, false);
+        StructureTemplateManager mgr = server.getStructureTemplateManager();
+
+        // Calculate which chunk we're in relative to the structure origin
+        int relativeChunkX = chunkStartX / 16;
+        int relativeChunkZ = chunkStartZ / 16;
+
+        // Only place structures if we're within the 4x4 chunk area (64x64 blocks)
+        if (relativeChunkX >= 0 && relativeChunkX < 4 && relativeChunkZ >= 0 && relativeChunkZ < 4) {
+
+            // Determine which structure template to use based on position
+            Identifier structureId;
+            if (relativeChunkX == 0 && relativeChunkZ == 0) {
+                // Corner piece - entrance or special room
+                structureId = new Identifier(Spv_addon.MOD_ID, "level188/entrance");
+            } else if (relativeChunkX == 3 && relativeChunkZ == 3) {
+                // Opposite corner - exit or special room
+                structureId = new Identifier(Spv_addon.MOD_ID, "level188/exit");
+            } else {
+                // Regular room pieces - use different variants
+                int variant = ((relativeChunkX + relativeChunkZ) % 4) + 1;
+                structureId = new Identifier(Spv_addon.MOD_ID, "level188/room" + variant);
             }
-        }
 
-        // Generate single structure at 0, 60, 0 if this chunk contains that position
-        int chunkX = chunk.getPos().x;
-        int chunkZ = chunk.getPos().z;
+            Optional<StructureTemplate> optTemplate = mgr.getTemplate(structureId);
+            if (optTemplate.isEmpty()) {
+                // Fallback: generate a simple structure if template doesn't exist
+                generateFallbackStructure(world, chunk, chunkStartX, chunkStartZ);
+                return;
+            }
 
-        // Check if structure coordinates fall within this chunk
-        if (STRUCTURE_X >= chunkX * 16 && STRUCTURE_X < (chunkX + 1) * 16 &&
-            STRUCTURE_Z >= chunkZ * 16 && STRUCTURE_Z < (chunkZ + 1) * 16) {
+            StructureTemplate template = optTemplate.get();
 
-            // Convert world coordinates to chunk-local coordinates
-            int localX = STRUCTURE_X - (chunkX * 16);
-            int localZ = STRUCTURE_Z - (chunkZ * 16);
+            // Calculate the exact position for this chunk's structure
+            BlockPos basePos = new BlockPos(chunkStartX, STRUCTURE_Y, chunkStartZ);
 
-            generateStructure(chunk, localX, localZ);
+            StructurePlacementData placementData = new StructurePlacementData()
+                    .setMirror(BlockMirror.NONE)
+                    .setRotation(BlockRotation.NONE)
+                    .setIgnoreEntities(true);
+
+            // Place the template for this chunk
+            template.place(world, basePos, basePos, placementData, random, 2);
         }
     }
 
-    private void generateStructure(Chunk chunk, int localX, int localZ) {
+    private void generateFallbackStructure(StructureWorldAccess world, Chunk chunk, int chunkStartX, int chunkStartZ) {
+        // Fallback method that generates a simple 64x100x64 structure when template is not found
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         BlockState structureBlock = ModBlocks.CONCRETE_BLOCK_1.getDefaultState();
 
-        // Generate a simple tower structure at the specified location
-        for (int y = STRUCTURE_Y; y < STRUCTURE_Y + 10; y++) {
-            // Create a 3x3 platform at the base
-            if (y == STRUCTURE_Y) {
-                for (int x = localX - 1; x <= localX + 1; x++) {
-                    for (int z = localZ - 1; z <= localZ + 1; z++) {
-                        if (x >= 0 && x < 16 && z >= 0 && z < 16) {
-                            mutable.set(x, y, z);
-                            chunk.setBlockState(mutable, structureBlock, false);
-                        }
-                    }
-                }
-            }
-            // Create walls for the tower
-            else if (y < STRUCTURE_Y + 9) {
-                for (int x = localX - 1; x <= localX + 1; x++) {
-                    for (int z = localZ - 1; z <= localZ + 1; z++) {
-                        if (x >= 0 && x < 16 && z >= 0 && z < 16) {
-                            // Only place blocks on the edges (walls)
-                            if (x == localX - 1 || x == localX + 1 || z == localZ - 1 || z == localZ + 1) {
-                                mutable.set(x, y, z);
-                                chunk.setBlockState(mutable, structureBlock, false);
-                            }
-                        }
-                    }
-                }
-            }
-            // Create roof
-            else if (y == STRUCTURE_Y + 9) {
-                for (int x = localX - 1; x <= localX + 1; x++) {
-                    for (int z = localZ - 1; z <= localZ + 1; z++) {
-                        if (x >= 0 && x < 16 && z >= 0 && z < 16) {
-                            mutable.set(x, y, z);
-                            chunk.setBlockState(mutable, structureBlock, false);
-                        }
+        // Calculate the intersection of this chunk with the structure bounds
+        int structureStartX = Math.max(STRUCTURE_X, chunkStartX);
+        int structureEndX = Math.min(STRUCTURE_X + STRUCTURE_WIDTH, chunkStartX + 16);
+        int structureStartZ = Math.max(STRUCTURE_Z, chunkStartZ);
+        int structureEndZ = Math.min(STRUCTURE_Z + STRUCTURE_DEPTH, chunkStartZ + 16);
+
+        // Generate the structure part that falls within this chunk
+        for (int worldX = structureStartX; worldX < structureEndX; worldX++) {
+            for (int worldZ = structureStartZ; worldZ < structureEndZ; worldZ++) {
+                // Convert world coordinates to chunk-local coordinates
+                int localX = worldX - chunkStartX;
+                int localZ = worldZ - chunkStartZ;
+
+                // Calculate relative position within the structure
+                int relativeX = worldX - STRUCTURE_X;
+                int relativeZ = worldZ - STRUCTURE_Z;
+
+                // Generate structure blocks from Y=0 to Y=99 (100 blocks high)
+                for (int y = STRUCTURE_Y; y < STRUCTURE_Y + STRUCTURE_HEIGHT; y++) {
+                    // Create hollow structure with walls only on the edges
+                    boolean isEdge = (relativeX == 0 || relativeX == STRUCTURE_WIDTH - 1 ||
+                                     relativeZ == 0 || relativeZ == STRUCTURE_DEPTH - 1 ||
+                                     y == STRUCTURE_Y || y == STRUCTURE_Y + STRUCTURE_HEIGHT - 1);
+
+                    if (isEdge && localX >= 0 && localX < 16 && localZ >= 0 && localZ < 16) {
+                        BlockPos worldPos = new BlockPos(worldX, y, worldZ);
+                        world.setBlockState(worldPos, structureBlock, 3);
                     }
                 }
             }

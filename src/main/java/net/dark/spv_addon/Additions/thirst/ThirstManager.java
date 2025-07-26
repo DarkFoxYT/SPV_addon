@@ -174,7 +174,7 @@ public class ThirstManager {
         // Dimension-based multipliers
         if (world.getRegistryKey().getValue().equals(com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY.getValue())) {
             return POOLROOMS_MULTIPLIER; // Humid but still dehydrating
-        } else if (world.getRegistryKey().getValue().equals(BackroomsLevels.LEVEL105_WORLD_KEY.getValue())) {
+        } else if (world.getRegistryKey().getValue().equals(BackroomsLevels.LEVEL188_WORLD_KEY.getValue())) {
             return LEVEL188_MULTIPLIER; // Cooler environment
         }
 

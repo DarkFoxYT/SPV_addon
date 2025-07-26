@@ -60,14 +60,6 @@ SPV Addon is a comprehensive content expansion for [Space Potatoes Backrooms Mod
 - **Interactive Elements**: Cat-themed blocks and lighting systems
 - **Safe Haven**: Relatively peaceful level for recovery
 
-### 🔊 **Level 207**
-- **Audio Nightmare**: Level focused on sound-based horror with dynamic ambiance
-- **Time-Based Exit**: Automatic escape after 3-4 minutes with glitching effects
-- **Death Transitions**:
-  - **Singleplayer**: Death teleports you to Level 207 (between Kitty and Poolrooms)
-  - **Multiplayer**: After 2 player deaths, all players get teleported to Level 207
-- **Glitching Sequence**: SPB-Revamped style noclipping and visual effects during exit
-- **Random Destinations**: Escape leads to different levels based on game mode
 
 ---
 
@@ -136,8 +128,6 @@ SPV Addon is a comprehensive content expansion for [Space Potatoes Backrooms Mod
 - `/spv thirst <0-100>` - Set player thirst level
 - `/spv sanity <0-100>` - Set player sanity level
 - `/spv run progress` - Check Level RUN progress and distance traveled
-- `/spv 207 status` - Check Level 207 timer and status
-- `/spv 207 trigger` - Force trigger Level 207 exit (admin only)
 
 ---
 
@@ -284,16 +274,7 @@ SPV Addon is a comprehensive content expansion for [Space Potatoes Backrooms Mod
 - **Entity Spawning**: Smilers spawn every 40 ticks to increase difficulty
 - **One-Time Event**: Level RUN can only be triggered once per server session
 
-### 🔊 **Level 207 Exit & Death System**
-- **Time-Based Escape**: Automatic exit after 3-4 minutes (randomized)
-- **Glitching Sequence**: SPB-Revamped style visual effects and noclipping during exit
-- **Death-Based Transitions**:
-  - **Singleplayer Mode**: Any death teleports player to Level 207
-  - **Multiplayer Mode**: After 2 total player deaths, all players teleport to Level 207
-- **Smart Destinations**:
-  - **Singleplayer**: Exits to Level Kitty or Poolrooms
-  - **Multiplayer**: Exits to Poolrooms, Level 0, or Level 1
-- **Progress Tracking**: Real-time countdown and status monitoring
+
 
 ### 🌐 **Multiplayer Features**
 - **Synchronized Systems**: All players share the same survival mechanics

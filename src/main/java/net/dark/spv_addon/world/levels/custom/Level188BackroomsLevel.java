@@ -18,11 +18,11 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level105BackroomsLevel extends BackroomsLevel {
+public class Level188BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
 
-    public Level105BackroomsLevel() {
-        super("level105", Level188ChunkGenerator.CODEC, new Vec3d(16, 60, 16), BackroomsLevels.LEVEL105_WORLD_KEY, "spv_addon");
+    public Level188BackroomsLevel() {
+        super("level188", Level188ChunkGenerator.CODEC, new Vec3d(16, 60, 16), BackroomsLevels.LEVEL188_WORLD_KEY, "spv_addon");
 
         // Register transition from Poolrooms to Level 105
         com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL.registerTransition((world, playerComponent, from) -> {
@@ -37,7 +37,7 @@ public class Level105BackroomsLevel extends BackroomsLevel {
             }
 
             return playerList;
-        }, "poolrooms -> level105");
+        }, "poolrooms -> level188");
 
         // Register transition from Level 105 to Infinite Fields
         this.registerTransition((world, playerComponent, from) -> {
@@ -47,12 +47,12 @@ public class Level105BackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof Level105BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL105_WORLD_KEY) {
+            if (from instanceof Level188BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL188_WORLD_KEY) {
                 playerList.add(this.getInfiniteFieldsTransition(playerComponent));
             }
 
             return playerList;
-        }, "level105 -> infinite_fields");
+        }, "level188 -> infinite_fields");
 
         // Register transition from Infinite Fields back to Level 105
         com.sp.init.BackroomsLevels.INFINITE_FIELD_BACKROOMS_LEVEL.registerTransition((world, playerComponent, from) -> {
@@ -67,7 +67,7 @@ public class Level105BackroomsLevel extends BackroomsLevel {
             }
 
             return playerList;
-        }, "infinite_fields -> level105");
+        }, "infinite_fields -> level188");
     }
 
     private BackroomsLevel.LevelTransition getLevel105Transition(PlayerComponent playerComponent) {
@@ -88,7 +88,7 @@ public class Level105BackroomsLevel extends BackroomsLevel {
                     teleport.playerComponent().sync();
                 }
             }
-        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL, BackroomsLevels.LEVEL105_BACKROOMS_LEVEL), (teleport, tick) -> {
+        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL, BackroomsLevels.LEVEL188_BACKROOMS_LEVEL), (teleport, tick) -> {
             teleport.playerComponent().setShouldNoClip(false);
             teleport.playerComponent().sync();
         });
@@ -136,10 +136,16 @@ public class Level105BackroomsLevel extends BackroomsLevel {
                     teleport.playerComponent().sync();
                 }
             }
-        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.INFINITE_FIELD_BACKROOMS_LEVEL, BackroomsLevels.LEVEL105_BACKROOMS_LEVEL), (teleport, tick) -> {
+        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.INFINITE_FIELD_BACKROOMS_LEVEL, BackroomsLevels.LEVEL188_BACKROOMS_LEVEL), (teleport, tick) -> {
             teleport.playerComponent().setShouldNoClip(false);
             teleport.playerComponent().sync();
         });
+
+    }
+
+    @Override
+    public boolean hasVanillaLighting() {
+        return true;
     }
 
     @Override

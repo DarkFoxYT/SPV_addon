@@ -1,5 +1,5 @@
 {
-  "type": "spb-revamped:poolrooms_type",
+  "type": "spv_addon:level188",
   "generator": {
     "type": "spv_addon:level188_chunk_generator",
     "settings": "spb-revamped:level0",

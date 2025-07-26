@@ -57,7 +57,6 @@ public class Spv_addon implements ModInitializer {
 
         // Initialize level managers
         net.dark.spv_addon.world.levels.managers.LevelRunManager.initialize();
-        net.dark.spv_addon.world.levels.managers.Level207Manager.initialize();
 
 
 
