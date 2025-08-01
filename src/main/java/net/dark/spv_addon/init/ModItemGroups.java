@@ -60,7 +60,6 @@ public class ModItemGroups {
                         // Enhanced thirst items
                         entries.add(ModItems.WATER_BOTTLE);
                         entries.add(ModItems.DIRTY_WATER);
-                        entries.add(ModItems.PURIFIED_WATER);
                         entries.add(ModItems.ENERGY_DRINK);
 
                     })

@@ -14,22 +14,17 @@ public class ShadowMapRendererMixin {
 
     /**
      * @author DarkFox Studios
-     * @reason Add conditional shadow rotation based on world type
+     * @reason Add conditional shadow rotation based on world.
+     * note : noon 85°, day 0°, sunrise 20°, midnight 70°
      */
     @Overwrite
     public static void rotateShadowModelView(Matrix4f shadowModelView, World world) {
-        // Check if we're in poolrooms world
         if (world.getRegistryKey().equals(com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY)) {
-            // Use the original poolrooms day cycle rotation
             shadowModelView.rotate(RotationAxis.POSITIVE_X.rotationDegrees(PoolroomsDayCycle.getSunAngle()));
-        }
-        // Check if we're in level188 world
-        else if (world.getRegistryKey().equals(BackroomsLevels.LEVEL188_WORLD_KEY)) {
-            // Set fixed rotation to 30 degrees for level188
+        } else if (world.getRegistryKey().equals(BackroomsLevels.LEVEL188_WORLD_KEY)) {
             shadowModelView.rotate(RotationAxis.POSITIVE_X.rotationDegrees(30));
-        }
-        // For other worlds, use default rotation
-        else {
+            shadowModelView.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(10));
+        } else {
             shadowModelView.rotate(RotationAxis.POSITIVE_X.rotationDegrees(140));
         }
     }

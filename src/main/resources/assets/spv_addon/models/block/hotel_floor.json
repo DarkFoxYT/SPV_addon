@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "spv_addon:block/hotel_floor_color"
+    "all": "spv_addon:block/pbr/hotel_floor/hotel_floor_color"
   }
 }

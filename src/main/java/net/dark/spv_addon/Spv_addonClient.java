@@ -91,13 +91,12 @@ public class Spv_addonClient implements ClientModInitializer {
 
                         BlockIdMap.registerBlockID(blockIdMap -> {
                             blockIdMap.put(ModBlocks.KITTY_FLOOR, 4500);
-                            blockIdMap.put(ModBlocks.LE_FLOOR, 4501);
-
+                            blockIdMap.put(ModBlocks.HOTEL_FLOOR, 4501);
                         });
 
 
                         PbrRegistry.registerPBR(ModBlocks.KITTY_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 2, 256));
-
+                        //PbrRegistry.registerPBR(ModBlocks.HOTEL_FLOOR, new PbrRegistry.PbrMaterial(false, 0, 2, 256));
                     }
 
                 });
@@ -115,6 +114,18 @@ public class Spv_addonClient implements ClientModInitializer {
                         }
                     }
                 }
+
+
+
+                if (clientWorld.getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+                    if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
+                        if (camera != null) {
+                            ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
+                        }
+                    }
+                }
+
+
 
                 if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
                     if (this.grassRenderer != null) {

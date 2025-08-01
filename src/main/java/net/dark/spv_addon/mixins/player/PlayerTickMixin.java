@@ -48,16 +48,7 @@ public abstract class PlayerTickMixin {
             boolean inField = world.getRegistryKey().equals(BackroomsLevels.INFINITE_FIELD_WORLD_KEY);
             boolean inKitty = world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY);
 
-            if (inPool) {
-                return;
-            }
-            if (in207) {
-                return;
-            }
-            if (inField) {
-                return;
-            }
-            if (inKitty) {
+            if (inPool || in207 || inField || inKitty) {
                 return;
             }
 

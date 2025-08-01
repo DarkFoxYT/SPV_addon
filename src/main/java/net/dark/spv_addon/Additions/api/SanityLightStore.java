@@ -37,7 +37,7 @@ public class SanityLightStore {
     }
 }
 
-/* (pour blocs personnalisés si besoin)
+/* (for custom blocks)
 @Override
 public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
     if (!world.isClient) {

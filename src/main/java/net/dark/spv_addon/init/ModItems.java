@@ -58,7 +58,6 @@ public class ModItems {
     // Enhanced thirst items
     public static final Item WATER_BOTTLE = new WaterBottleItem(new Item.Settings().maxCount(16), 25, false);
     public static final Item DIRTY_WATER = new DirtyWaterItem(new Item.Settings().maxCount(16), 10, true);
-    public static final Item PURIFIED_WATER = new WaterBottleItem(new Item.Settings().maxCount(16), 40, false);
     public static final Item ENERGY_DRINK = new WaterBottleItem(new Item.Settings().maxCount(8), 60, false);
 
 
@@ -74,7 +73,6 @@ public class ModItems {
         // Register thirst items
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "water_bottle"), WATER_BOTTLE);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "dirty_water"), DIRTY_WATER);
-        Registry.register(Registries.ITEM, new Identifier("spv_addon", "purified_water"), PURIFIED_WATER);
         Registry.register(Registries.ITEM, new Identifier("spv_addon", "energy_drink"), ENERGY_DRINK);
 
 

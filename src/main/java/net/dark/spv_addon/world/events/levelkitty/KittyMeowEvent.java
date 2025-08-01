@@ -19,7 +19,6 @@ public class KittyMeowEvent extends AbstractEvent {
         ModItems.CANTEEN,           // Sanity restoring item
         ModItems.ALMOND_BOTTLE,     // Almond water
         ModItems.BATTERY_ITEM,      // Battery for flashlight
-        ModItems.PURIFIED_WATER,    // Better hydration
         ModItems.ENERGY_DRINK       // High-tier hydration
     };
 
@@ -45,7 +44,7 @@ public class KittyMeowEvent extends AbstractEvent {
 
             // Create item stack with random count for some items
             ItemStack itemStack;
-            if (selectedItem == ModItems.WATER_BOTTLE || selectedItem == ModItems.PURIFIED_WATER) {
+            if (selectedItem == ModItems.WATER_BOTTLE) {
                 itemStack = new ItemStack(selectedItem, 1 + rand.nextInt(3)); // 1-3 bottles
             } else if (selectedItem == ModItems.BATTERY_ITEM) {
                 itemStack = new ItemStack(selectedItem, 1); // Always 1 battery
