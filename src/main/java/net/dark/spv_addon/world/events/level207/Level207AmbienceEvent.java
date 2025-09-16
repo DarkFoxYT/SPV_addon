@@ -1,38 +1,40 @@
 package net.dark.spv_addon.world.events.level207;
 
-import com.sp.world.events.AbstractEvent;
-import net.dark.spv_addon.init.ModSounds;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.world.World;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.registry.Registries;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
 
-public class Level207AmbienceEvent extends AbstractEvent {
-    private static final int AMBIENCE_INTERVAL = 440; // duration in ticks (20 ticks = 1 second, 400 = 20 sec)
-    private int ticks = 0;
+public final class Level207AmbienceEvent {
+    private static final Identifier LEVEL_207_ID   = new Identifier("spv_addon", "level_207"); // <-- change si besoin
+    private static final Identifier AMBIENT_SOUND  = new Identifier("spv_addon", "music/level207_amb"); // ton SoundEvent
 
-    @Override
-    public void init(World world) {
-        playAmbience(world);
-        this.ticks = 0;
-    }
+    private static PositionedSoundInstance current;
 
-    @Override
-    public void ticks(int ticks, World world) {
-        this.ticks++;
-        // Loop sound every interval
-        if (this.ticks % AMBIENCE_INTERVAL == 0) {
-            playAmbience(world);
-        }
-    }
+    public static void init() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.isPaused()) return;
 
-    private void playAmbience(World world) {
-        // Play for all players in the dimension
-        world.getPlayers().forEach(player -> {
-            player.playSound(ModSounds.LEVEL_207_AMBIANCE, SoundCategory.AMBIENT, 1.0F, 1.0F);
+            boolean in207 = client.world != null && client.world.getRegistryKey().getValue().equals(LEVEL_207_ID);
+
+            if (!in207) {
+                // stop si on quitte
+                if (current != null) {
+                    client.getSoundManager().stop(current);
+                    current = null;
+                }
+                return;
+            }
+
+            // si pas en cours, on (re)lance instantanément
+            if (current == null || !client.getSoundManager().isPlaying(current)) {
+                SoundEvent ev = Registries.SOUND_EVENT.get(AMBIENT_SOUND);
+                if (ev != null) {
+                    current = PositionedSoundInstance.master(ev, 1.0f, 1.0f); // volume=1, pitch=1
+                    client.getSoundManager().play(current);
+                }
+            }
         });
-    }
-
-    @Override
-    public int duration() {
-        return Integer.MAX_VALUE; // Run "forever" (until the player leaves or level changes)
     }
 }

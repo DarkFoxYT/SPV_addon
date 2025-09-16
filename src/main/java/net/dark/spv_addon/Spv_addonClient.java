@@ -8,6 +8,7 @@ import foundry.veil.platform.VeilEventPlatform;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.blocks.entities.rend.PlateBlockEntityRenderer;
 import net.dark.spv_addon.Additions.api.ClientFlashlightRendererAddon;
+import net.dark.spv_addon.client.effects.StaticifyController;
 import net.dark.spv_addon.client.gui.UnifiedHud;
 import net.dark.spv_addon.Additions.sanity.SanityEffectsManager;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
@@ -22,6 +23,7 @@ import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.init.grass.GrassRenderer;
+import net.dark.spv_addon.world.events.misc.LevelRunSpawner;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,6 +45,7 @@ import net.minecraft.world.World;
 public class Spv_addonClient implements ClientModInitializer {
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     private GrassRenderer grassRenderer;
+    private StaticifyController staticifyController;
     public static Camera camera;
 
     @Override
@@ -55,10 +58,10 @@ public class Spv_addonClient implements ClientModInitializer {
         net.dark.spv_addon.client.gui.BatteryHud.register();
         net.dark.spv_addon.client.gui.SanityBar.register();
         net.dark.spv_addon.client.gui.ThirstHud.register();
+        LevelRunSpawner.init();
 
         ThirstManager.register();
 
-        SanityEffectsManager.initialize();
 
         new net.dark.spv_addon.init.crawl.CrawlClient().onInitializeClient();
 
@@ -116,6 +119,7 @@ public class Spv_addonClient implements ClientModInitializer {
                 }
 
 
+                SanityEffectsManager.initialize();
 
                 if (clientWorld.getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
                     if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
@@ -139,6 +143,7 @@ public class Spv_addonClient implements ClientModInitializer {
 
                     this.grassRenderer.render();
                 }
+
 
             }
         });

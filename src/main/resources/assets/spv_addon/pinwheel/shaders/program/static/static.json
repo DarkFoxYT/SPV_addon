@@ -1,0 +1,4 @@
+{
+  "vertex": "spv_addon:static/static",
+  "fragment": "spv_addon:static/static"
+}

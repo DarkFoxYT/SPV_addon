@@ -25,7 +25,7 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
 
     public Level207BackroomsLevel() {
-        super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 66, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
+        super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 22, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
 
         this.registerTransition((world, playerComponent, from) -> {
             List<BackroomsLevel.LevelTransition> playerList = new ArrayList();
@@ -63,7 +63,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        this.registerEvents("ambience", net.dark.spv_addon.world.events.level207.Level207AmbienceEvent::new);
         this.registerEvents("bellwalker_spawn", net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent::new);
         this.registerEvents("empty", HaHvavCustomEvent::new);
 

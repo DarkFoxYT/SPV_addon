@@ -2,9 +2,7 @@ package net.dark.spv_addon.world.generation.level188;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sp.init.ModBlocks;
 import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
-import net.dark.spv_addon.Spv_addon;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -16,9 +14,6 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
@@ -33,8 +28,8 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
+import net.minecraft.util.math.random.Random;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -64,29 +59,25 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
-        int chunkX = chunk.getPos().x;
-        int chunkZ = chunk.getPos().z;
+        int cx = chunk.getPos().x;
+        int cz = chunk.getPos().z;
+        if (cx != 0 || cz != 0) return;
 
-        // Only spawn the structure at chunk coordinates (0,0) which contains world coordinates (0,0,0)
-        if (chunkX == 0 && chunkZ == 0) {
-            MinecraftServer server = world.getServer();
-            if (server == null) return;
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
 
-            StructureTemplateManager mgr = server.getStructureTemplateManager();
-            Identifier roomId = new Identifier(Spv_addon.MOD_ID, "level105/room1");
-            Optional<StructureTemplate> optTpl = mgr.getTemplate(roomId);
+        StructureTemplateManager mgr = server.getStructureTemplateManager();
+        Identifier id = new Identifier("spv_addon", "level188/root_64x64");
+        Optional<StructureTemplate> tpl = mgr.getTemplate(id);
+        if (tpl.isEmpty()) return;
 
-            if (optTpl.isPresent()) {
-                BlockPos basePos = new BlockPos(0, 100, 0);
+        BlockPos base = new BlockPos(0, 100, 0);
+        StructurePlacementData data = new StructurePlacementData()
+                .setMirror(BlockMirror.NONE)
+                .setRotation(BlockRotation.NONE)
+                .setIgnoreEntities(true);
 
-                StructurePlacementData placeData = new StructurePlacementData()
-                        .setMirror(BlockMirror.NONE)
-                        .setRotation(BlockRotation.NONE)
-                        .setIgnoreEntities(true);
-
-                optTpl.get().place(world, basePos, basePos, placeData, random, 2);
-            }
-        }
+        tpl.get().place(world, base, base, data, random, 2);
     }
 
     @Override
@@ -120,27 +111,20 @@ public class Level188ChunkGenerator extends BackroomsChunkGenerator {
 
     @Override
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
-        // Check if we're within the 64x64 structure bounds at 0,0,0
-        if (x >= 0 && x < 64 && z >= 0 && z < 64) {
-            return 100; // Structure height (64x100x64)
-        }
-        return 1; // Flat ground level
+        if (x >= 0 && x < 64 && z >= 0 && z < 64) return 100;
+        return 1;
     }
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        BlockState[] states = new BlockState[world.getHeight()];
-
-        for (int y = 0; y < states.length; y++) {
-            int worldY = world.getBottomY() + y;
-            if (worldY == 0) {
-                states[y] = ModBlocks.CONCRETE_BLOCK_1.getDefaultState(); // Flat ground
-            } else {
-                states[y] = Blocks.AIR.getDefaultState(); // Air everywhere else (structure will be placed by template)
-            }
+        int h = world.getHeight();
+        BlockState[] states = new BlockState[h];
+        int bottom = world.getBottomY();
+        for (int i = 0; i < h; i++) {
+            int y = bottom + i;
+            states[i] = (y == 0) ? Blocks.BEDROCK.getDefaultState() : Blocks.AIR.getDefaultState();
         }
-
-        return new VerticalBlockSample(world.getBottomY(), states);
+        return new VerticalBlockSample(bottom, states);
     }
 
     public void generate(StructureWorldAccess world, Chunk chunk) {}

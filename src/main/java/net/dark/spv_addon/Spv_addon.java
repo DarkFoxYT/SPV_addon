@@ -7,10 +7,12 @@ import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.commands.SpvCommands;
 import net.dark.spv_addon.init.config.SpvAddonConfig;
+import net.dark.spv_addon.world.events.LevelTeleportOnLectern;
 import net.dark.spv_addon.world.events.level207.Level207AmbianceHandler;
 import net.dark.spv_addon.init.gamerules.SpvGameRules;
 import net.dark.spv_addon.init.*;
 import net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin;
+import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.dark.spv_addon.world.events.misc.LevelRunGlobalTicker;
 import net.dark.spv_addon.world.events.misc.RedWoolTeleporter;
 import net.dark.spv_addon.world.events.misc.WoolTeleporter207;
@@ -57,8 +59,8 @@ public class Spv_addon implements ModInitializer {
 
         // Initialize level managers
         net.dark.spv_addon.world.levels.managers.LevelRunManager.initialize();
-
-
+        LevelTeleportOnLectern.init();
+        Level207AmbienceEvent.init();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
