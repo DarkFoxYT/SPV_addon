@@ -2,6 +2,7 @@ package net.dark.spv_addon.world.events.level207;
 
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModSounds;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -18,11 +19,20 @@ import java.util.UUID;
 public class Level207AmbianceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("Level207AmbianceHandler");
     private static final Map<UUID, Boolean> playersInLevel207 = new HashMap<>();
+    private static final Map<UUID, Long> nextAmbienceTick = new HashMap<>();
     private static final int AMBIANCE_LOOP_INTERVAL = 440;
-    
+    private static long serverTick;
+
     public static void register() {
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             checkPlayerDimension(newPlayer);
+        });
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            serverTick++;
+            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                checkPlayerDimension(player);
+            }
         });
         
         LOGGER.info("Level 207 ambiance handler registered");
@@ -39,10 +49,16 @@ public class Level207AmbianceHandler {
         if (isInLevel207 && !wasInLevel207) {
             startAmbianceForPlayer(player);
             playersInLevel207.put(playerId, true);
-            // Removed debug logging for production
+            nextAmbienceTick.put(playerId, serverTick + AMBIANCE_LOOP_INTERVAL);
         } else if (!isInLevel207 && wasInLevel207) {
             playersInLevel207.put(playerId, false);
-            // Removed debug logging for production
+            nextAmbienceTick.remove(playerId);
+        } else if (isInLevel207) {
+            long nextTick = nextAmbienceTick.getOrDefault(playerId, serverTick + AMBIANCE_LOOP_INTERVAL);
+            if (serverTick >= nextTick) {
+                playAmbience(player);
+                nextAmbienceTick.put(playerId, serverTick + AMBIANCE_LOOP_INTERVAL);
+            }
         }
     }
     
@@ -51,61 +67,22 @@ public class Level207AmbianceHandler {
      */
     private static void startAmbianceForPlayer(ServerPlayerEntity player) {
         try {
-            player.getServerWorld().playSound(
+            playAmbience(player);
+            
+        } catch (Exception e) {
+            LOGGER.warn("Failed to start ambiance for player {}: {}", player.getName().getString(), e.getMessage());
+        }
+    }
+
+    private static void playAmbience(ServerPlayerEntity player) {
+        player.getServerWorld().playSound(
                 null,
                 player.getBlockPos(),
                 ModSounds.LEVEL_207_AMBIANCE,
                 SoundCategory.AMBIENT,
                 1.0F,
                 1.0F
-            );
-
-            scheduleAmbianceLoop(player);
-            
-        } catch (Exception e) {
-            LOGGER.warn("Failed to start ambiance for player {}: {}", player.getName().getString(), e.getMessage());
-        }
-    }
-    
-    /**
-     * Schedule the ambiance to loop for the player
-     */
-    private static void scheduleAmbianceLoop(ServerPlayerEntity player) {
-        player.getServer().execute(() -> {
-            scheduleRepeatingAmbiance(player, 0);
-        });
-    }
-    
-    /**
-     * Recursively schedule ambiance to play every interval
-     */
-    private static void scheduleRepeatingAmbiance(ServerPlayerEntity player, int iteration) {
-        if (player.isRemoved() || !player.getServerWorld().getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
-            return;
-        }
-
-        player.getServer().execute(() -> {
-            try {
-                Thread.sleep(AMBIANCE_LOOP_INTERVAL * 50);
-
-                if (!player.isRemoved() && player.getServerWorld().getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
-                    player.getServerWorld().playSound(
-                        null,
-                        player.getBlockPos(),
-                        ModSounds.LEVEL_207_AMBIANCE,
-                        SoundCategory.AMBIENT,
-                        1.0F,
-                        1.0F
-                    );
-
-                    scheduleRepeatingAmbiance(player, iteration + 1);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            } catch (Exception e) {
-                LOGGER.warn("Error in ambiance loop for player {}: {}", player.getName().getString(), e.getMessage());
-            }
-        });
+        );
     }
     
     /**
@@ -120,5 +97,6 @@ public class Level207AmbianceHandler {
      */
     public static void onPlayerDisconnect(UUID playerId) {
         playersInLevel207.remove(playerId);
+        nextAmbienceTick.remove(playerId);
     }
 }

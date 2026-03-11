@@ -1,5 +1,6 @@
 package net.dark.spv_addon.Additions.thirst;
 
+import net.dark.spv_addon.Additions.needs.SurvivalNeedsService;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.cca.ThirstComponent;
@@ -61,7 +62,7 @@ public class ThirstManager {
     private static final float LEVEL188_MULTIPLIER = 0.8f; // Cooler environment
 
     public static void register() {
-        ServerTickEvents.START_SERVER_TICK.register(ThirstManager::onServerTick);
+        SurvivalNeedsService.register();
     }
 
     private static void onServerTick(MinecraftServer server) {

@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class ModSounds {
     public static final SoundEvent BELLWALKER_BELL = register("entity.bellwalker.bell");
-    public static final SoundEvent DEATH_SOUND = register("death_sound");
+    public static final SoundEvent DEATH_SOUND = register("death_screen");
     public static final SoundEvent BONK = register("stuff.bonk");
     public static final SoundEvent LEVEL_207_AMBIANCE = register("stuff.207_ambiance");
     public static final SoundEvent BELLWALKER_CARP = register("entity.bellwalker.carp");

@@ -24,7 +24,7 @@ public class SpvCommands {
                                 .executes(ctx -> {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     int value = IntegerArgumentType.getInteger(ctx, "value");
-                                    BatteryManager.setBattery(player.getUuid(), value);
+                                    BatteryManager.setBattery(player, value);
                                     ctx.getSource().sendFeedback(() ->
                                             Text.literal("Battery set to " + value + "%"), false);
                                     return 1;

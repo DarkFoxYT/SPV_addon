@@ -102,7 +102,7 @@ public class UnifiedHud implements HudRenderCallback {
         // Update and render battery with fade (only if legacy battery HUD is not enabled)
         if (SpvAddonConfig.showBatteryHud && SpvAddonConfig.enableBatterySystem &&
             !(SpvAddonConfig.enableLegacyHuds && SpvAddonConfig.legacyBatteryHud)) {
-            boolean isBatteryChanging = BatteryManager.isBatteryChanging(player.getUuid());
+            boolean isBatteryChanging = BatteryManager.isBatteryChanging(player);
             boolean shouldShowBattery = flashlightOn || battery <= SpvAddonConfig.showBatteryThreshold || isBatteryChanging;
             float batteryAlpha = updateFadeState("battery", shouldShowBattery);
             if (batteryAlpha > 0.0f) {
@@ -297,7 +297,7 @@ public class UnifiedHud implements HudRenderCallback {
      * Format battery text with status
      */
     private String formatBatteryText(int battery, PlayerEntity player) {
-        String status = BatteryManager.getBatteryStatusText(player.getUuid());
+        String status = BatteryManager.getBatteryStatusText(player);
         return String.format("Battery: %d%% - %s", battery, status);
     }
     
@@ -322,7 +322,7 @@ public class UnifiedHud implements HudRenderCallback {
      */
     private int getBatteryLevel(PlayerEntity player) {
         try {
-            return BatteryManager.getBattery(player.getUuid());
+            return BatteryManager.getBattery(player);
         } catch (Exception e) {
             return 100;
         }
@@ -382,8 +382,8 @@ public class UnifiedHud implements HudRenderCallback {
      * Get battery text color using configurable colors
      */
     private int getBatteryTextColor(int battery, PlayerEntity player) {
-        int health = BatteryManager.getBatteryHealth(player.getUuid());
-        boolean isChanging = BatteryManager.isBatteryChanging(player.getUuid());
+        int health = BatteryManager.getBatteryHealth(player);
+        boolean isChanging = BatteryManager.isBatteryChanging(player);
 
         return SpvAddonConfig.getBatteryColor(battery, health, isChanging);
     }

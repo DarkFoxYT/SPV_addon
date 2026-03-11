@@ -221,6 +221,9 @@
 
   "commands.spv.battery.success": "Battery set to %s%%",
   "commands.spv.sanity.success": "Sanity set to %s%%",
-  "commands.spv.thirst.success": "Thirst set to %s%%"
+  "commands.spv.thirst.success": "Thirst set to %s%%",
+
+  "dimension.spv_addon.glitched": "The Glitched",
+  "biome.spv_addon.glitched_biome": "Glitched Expanse"
 
 }

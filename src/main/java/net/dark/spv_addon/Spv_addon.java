@@ -6,14 +6,14 @@ import com.sp.entity.ik.model.GeckoLib.MowzieModelFactory;
 import net.dark.spv_addon.Additions.battery.FlashlightBatteryEvents;
 import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.commands.SpvCommands;
-import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.dark.spv_addon.world.events.LevelTeleportOnLectern;
 import net.dark.spv_addon.world.events.level207.Level207AmbianceHandler;
 import net.dark.spv_addon.init.gamerules.SpvGameRules;
 import net.dark.spv_addon.init.*;
-import net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin;
-import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
+import net.dark.spv_addon.init.voicechat.VoiceActivityTracker;
+import net.dark.spv_addon.util.ServerTickScheduler;
 import net.dark.spv_addon.world.events.misc.LevelRunGlobalTicker;
+import net.dark.spv_addon.world.events.misc.LevelRunSpawner;
 import net.dark.spv_addon.world.events.misc.RedWoolTeleporter;
 import net.dark.spv_addon.world.events.misc.WoolTeleporter207;
 import net.fabricmc.api.ModInitializer;
@@ -27,18 +27,12 @@ import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-
-
-import static com.sp.SPBRevamped.sendBlackScreenPacket;
-
 public class Spv_addon implements ModInitializer {
     public static final String MOD_ID = "spv_addon";
     public static final Logger LOGGER = LoggerFactory.getLogger("spv_addon");
 
     @Override
     public void onInitialize() {
-        SpvAddonConfig.init("spv_addon", SpvAddonConfig.class);
-
         SpvGameRules.initialize();
 
         ModBlockEntities.register();
@@ -52,6 +46,8 @@ public class Spv_addon implements ModInitializer {
         ModItemGroups.registerItemGroups();
         ModSounds.registerSounds();
         LevelRunGlobalTicker.init();
+        LevelRunSpawner.init();
+        ServerTickScheduler.register();
         GeckoLibUtil.addCustomBakedModelFactory(MOD_ID, new MowzieModelFactory());
         GeckoLib.initialize();
 
@@ -60,7 +56,6 @@ public class Spv_addon implements ModInitializer {
         // Initialize level managers
         net.dark.spv_addon.world.levels.managers.LevelRunManager.initialize();
         LevelTeleportOnLectern.init();
-        Level207AmbienceEvent.init();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SpvCommands.register(dispatcher));
 
@@ -72,10 +67,7 @@ public class Spv_addon implements ModInitializer {
         });
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
-            SpvAddonVoicechatPlugin.justMadeNoise.clear();
-            if (SpvAddonVoicechatPlugin.voicechatApi != null) {
-                SpvAddonVoicechatPlugin.voicechatApi.getBroadcastRange();
-            }
+            VoiceActivityTracker.tick(server);
         });
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {

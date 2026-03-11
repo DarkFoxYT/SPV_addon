@@ -6,11 +6,14 @@ import com.sp.entity.ik.parts.ik_chains.TargetReachingIKChain;
 import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
 import net.dark.spv_addon.entities.ik.components.IKArmComp;
 import net.dark.spv_addon.entities.ik.components.IKLegCompIkeaWalker;
+import net.dark.spv_addon.init.voicechat.VoiceActivityTracker;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
@@ -28,6 +31,7 @@ public class IkeaWalkerEntity extends PathAwareEntity
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final IKLegCompIkeaWalker<TargetReachingIKChain, IkeaWalkerEntity> legComponent;
     private final IKArmComp<TargetReachingIKChain, IkeaWalkerEntity> armComponent;
+    private int brainTickCooldown = 0;
 
     public IkeaWalkerEntity(EntityType<? extends IkeaWalkerEntity> type, World world) {
         super(type, world);
@@ -104,12 +108,9 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
     @Override
     protected void initGoals() {
-        if (this.getWorld().isDay()) {
-            this.goalSelector.add(0, new LookAroundGoal(this));
-        } else {
-            this.goalSelector.add(0, new MeleeAttackGoal(this, 1.0, true));
-            this.targetSelector.add(1, new net.minecraft.entity.ai.goal.ActiveTargetGoal<>(this, net.minecraft.entity.LivingEntity.class, true));
-        }
+        this.goalSelector.add(0, new MeleeAttackGoal(this, 0.95, false));
+        this.goalSelector.add(2, new LookAroundGoal(this));
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
     }
 
     @Override
@@ -118,19 +119,42 @@ public class IkeaWalkerEntity extends PathAwareEntity
         legComponent.tickServer(this);
         armComponent.tickServer(this);
 
-        // Attirer vers le joueur tenant un os
-        this.getWorld().getPlayers().stream()
+        if (!this.getWorld().isClient) {
+            runProceduralBehavior();
+        }
+    }
+
+    private void runProceduralBehavior() {
+        if (brainTickCooldown > 0) {
+            brainTickCooldown--;
+            return;
+        }
+        brainTickCooldown = 6;
+
+        PlayerEntity noisyTarget = this.getWorld().getPlayers().stream()
+                .filter(player -> !player.isSpectator() && player.isAlive())
+                .filter(player -> player.squaredDistanceTo(this) <= 30.0 * 30.0)
+                .max((a, b) -> Float.compare(
+                        VoiceActivityTracker.getActivity(a.getUuid()),
+                        VoiceActivityTracker.getActivity(b.getUuid())))
+                .orElse(null);
+
+        // Friendly "bone lure" still exists, but now competes with threat/noise context.
+        PlayerEntity boneTarget = this.getWorld().getPlayers().stream()
                 .filter(player -> player.getMainHandStack().getItem().toString().toLowerCase().contains("bone"))
                 .findFirst()
-                .ifPresent(player -> {
-                    double dx = player.getX() - this.getX();
-                    double dz = player.getZ() - this.getZ();
-                    double distance = Math.sqrt(dx * dx + dz * dz);
-                    if (distance > 2.0) { // Garde une petite distance
-                        double speed = 0.5;
-                        this.getNavigation().startMovingTo(player, speed);
-                    }
-                });
+                .orElse(null);
+
+        if (noisyTarget != null && VoiceActivityTracker.getActivity(noisyTarget.getUuid()) > 0.15f) {
+            this.getNavigation().startMovingTo(noisyTarget, 0.72);
+            this.setTarget(noisyTarget);
+            return;
+        }
+
+        if (boneTarget != null && boneTarget.squaredDistanceTo(this) > 4.0) {
+            this.getNavigation().startMovingTo(boneTarget, 0.50);
+            this.setTarget(null);
+        }
     }
 
     @Override

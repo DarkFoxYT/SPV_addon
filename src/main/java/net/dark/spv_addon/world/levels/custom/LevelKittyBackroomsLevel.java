@@ -12,6 +12,7 @@ import net.dark.spv_addon.init.ModEntities;
 import net.dark.spv_addon.world.events.levelkitty.KittyMeowEvent;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
+import net.dark.spv_addon.world.transitions.SpbTransitionDirector;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
@@ -65,49 +66,23 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     }
 
     private BackroomsLevel.LevelTransition getKittyTransition(PlayerComponent playerComponent) {
-        return new BackroomsLevel.LevelTransition(110, (teleport, tick) -> {
-            World world = teleport.playerComponent().player.getWorld();
-            if (!world.isClient()) {
-                if (tick == 20) {
-                    teleport.playerComponent().sync();
-                }
-
-                if (tick == 14) {
-                    SPBRevamped.sendBlackScreenPacket((ServerPlayerEntity)teleport.playerComponent().player, 20, true, false);
-                }
-
-                if (tick == 1) {
-                    teleport.playerComponent().sync();
-                }
-            }
-        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, this.getSpawnPos(), com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL, BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL), (teleport, tick) -> {
-            teleport.playerComponent().setShouldNoClip(false);
-            teleport.playerComponent().sync();
-        });
+        return SpbTransitionDirector.createTransition(
+                playerComponent,
+                this.getSpawnPos(),
+                com.sp.init.BackroomsLevels.LEVEL2_BACKROOMS_LEVEL,
+                BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL,
+                SpbTransitionDirector.TransitionProfile.cinematicDefault()
+        );
     }
 
     public BackroomsLevel.LevelTransition getPoolRoomsTransition(PlayerComponent playerComponent) {
-        return new BackroomsLevel.LevelTransition(110, (teleport, tick) -> {
-            World world = teleport.playerComponent().player.getWorld();
-            if (!world.isClient()) {
-                if (tick == 20) {
-                    teleport.playerComponent().setShouldNoClip(true);
-                    teleport.playerComponent().sync();
-                }
-
-                if (tick == 14) {
-                    SPBRevamped.sendBlackScreenPacket((ServerPlayerEntity)teleport.playerComponent().player, 20, true, false);
-                }
-
-                if (tick == 1) {
-                    teleport.playerComponent().setShouldNoClip(false);
-                    teleport.playerComponent().sync();
-                }
-            }
-        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL.getSpawnPos(), this, com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL), (teleport, tick) -> {
-            teleport.playerComponent().setShouldNoClip(false);
-            teleport.playerComponent().sync();
-        });
+        return SpbTransitionDirector.createTransition(
+                playerComponent,
+                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL.getSpawnPos(),
+                this,
+                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL,
+                SpbTransitionDirector.TransitionProfile.cinematicDefault()
+        );
     }
 
     public static void ensureSingleKitty(ServerWorld world) {

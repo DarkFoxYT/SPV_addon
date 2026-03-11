@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.dark.spv_addon.util.ServerTickScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,9 +114,9 @@ public class LevelRunManager {
         
         // Apply black screen effect
         com.sp.SPBRevamped.sendBlackScreenPacket(player, 60, true, false);
-        
-        // Schedule teleportation
-        player.getServer().execute(() -> {
+
+        // Schedule teleportation after transition build-up.
+        ServerTickScheduler.schedule(42, () -> {
             try {
                 TransitionDestination destination = selectRandomDestination(player.getServer());
                 teleportPlayerToDestination(player, destination);
@@ -130,7 +131,7 @@ public class LevelRunManager {
                     player.getName().getString(), destination.name);
                 
             } catch (Exception e) {
-                LOGGER.error("Error transitioning player {} out of Level RUN: {}", 
+                LOGGER.error("Error transitioning player {} out of Level RUN: {}",
                     player.getName().getString(), e.getMessage());
                 playersInTransition.remove(player.getUuid());
             }

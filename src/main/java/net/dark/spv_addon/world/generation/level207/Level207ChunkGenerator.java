@@ -2,15 +2,13 @@ package net.dark.spv_addon.world.generation.level207;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sp.SPBRevampedClient;
-import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
+import net.dark.spv_addon.world.generation.framework.StructurePlacementHelper;
+import net.dark.spv_addon.world.generation.framework.TemplateBackroomsChunkGenerator;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
-import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
@@ -32,7 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
+public final class Level207ChunkGenerator extends TemplateBackroomsChunkGenerator {
     public static final Codec<Level207ChunkGenerator> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(gen -> gen.biomeSource),
@@ -40,13 +38,8 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
             ).apply(instance, Level207ChunkGenerator::new)
     );
 
-    private final RegistryEntry<ChunkGeneratorSettings> settings;
-    private final Random random = Random.create();
-
     public Level207ChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
-        super(biomeSource);
-        this.settings = settings;
-        SPBRevampedClient.setInBackrooms(true);
+        super(biomeSource, settings);
     }
 
     @Override
@@ -58,6 +51,7 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
+        Random random = StructurePlacementHelper.chunkRandom(cx, cz, 0x32_30_37L);
 
         if (cx % 2 == 0 && cz % 2 == 0) {
             int rx = cx / 2;
@@ -71,19 +65,12 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
                 roomId = new Identifier(Spv_addon.MOD_ID, "level207/grave" + variant);
             }
 
-            MinecraftServer server = world.getServer();
-            if (server == null) return;
-            StructureTemplateManager mgr = server.getStructureTemplateManager();
-            Optional<StructureTemplate> optTpl = mgr.getTemplate(roomId);
+            Optional<StructureTemplate> optTpl = StructurePlacementHelper.template(world, roomId);
             if (optTpl.isEmpty()) return;
 
             StructureTemplate template = optTpl.get();
 
-            int limeYOffset = 0;
-            for (StructureTemplate.StructureBlockInfo info : template.getInfosForBlock(BlockPos.ORIGIN, new StructurePlacementData(), Blocks.LIME_WOOL)) {
-                limeYOffset = info.pos().getY();
-                break;
-            }
+            int limeYOffset = StructurePlacementHelper.markerYOffset(roomId, template, Blocks.LIME_WOOL);
 
             int bx = chunk.getPos().getStartX();
             int bz = chunk.getPos().getStartZ();
@@ -99,46 +86,4 @@ public final class Level207ChunkGenerator extends BackroomsChunkGenerator {
         }
     }
 
-    @Override
-    public void generate(StructureWorldAccess structureWorldAccess, Chunk chunk) {
-
-    }
-
-    @Override
-    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
-                                                  NoiseConfig noiseConfig,
-                                                  StructureAccessor structureAccessor,
-                                                  Chunk chunk) {
-        return CompletableFuture.completedFuture(chunk);
-    }
-
-    @Override public int getSeaLevel() { return 0; }
-    @Override public int getMinimumY() { return 0; }
-    @Override public int getWorldHeight() { return 256; }
-    @Override public int getHeight(int x, int z, net.minecraft.world.Heightmap.Type type, net.minecraft.world.HeightLimitView view, NoiseConfig noiseConfig) { return getWorldHeight(); }
-    @Override public VerticalBlockSample getColumnSample(int x, int z, net.minecraft.world.HeightLimitView view, NoiseConfig noiseConfig) {
-        var states = new net.minecraft.block.BlockState[getWorldHeight()];
-        for (int i = 0; i < states.length; i++) states[i] = Blocks.AIR.getDefaultState();
-        return new VerticalBlockSample(0, states);
-    }
-
-    @Override
-    public void carve(ChunkRegion region, long seed, NoiseConfig noiseConfig, net.minecraft.world.biome.source.BiomeAccess biomeAccess, StructureAccessor structAcc, Chunk chunk, GenerationStep.Carver carverStep) {}
-
-    @Override
-    public void buildSurface(ChunkRegion region,
-                             StructureAccessor structAcc,
-                             NoiseConfig noiseConfig,
-                             Chunk chunk) {
-    }
-
-    @Override
-    public void populateEntities(ChunkRegion region) {
-    }
-
-    @Override
-    public void getDebugHudText(java.util.List<String> text,
-                                NoiseConfig noiseConfig,
-                                BlockPos pos) {
-    }
 }

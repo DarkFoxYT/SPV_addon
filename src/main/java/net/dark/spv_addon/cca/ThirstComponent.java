@@ -26,8 +26,11 @@ public class ThirstComponent implements ComponentV3, AutoSyncedComponent {
     }
 
     public void setThirst(int thirst) {
-        this.thirst = Math.max(0, Math.min(MAX_THIRST, thirst));
-        InitializeComponents.THIRST.sync(player);
+        int clamped = Math.max(0, Math.min(MAX_THIRST, thirst));
+        if (this.thirst != clamped) {
+            this.thirst = clamped;
+            InitializeComponents.THIRST.sync(player);
+        }
     }
 
     public void addThirst(int amount) {

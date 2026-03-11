@@ -1,6 +1,7 @@
 package net.dark.spv_addon.mixins.player;
 
 import com.sp.init.BackroomsLevels;
+import net.dark.spv_addon.Additions.needs.SurvivalNeedsService;
 import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.cca.SanityComponent;
 import net.dark.spv_addon.init.config.ServerConfig;
@@ -30,6 +31,7 @@ public abstract class PlayerTickMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        if (SurvivalNeedsService.isCentralizedMode()) return;
 
         // Check if sanity system is enabled via server config
         if (!ServerConfig.isSanitySystemEnabled(player.getServer())) return;

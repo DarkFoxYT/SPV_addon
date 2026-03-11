@@ -1,6 +1,7 @@
 package net.dark.spv_addon.mixins.crawl;
 
 import net.dark.spv_addon.init.config.ServerConfig;
+import net.dark.spv_addon.init.crawl.CrawlStateController;
 import net.dark.spv_addon.init.crawl.CrawlSystem;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -37,27 +38,12 @@ public abstract class PlayerEntityCrawlMixin extends LivingEntity {
         at = @At(value = "INVOKE", target = "net/minecraft/entity/player/PlayerEntity.setPose(Lnet/minecraft/entity/EntityPose;)V")
     )
     public EntityPose onPreSetPose(EntityPose pose) {
-        // Check if crawling is enabled via server config (for servers) or always enabled (for singleplayer)
-        boolean crawlingEnabled = true; // Default to enabled
-        if (!getWorld().isClient && getWorld().getServer() != null) {
-            crawlingEnabled = ServerConfig.isCrawlingEnabled(getWorld().getServer());
+        if (this.abilities.flying) {
+            return pose;
         }
 
-        if (crawlingEnabled && !isFallFlying() && !this.isSpectator() && !this.hasVehicle() && !this.abilities.flying) {
-            boolean requested = getDataTracker().get(CrawlSystem.Shared.CRAWL_REQUEST);
-            boolean swimming = isSwimming() || isTouchingWater();
-
-            if (requested) {
-                if (!swimming) {
-                    pose = CrawlSystem.Shared.CRAWLING;
-                } else {
-                    pose = EntityPose.SWIMMING;
-                }
-            } else if (pose == EntityPose.SWIMMING && !swimming) {
-                pose = CrawlSystem.Shared.CRAWLING;
-            }
-        }
-        return pose;
+        boolean requested = getDataTracker().get(CrawlSystem.Shared.CRAWL_REQUEST);
+        return CrawlStateController.resolvePose((PlayerEntity) (Object) this, pose, requested);
     }
     
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)

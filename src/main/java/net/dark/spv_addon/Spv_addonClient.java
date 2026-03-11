@@ -5,9 +5,9 @@ import com.sp.render.pbr.BlockIdMap;
 import com.sp.render.pbr.PbrRegistry;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
-import net.dark.spv_addon.Additions.thirst.ThirstManager;
 import net.dark.spv_addon.blocks.entities.rend.PlateBlockEntityRenderer;
 import net.dark.spv_addon.Additions.api.ClientFlashlightRendererAddon;
+import net.dark.spv_addon.client.effects.GlitchedLevelRenderController;
 import net.dark.spv_addon.client.effects.StaticifyController;
 import net.dark.spv_addon.client.gui.UnifiedHud;
 import net.dark.spv_addon.Additions.sanity.SanityEffectsManager;
@@ -22,8 +22,9 @@ import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
 import net.dark.spv_addon.init.ModEntities;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.dark.spv_addon.init.grass.GrassRenderer;
-import net.dark.spv_addon.world.events.misc.LevelRunSpawner;
+import net.dark.spv_addon.world.events.level207.Level207AmbienceEvent;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,17 +40,25 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.minecraft.registry.RegistryKey;
 
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class Spv_addonClient implements ClientModInitializer {
+    private static final Set<RegistryKey<World>> SHADOW_MAP_LEVELS = Set.of(
+            BackroomsLevels.LEVEL188_WORLD_KEY,
+            BackroomsLevels.LEVEL_KITTY_WORLD_KEY,
+            BackroomsLevels.GLITCHED_WORLD_KEY
+    );
+
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     private GrassRenderer grassRenderer;
-    private StaticifyController staticifyController;
     public static Camera camera;
 
     @Override
     public void onInitializeClient() {
+        SpvAddonConfig.init("spv_addon", SpvAddonConfig.class);
 
         BlockEntityRendererFactories.register(ModBlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
 
@@ -58,12 +67,11 @@ public class Spv_addonClient implements ClientModInitializer {
         net.dark.spv_addon.client.gui.BatteryHud.register();
         net.dark.spv_addon.client.gui.SanityBar.register();
         net.dark.spv_addon.client.gui.ThirstHud.register();
-        LevelRunSpawner.init();
-
-        ThirstManager.register();
-
-
         new net.dark.spv_addon.init.crawl.CrawlClient().onInitializeClient();
+        StaticifyController.init();
+        GlitchedLevelRenderController.init();
+        SanityEffectsManager.initialize();
+        Level207AmbienceEvent.init();
 
 
 
@@ -110,25 +118,11 @@ public class Spv_addonClient implements ClientModInitializer {
             World clientWorld = client.world;
             if (clientWorld != null) {
 
-                if (clientWorld.getRegistryKey() == BackroomsLevels.LEVEL188_WORLD_KEY) {
-                    if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
-                        if (camera != null) {
-                            ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
-                        }
-                    }
+                if (SHADOW_MAP_LEVELS.contains(clientWorld.getRegistryKey())
+                        && stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY
+                        && camera != null) {
+                    ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
                 }
-
-
-                SanityEffectsManager.initialize();
-
-                if (clientWorld.getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
-                    if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
-                        if (camera != null) {
-                            ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
-                        }
-                    }
-                }
-
 
 
                 if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {

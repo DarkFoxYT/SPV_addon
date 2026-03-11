@@ -25,8 +25,11 @@ public class SanityComponent implements ComponentV3, AutoSyncedComponent {
     }
 
     public void setSanityLevel(int level) {
-        this.sanityLevel = Math.max(0, Math.min(level, 100));
-        InitializeComponents.SANITY.sync(player);
+        int clamped = Math.max(0, Math.min(level, 100));
+        if (this.sanityLevel != clamped) {
+            this.sanityLevel = clamped;
+            InitializeComponents.SANITY.sync(player);
+        }
     }
 
     public void decreaseSanity(int amount) {

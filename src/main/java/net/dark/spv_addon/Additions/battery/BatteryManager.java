@@ -1,6 +1,8 @@
 package net.dark.spv_addon.Additions.battery;
 
 import com.sp.init.BackroomsLevels;
+import net.dark.spv_addon.cca.FlashlightBatteryComponent;
+import net.dark.spv_addon.cca.InitializeComponents;
 import net.dark.spv_addon.init.config.ServerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -10,225 +12,258 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class BatteryManager {
     private static final Logger LOGGER = LoggerFactory.getLogger("BatteryManager");
-    private static final HashMap<UUID, Integer> batteryLevels = new HashMap<>();
-    private static final HashMap<UUID, Long> lastDrainTime = new HashMap<>();
-    private static final HashMap<UUID, Integer> batteryHealth = new HashMap<>(); // Battery degradation
-    private static final HashMap<UUID, Long> batteryChangingTime = new HashMap<>(); // Track when battery is being changed
-    private static final Random random = Random.create();
+    private static final Map<UUID, Integer> BATTERY_CACHE = new HashMap<>();
+    private static final Map<UUID, Integer> BATTERY_HEALTH_CACHE = new HashMap<>();
+    private static final Map<UUID, Long> BATTERY_CHANGING_CACHE = new HashMap<>();
+    private static final Map<UUID, Long> LAST_DRAIN_TICK = new HashMap<>();
+    private static final Random RANDOM = Random.create();
+
+    private static final int MAX_BATTERY_HEALTH = 100;
+    private static final int DRAIN_INTERVAL_TICKS = 20;
+    private static final int BATTERY_CHANGING_DURATION_TICKS = 3 * 20;
+    private static final float HEALTH_DEGRADATION_CHANCE = 0.001f;
 
     private static boolean batteryEnabled = true;
 
-    // Battery changing duration (3 seconds)
-    private static final long BATTERY_CHANGING_DURATION = 3000; // 3 seconds in milliseconds
-
-    // Enhanced battery configuration
-    private static final int MAX_BATTERY_HEALTH = 100;
-    private static final int DRAIN_INTERVAL_MS = 1000; // 1 second
-    private static final float HEALTH_DEGRADATION_CHANCE = 0.001f; // 0.1% chance per drain
+    private BatteryManager() {
+    }
 
     public static int getBattery(UUID uuid) {
-        return batteryLevels.getOrDefault(uuid, 100);
+        return BATTERY_CACHE.getOrDefault(uuid, 100);
+    }
+
+    public static int getBattery(PlayerEntity player) {
+        if (player == null) {
+            return 100;
+        }
+        FlashlightBatteryComponent component = getComponent(player);
+        if (component != null) {
+            cache(player.getUuid(), component);
+            return component.getBatteryLevel();
+        }
+        return getBattery(player.getUuid());
     }
 
     public static void setBattery(UUID uuid, int value) {
-        batteryLevels.put(uuid, Math.min(100, Math.max(0, value)));
+        BATTERY_CACHE.put(uuid, clampPercentage(value));
     }
 
-    /**
-     * Get battery health (affects maximum capacity)
-     */
+    public static void setBattery(PlayerEntity player, int value) {
+        if (player == null) {
+            return;
+        }
+        int clamped = clampPercentage(value);
+        FlashlightBatteryComponent component = getComponent(player);
+        if (component != null) {
+            component.setBatteryLevel(clamped);
+        }
+        setBattery(player.getUuid(), clamped);
+    }
+
     public static int getBatteryHealth(UUID uuid) {
-        return batteryHealth.getOrDefault(uuid, MAX_BATTERY_HEALTH);
+        return BATTERY_HEALTH_CACHE.getOrDefault(uuid, MAX_BATTERY_HEALTH);
     }
 
-    /**
-     * Set battery health
-     */
+    public static int getBatteryHealth(PlayerEntity player) {
+        if (player == null) {
+            return MAX_BATTERY_HEALTH;
+        }
+        FlashlightBatteryComponent component = getComponent(player);
+        if (component != null) {
+            cache(player.getUuid(), component);
+            return component.getBatteryHealth();
+        }
+        return getBatteryHealth(player.getUuid());
+    }
+
     public static void setBatteryHealth(UUID uuid, int health) {
-        batteryHealth.put(uuid, Math.min(MAX_BATTERY_HEALTH, Math.max(0, health)));
+        BATTERY_HEALTH_CACHE.put(uuid, clampPercentage(health));
     }
 
-    /**
-     * Check if battery is enabled for the player's current dimension
-     */
-    public static boolean isBatteryEnabledForPlayer(PlayerEntity player, MinecraftServer server) {
-        if (!batteryEnabled || !ServerConfig.isBatterySystemEnabled(server)) return false;
+    public static void setBatteryHealth(PlayerEntity player, int health) {
+        if (player == null) {
+            return;
+        }
+        int clamped = clampPercentage(health);
+        FlashlightBatteryComponent component = getComponent(player);
+        if (component != null) {
+            component.setBatteryHealth(clamped);
+        }
+        setBatteryHealth(player.getUuid(), clamped);
+    }
 
-        // Disable battery in poolrooms
-        if (player instanceof ServerPlayerEntity serverPlayer) {
-            if (serverPlayer.getServerWorld().getRegistryKey().getValue().equals(BackroomsLevels.POOLROOMS_WORLD_KEY.getValue())) {
-                return false;
-            }
+    public static boolean isBatteryEnabledForPlayer(PlayerEntity player, MinecraftServer server) {
+        if (!batteryEnabled || !ServerConfig.isBatterySystemEnabled(server)) {
+            return false;
+        }
+
+        if (player instanceof ServerPlayerEntity serverPlayer
+                && serverPlayer.getServerWorld().getRegistryKey().getValue().equals(BackroomsLevels.POOLROOMS_WORLD_KEY.getValue())) {
+            return false;
         }
 
         return true;
     }
 
-    /**
-     * Legacy method for backward compatibility
-     */
     public static boolean isBatteryEnabledForPlayer(PlayerEntity player) {
         return isBatteryEnabledForPlayer(player, null);
     }
 
     public static void drainBattery(UUID uuid, int amount) {
-        drainBattery(uuid, amount, null, null);
+        int effectiveDrain = Math.max(1, amount);
+        setBattery(uuid, Math.max(0, getBattery(uuid) - effectiveDrain));
     }
 
-    public static void drainBattery(UUID uuid, int amount, PlayerEntity player) {
-        drainBattery(uuid, amount, player, null);
+    public static void drainBattery(PlayerEntity player, int amount) {
+        drainBattery(player, amount, player.getWorld().getServer());
     }
 
-    /**
-     * Enhanced battery drain with health degradation and poolrooms check
-     */
-    public static void drainBattery(UUID uuid, int amount, PlayerEntity player, MinecraftServer server) {
-        if (!batteryEnabled) return;
-
-        // Check if battery should be disabled for this player
-        if (player != null && !isBatteryEnabledForPlayer(player, server)) {
+    public static void drainBattery(PlayerEntity player, int amount, MinecraftServer server) {
+        if (player == null || !batteryEnabled || !isBatteryEnabledForPlayer(player, server)) {
             return;
         }
 
-        // Throttle drain rate
-        long currentTime = System.currentTimeMillis();
-        Long lastDrain = lastDrainTime.get(uuid);
-        if (lastDrain != null && currentTime - lastDrain < DRAIN_INTERVAL_MS) {
+        long currentTick = player.getWorld().getTime();
+        Long lastDrain = LAST_DRAIN_TICK.get(player.getUuid());
+        if (lastDrain != null && currentTick - lastDrain < DRAIN_INTERVAL_TICKS) {
             return;
         }
-        lastDrainTime.put(uuid, currentTime);
+        LAST_DRAIN_TICK.put(player.getUuid(), currentTick);
 
-        // Calculate effective drain based on battery health and server settings
-        int health = getBatteryHealth(uuid);
-        float healthMultiplier = health / (float)MAX_BATTERY_HEALTH;
+        int health = getBatteryHealth(player);
+        float healthMultiplier = Math.max(0.2f, health / (float) MAX_BATTERY_HEALTH);
         float drainRateMultiplier = server != null ? ServerConfig.getBatteryDrainRate(server) : 1.0f;
-        int effectiveDrain = Math.round(amount * drainRateMultiplier / healthMultiplier);
+        int effectiveDrain = Math.max(1, Math.round(amount * drainRateMultiplier / healthMultiplier));
+        int newValue = Math.max(0, getBattery(player) - effectiveDrain);
+        setBattery(player, newValue);
 
-        // Apply drain
-        int newValue = Math.max(0, getBattery(uuid) - effectiveDrain);
-        batteryLevels.put(uuid, newValue);
-
-        // Chance to degrade battery health
-        if (random.nextFloat() < HEALTH_DEGRADATION_CHANCE) {
-            int newHealth = Math.max(20, health - 1); // Minimum 20% health
-            setBatteryHealth(uuid, newHealth);
-            // Removed debug logging for production
+        if (RANDOM.nextFloat() < HEALTH_DEGRADATION_CHANCE) {
+            setBatteryHealth(player, Math.max(20, health - 1));
         }
 
-        // Special effects based on battery level
-        applyBatteryEffects(uuid, newValue, health, player);
+        applyBatteryEffects(player.getUuid(), newValue, player);
     }
 
-    /**
-     * Apply special effects based on battery level
-     */
-    private static void applyBatteryEffects(UUID uuid, int batteryLevel, int health, PlayerEntity player) {
-        if (player == null) return;
+    private static void applyBatteryEffects(UUID uuid, int batteryLevel, PlayerEntity player) {
+        if (player == null) {
+            return;
+        }
 
         try {
-            // Flickering at low battery
             if (batteryLevel <= 15) {
-                // Handled by flashlight renderer
+                cache(uuid, getComponent(player));
             }
-
-            // Warning at very low battery
             if (batteryLevel <= 5 && batteryLevel > 0) {
-                // Could add warning sounds here
+                cache(uuid, getComponent(player));
             }
-
-            // Battery death effects
             if (batteryLevel <= 0) {
-                // Could add special effects when battery dies
+                cache(uuid, getComponent(player));
             }
-
         } catch (Exception e) {
-            LOGGER.warn("Error applying battery effects: " + e.getMessage());
+            LOGGER.warn("Error applying battery effects: {}", e.getMessage());
         }
     }
 
-    /**
-     * Recharge battery (for future battery items)
-     */
     public static void rechargeBattery(UUID uuid, int amount) {
         int currentBattery = getBattery(uuid);
         int health = getBatteryHealth(uuid);
-        int maxCapacity = (int)(100 * (health / (float)MAX_BATTERY_HEALTH));
-
-        int newValue = Math.min(maxCapacity, currentBattery + amount);
-        batteryLevels.put(uuid, newValue);
-
-        // Removed debug logging for production
+        int maxCapacity = (int) (100 * (health / (float) MAX_BATTERY_HEALTH));
+        setBattery(uuid, Math.min(maxCapacity, currentBattery + amount));
     }
 
-    /**
-     * Repair battery health (for future repair items)
-     */
+    public static void rechargeBattery(PlayerEntity player, int amount) {
+        int currentBattery = getBattery(player);
+        int health = getBatteryHealth(player);
+        int maxCapacity = (int) (100 * (health / (float) MAX_BATTERY_HEALTH));
+        setBattery(player, Math.min(maxCapacity, currentBattery + amount));
+    }
+
     public static void repairBattery(UUID uuid, int healthAmount) {
-        int currentHealth = getBatteryHealth(uuid);
-        int newHealth = Math.min(MAX_BATTERY_HEALTH, currentHealth + healthAmount);
-        setBatteryHealth(uuid, newHealth);
-
-        // Removed debug logging for production
+        setBatteryHealth(uuid, Math.min(MAX_BATTERY_HEALTH, getBatteryHealth(uuid) + healthAmount));
     }
 
-    /**
-     * Get effective battery capacity based on health
-     */
+    public static void repairBattery(PlayerEntity player, int healthAmount) {
+        setBatteryHealth(player, Math.min(MAX_BATTERY_HEALTH, getBatteryHealth(player) + healthAmount));
+    }
+
     public static int getEffectiveBatteryCapacity(UUID uuid) {
-        int health = getBatteryHealth(uuid);
-        return (int)(100 * (health / (float)MAX_BATTERY_HEALTH));
+        return (int) (100 * (getBatteryHealth(uuid) / (float) MAX_BATTERY_HEALTH));
     }
 
-    /**
-     * Check if battery is in critical condition
-     */
+    public static int getEffectiveBatteryCapacity(PlayerEntity player) {
+        return (int) (100 * (getBatteryHealth(player) / (float) MAX_BATTERY_HEALTH));
+    }
+
     public static boolean isBatteryCritical(UUID uuid) {
         return getBattery(uuid) <= 15 || getBatteryHealth(uuid) <= 30;
     }
 
-    /**
-     * Start battery changing process
-     */
+    public static boolean isBatteryCritical(PlayerEntity player) {
+        return getBattery(player) <= 15 || getBatteryHealth(player) <= 30;
+    }
+
     public static void startBatteryChanging(UUID uuid) {
-        batteryChangingTime.put(uuid, System.currentTimeMillis());
-        // Removed debug logging for production
+        BATTERY_CHANGING_CACHE.put(uuid, (long) BATTERY_CHANGING_DURATION_TICKS);
     }
 
-    /**
-     * Check if battery is currently being changed
-     */
+    public static void startBatteryChanging(PlayerEntity player) {
+        if (player == null) {
+            return;
+        }
+        long untilTick = player.getWorld().getTime() + BATTERY_CHANGING_DURATION_TICKS;
+        FlashlightBatteryComponent component = getComponent(player);
+        if (component != null) {
+            component.setBatteryChangingUntilTick(untilTick);
+        }
+        BATTERY_CHANGING_CACHE.put(player.getUuid(), untilTick);
+    }
+
     public static boolean isBatteryChanging(UUID uuid) {
-        Long changingStartTime = batteryChangingTime.get(uuid);
-        if (changingStartTime == null) {
-            return false;
-        }
-
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - changingStartTime > BATTERY_CHANGING_DURATION) {
-            // Changing process finished
-            batteryChangingTime.remove(uuid);
-            return false;
-        }
-
-        return true;
+        Long untilTick = BATTERY_CHANGING_CACHE.get(uuid);
+        return untilTick != null && untilTick > 0;
     }
 
-    /**
-     * Get battery status text for UI
-     */
+    public static boolean isBatteryChanging(PlayerEntity player) {
+        FlashlightBatteryComponent component = getComponent(player);
+        if (component != null) {
+            cache(player.getUuid(), component);
+            return component.getBatteryChangingUntilTick() > player.getWorld().getTime();
+        }
+        return false;
+    }
+
     public static String getBatteryStatusText(UUID uuid) {
-        // Check if battery is being changed first
         if (isBatteryChanging(uuid)) {
             return "CHANGING";
         }
 
         int battery = getBattery(uuid);
         int health = getBatteryHealth(uuid);
+        if (battery <= 0) {
+            return "DEAD";
+        } else if (battery <= 5) {
+            return "CRITICAL";
+        } else if (battery <= 15) {
+            return "LOW";
+        } else if (health <= 30) {
+            return "DEGRADED";
+        } else {
+            return "GOOD";
+        }
+    }
 
+    public static String getBatteryStatusText(PlayerEntity player) {
+        if (isBatteryChanging(player)) {
+            return "CHANGING";
+        }
+
+        int battery = getBattery(player);
+        int health = getBatteryHealth(player);
         if (battery <= 0) {
             return "DEAD";
         } else if (battery <= 5) {
@@ -248,5 +283,22 @@ public class BatteryManager {
 
     public static void setBatteryEnabled(boolean enabled) {
         batteryEnabled = enabled;
+    }
+
+    private static FlashlightBatteryComponent getComponent(PlayerEntity player) {
+        return player == null ? null : InitializeComponents.FLASHLIGHT_BATTERY.get(player);
+    }
+
+    private static void cache(UUID uuid, FlashlightBatteryComponent component) {
+        if (component == null) {
+            return;
+        }
+        BATTERY_CACHE.put(uuid, component.getBatteryLevel());
+        BATTERY_HEALTH_CACHE.put(uuid, component.getBatteryHealth());
+        BATTERY_CHANGING_CACHE.put(uuid, component.getBatteryChangingUntilTick());
+    }
+
+    private static int clampPercentage(int value) {
+        return Math.max(0, Math.min(100, value));
     }
 }

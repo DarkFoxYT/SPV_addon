@@ -7,8 +7,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 public final class Level207AmbienceEvent {
-    private static final Identifier LEVEL_207_ID   = new Identifier("spv_addon", "level_207"); // <-- change si besoin
-    private static final Identifier AMBIENT_SOUND  = new Identifier("spv_addon", "music/level207_amb"); // ton SoundEvent
+    private static final Identifier LEVEL_207_ID   = new Identifier("spv_addon", "level207");
+    private static final Identifier AMBIENT_SOUND  = new Identifier("spv_addon", "stuff.207_ambiance");
 
     private static PositionedSoundInstance current;
 

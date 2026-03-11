@@ -1,6 +1,7 @@
 package net.dark.spv_addon.init;
 
 import net.dark.spv_addon.Spv_addon;
+import net.dark.spv_addon.world.generation.glitched.GlitchedChunkGenerator;
 import net.dark.spv_addon.world.generation.level188.Level188ChunkGenerator;
 import net.dark.spv_addon.world.generation.ikea.LevelIKEAChunkGenerator;
 import net.dark.spv_addon.world.generation.kitty.KittyChunkGenerator;
@@ -18,5 +19,6 @@ public class ModChunkGenerators {
         Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level_run_chunk_generator"), RunChunkGenerator.CODEC);
         Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level_ikea"), LevelIKEAChunkGenerator.CODEC);
         Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "level_kitty"), KittyChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(Spv_addon.MOD_ID, "glitched_chunk_generator"), GlitchedChunkGenerator.CODEC);
     }
 }

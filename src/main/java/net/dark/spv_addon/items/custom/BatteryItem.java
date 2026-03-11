@@ -28,8 +28,8 @@ public class BatteryItem extends Item {
             playBatterySound(world, user);
 
             // Start the battery changing process
-            BatteryManager.startBatteryChanging(user.getUuid());
-            BatteryManager.setBattery(user.getUuid(), 0);
+            BatteryManager.startBatteryChanging(user);
+            BatteryManager.setBattery(user, 0);
             user.sendMessage(Text.literal("Changing Battery"), true);
 
             NbtCompound nbt = stack.getOrCreateNbt();
@@ -51,8 +51,8 @@ public class BatteryItem extends Item {
                 } else {
                     int currentDurability = maxDurability - stack.getDamage();
                     int added = Math.min(currentDurability, 100);
-                    int current = BatteryManager.getBattery(player.getUuid());
-                    BatteryManager.setBattery(player.getUuid(), Math.min(current + added, 100));
+                    int current = BatteryManager.getBattery(player);
+                    BatteryManager.setBattery(player, Math.min(current + added, 100));
                     player.sendMessage(Text.literal("Battery Changed"), true);
                     nbt.remove(NBT_RECHARGE_TICKS);
                     stack.decrement(1);

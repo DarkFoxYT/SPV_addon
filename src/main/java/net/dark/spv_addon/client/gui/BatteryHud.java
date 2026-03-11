@@ -46,8 +46,8 @@ public class BatteryHud implements HudRenderCallback {
             // Continue if sanity check fails
         }
 
-        int level = BatteryManager.getBattery(player.getUuid());
-        int health = BatteryManager.getBatteryHealth(player.getUuid());
+        int level = BatteryManager.getBattery(player);
+        int health = BatteryManager.getBatteryHealth(player);
         PlayerComponent comp = InitializeComponents.PLAYER.getNullable(player);
 
         if (level != 0 && (comp == null || !comp.isFlashLightOn())) return;
@@ -85,7 +85,7 @@ public class BatteryHud implements HudRenderCallback {
 
         // Enhanced battery display with status
         String txt = level + "%";
-        String statusText = BatteryManager.getBatteryStatusText(player.getUuid());
+        String statusText = BatteryManager.getBatteryStatusText(player);
         String healthText = health < 100 ? "(" + health + "% health)" : "";
 
         int tw = client.textRenderer.getWidth(txt);

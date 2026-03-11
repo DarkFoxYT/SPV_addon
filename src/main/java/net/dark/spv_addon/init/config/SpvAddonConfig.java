@@ -42,6 +42,25 @@ public class SpvAddonConfig extends MidnightConfig {
         }
     }
 
+    public enum GlitchQuality {
+        LOW(0.12f, 0.004f, 0.010f, 28.0f),
+        MEDIUM(0.20f, 0.007f, 0.018f, 42.0f),
+        HIGH(0.30f, 0.011f, 0.028f, 64.0f),
+        INSANE(0.46f, 0.017f, 0.042f, 92.0f);
+
+        public final float chaos;
+        public final float distortion;
+        public final float chroma;
+        public final float noiseScale;
+
+        GlitchQuality(float chaos, float distortion, float chroma, float noiseScale) {
+            this.chaos = chaos;
+            this.distortion = distortion;
+            this.chroma = chroma;
+            this.noiseScale = noiseScale;
+        }
+    }
+
 
     @Entry(category = "hud")
     public static boolean enableUnifiedHud = true;
@@ -230,6 +249,21 @@ public class SpvAddonConfig extends MidnightConfig {
     @Entry(category = "audio")
     public static boolean uiSounds = true;
 
+    @Entry(category = "glitched")
+    public static boolean enableGlitchedShader = true;
+
+    @Entry(category = "glitched")
+    public static GlitchQuality glitchQuality = GlitchQuality.HIGH;
+
+    @Entry(category = "glitched")
+    public static boolean reduceGlitchFlashing = false;
+
+    @Entry(category = "glitched")
+    public static boolean reduceGlitchDistortion = false;
+
+    @Entry(category = "glitched")
+    public static boolean disableGlitchedVisuals = false;
+
     // ===== PERFORMANCE CONFIGURATION =====
     @Entry(category = "performance")
     public static int renderDistance = 32;
@@ -316,6 +350,54 @@ public class SpvAddonConfig extends MidnightConfig {
             ((color >> 8) & 0xFF) / 255.0f,
             (color & 0xFF) / 255.0f
         };
+    }
+
+    public static boolean isGlitchedEffectEnabled() {
+        return enableGlitchedShader && !disableGlitchedVisuals;
+    }
+
+    public static float getGlitchChaos() {
+        if (!isGlitchedEffectEnabled()) {
+            return 0.0f;
+        }
+        float chaos = glitchQuality.chaos;
+        if (reduceGlitchDistortion) {
+            chaos *= 0.55f;
+        }
+        return chaos;
+    }
+
+    public static float getGlitchDistortion() {
+        if (!isGlitchedEffectEnabled()) {
+            return 0.0f;
+        }
+        float distortion = glitchQuality.distortion;
+        if (reduceGlitchDistortion) {
+            distortion *= 0.35f;
+        }
+        return distortion;
+    }
+
+    public static float getGlitchChroma() {
+        if (!isGlitchedEffectEnabled()) {
+            return 0.0f;
+        }
+        float chroma = glitchQuality.chroma;
+        if (reduceGlitchDistortion) {
+            chroma *= 0.45f;
+        }
+        return chroma;
+    }
+
+    public static float getGlitchFlashStrength() {
+        if (!isGlitchedEffectEnabled()) {
+            return 0.0f;
+        }
+        return reduceGlitchFlashing ? 0.03f : 0.08f;
+    }
+
+    public static float getGlitchNoiseScale() {
+        return glitchQuality.noiseScale;
     }
 
 }

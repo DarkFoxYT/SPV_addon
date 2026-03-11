@@ -115,7 +115,7 @@ public class GrassRenderer {
         int currentMeshResolution = ConfigStuff.grassQuality.getResolution();
         boolean countChange = currentGrassCount != this.lastGrassCount;
         boolean resolutionChange = currentMeshResolution != this.lastMeshResolution;
-        if (countChange) {
+        if (countChange || init) {
             GL15C.glBindBuffer(37074, this.positionsVbo);
             GL42C.glBufferData(37074, 4L * (long) currentGrassCount * 4L, 35048);
             GL15C.glBindBuffer(37074, 0);
@@ -171,10 +171,10 @@ public class GrassRenderer {
                 shader.setFloats("FrustumPlanes", values);
                 shader.bind();
                 int grass = MathHelper.floor(MathHelper.sqrt((float) ConfigStuff.grassQuality.getCount()) / 8.0F);
-                int x = Math.min(grass, VeilRenderSystem.maxComputeWorkGroupCountX());
-                int y = Math.min(grass, VeilRenderSystem.maxComputeWorkGroupCountY());
+                int x = Math.max(1, Math.min(grass, VeilRenderSystem.maxComputeWorkGroupCountX()));
+                int y = Math.max(1, Math.min(grass, VeilRenderSystem.maxComputeWorkGroupCountY()));
                 GL43C.glDispatchCompute(x, y, 1);
-                GL42C.glMemoryBarrier(-1);
+                GL42C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT | GL43C.GL_COMMAND_BARRIER_BIT);
                 ShaderProgram.unbind();
                 GL42C.glBindBufferBase(37074, 0, 0);
                 GL42C.glBindBufferBase(37074, 1, 0);
@@ -202,10 +202,15 @@ public class GrassRenderer {
     }
 
     public void close() {
+        if (this.vertexBuffer != null) {
+            this.vertexBuffer.close();
+            this.vertexBuffer = null;
+        }
         GL42C.glDeleteBuffers(this.positionsVbo);
         GL42C.glDeleteBuffers(this.indirectVbo);
-        GL42C.glUnmapBuffer(36671);
-        this.cmd.clear();
-        this.cmd = null;
+        if (this.cmd != null) {
+            this.cmd.clear();
+            this.cmd = null;
+        }
     }
 }

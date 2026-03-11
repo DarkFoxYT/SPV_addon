@@ -7,12 +7,11 @@ import com.sp.entity.ik.parts.Segment;
 import com.sp.entity.ik.parts.ik_chains.TargetReachingIKChain;
 import com.sp.entity.ik.parts.sever_limbs.ServerLimb;
 import net.dark.spv_addon.entities.ai.SlightlyBetterMobNavigation;
-import net.dark.spv_addon.entities.ai.goals.AggroNearestPlayerGoal;
-import net.dark.spv_addon.entities.ai.goals.BellWalkerStalkGoal;
+import net.dark.spv_addon.entities.ai.procedural.PredatorBrain;
+import net.dark.spv_addon.entities.ai.procedural.PredatorBrainConfig;
 import net.dark.spv_addon.entities.ik.components.IKLegCompDark;
 import net.dark.spv_addon.init.ModSounds;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -20,7 +19,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -28,7 +26,6 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +34,7 @@ public class BellWalkerEntity extends PathAwareEntity
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final IKLegCompDark<TargetReachingIKChain, BellWalkerEntity> legComponent;
+    private final PredatorBrain predatorBrain;
 
     private PlayerEntity stalkTarget = null;
     private int stalkCooldown = 0;
@@ -74,6 +72,20 @@ public class BellWalkerEntity extends PathAwareEntity
                 chain, chain, chain,
                 chain, chain, chain
         );
+
+        this.predatorBrain = new PredatorBrain(
+                this,
+                new PredatorBrainConfig(
+                        30.0,
+                        0.08f,
+                        6,
+                        100,
+                        0.35,
+                        0.60,
+                        0.92,
+                        12
+                )
+        );
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -102,11 +114,8 @@ public class BellWalkerEntity extends PathAwareEntity
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.75, true));
-        this.goalSelector.add(1, new LookAroundGoal(this));
-        this.goalSelector.add(2, new SmartWanderGoal(this, 0.5, 10, 60));
-        this.goalSelector.add(1, new AggroNearestPlayerGoal(this, 20.0));
-        this.goalSelector.add(1, new BellWalkerStalkGoal(this, 0.75, 0.30));
+        this.goalSelector.add(0, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.add(2, new LookAroundGoal(this));
     }
 
     public void onPlayerSoundHeard(PlayerEntity player, Vec3d pos) {
@@ -132,21 +141,17 @@ public class BellWalkerEntity extends PathAwareEntity
             stalkCooldown--;
             if (stalkCooldown == 0) stalkTarget = null;
         }
-        if (!hasStalkTarget() && age % 40 == 0 && this.getWorld().random.nextInt(8) == 0) {
+        if (age % 40 == 0 && this.getWorld().random.nextInt(8) == 0) {
             this.playSound(ModSounds.BELLWALKER_BELL, 1.0f, 1.0f);
         }
+
         if (!this.getWorld().isClient) {
-            double detectRadius = 18.0;
-            for (PlayerEntity player : this.getWorld().getPlayers()) {
-                if (net.dark.spv_addon.init.voicechat.SpvAddonVoicechatPlugin.justMadeNoise.contains(player.getUuid())
-                        && player.squaredDistanceTo(this) < detectRadius * detectRadius
-                        && !player.isSpectator() && player.isAlive()) {
-                    this.onPlayerSoundHeard(player, player.getPos());
-                }
-            }
-        }
-        if (hasStalkTarget()) {
-            this.setTarget(this.stalkTarget);
+            predatorBrain.tick();
+            predatorBrain.getCurrentTarget().ifPresent(target -> {
+                this.stalkTarget = target;
+                this.lastHeardPos = target.getPos();
+                this.stalkCooldown = 120;
+            });
         }
     }
 
@@ -166,7 +171,7 @@ public class BellWalkerEntity extends PathAwareEntity
 
     @Override
     public double getTick(Object o) {
-        return 0;
+        return age;
     }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -175,58 +180,5 @@ public class BellWalkerEntity extends PathAwareEntity
     public void applyModelPose(ModelAccessor model) {
         legComponent.getModelPositions(this, model);
         legComponent.tickClient(this, model);
-    }
-
-    public static class SmartWanderGoal extends Goal {
-        private final PathAwareEntity mob;
-        private final double speed;
-        private final int minIdle, maxIdle;
-        private int idleTicks;
-        private boolean idlePhase = true;
-
-        public SmartWanderGoal(PathAwareEntity mob, double speed, int minIdle, int maxIdle) {
-            this.mob = mob;
-            this.speed = speed;
-            this.minIdle = minIdle;
-            this.maxIdle = maxIdle;
-            this.setControls(EnumSet.of(Goal.Control.MOVE));
-            resetIdle();
-        }
-
-        private void resetIdle() {
-            int range = maxIdle - minIdle;
-            idleTicks = minIdle + mob.getRandom().nextInt(range + 1);
-        }
-
-        @Override
-        public boolean canStart() {
-            return mob.getNavigation().isIdle();
-        }
-
-        @Override
-        public boolean shouldContinue() {
-            return true;
-        }
-
-        @Override
-        public void tick() {
-            if (idlePhase) {
-                if (--idleTicks <= 0) {
-                    double dx = (mob.getRandom().nextDouble() * 2 - 1) * 10;
-                    double dz = (mob.getRandom().nextDouble() * 2 - 1) * 10;
-                    BlockPos dest = mob.getBlockPos().add((int) dx, 0, (int) dz);
-                    mob.getNavigation().startMovingTo(
-                            dest.getX(), dest.getY(), dest.getZ(), speed
-                    );
-                    idlePhase = false;
-                }
-            } else {
-                if (mob.getNavigation().isIdle()) {
-                    mob.playSound(ModSounds.BELLWALKER_BELL, 0.5f, 0.5f);
-                    idlePhase = true;
-                    resetIdle();
-                }
-            }
-        }
     }
 }

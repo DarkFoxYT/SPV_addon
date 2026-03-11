@@ -10,51 +10,41 @@ uniform float grassHeight;
 in vec3 localPos;
 in vec3 normal;
 
-float getGrassHeightGradient(float height){
+float getGrassHeightGradient(float height) {
     return clamp(height / grassHeight, 0.0, 1.0);
 }
 
 void main() {
     vec3 worldPos = localPos + VeilCamera.CameraPosition;
     float grassGradient = getGrassHeightGradient(worldPos.y - 21.0);
+    vec3 n = normalize(normal);
+    float facing = clamp(n.y, 0.0, 1.0);
+    float noiseTex = texture(WindNoise, worldPos.xz * 0.12 + vec2(GameTime * 0.015, GameTime * 0.01)).r;
 
-    // Couleur de base : plus de nuances, variation selon la hauteur et l’orientation
     vec3 baseA = vec3(0.17, 0.26, 0.13);
     vec3 baseB = vec3(0.38, 0.56, 0.18);
-    float facing = clamp(dot(normalize(normal), normalize(vec3(0.0, 1.0, 0.0))), 0.0, 1.0);
     vec3 grassColor = mix(baseA, baseB, pow(grassGradient, 1.7));
     grassColor = mix(grassColor, vec3(0.45, 0.65, 0.22), 0.15 * facing);
+    grassColor += 0.035 * (noiseTex - 0.5);
 
-    // Variation subtile par bruit
-    float colorNoise = texture(WindNoise, worldPos.xz * 0.13 + GameTime * 0.01).r;
-    grassColor += 0.04 * (colorNoise - 0.5);
+    float baseOcclusion = mix(0.45, 1.0, pow(grassGradient, 1.35));
+    float occlusionFactor = clamp(baseOcclusion * (0.8 + 0.2 * noiseTex), 0.35, 1.0);
+    grassColor *= 0.96 + 0.04 * sin(GameTime * 1.1 + worldPos.x * 0.09 + worldPos.z * 0.09);
 
-    // Occlusion ambiante : plus sombre à la base et entre les brins
-    float aoNoise = texture(WindNoise, worldPos.xz * 0.09 + GameTime * 0.025).r;
-    float baseOcclusion = mix(0.45, 1.0, pow(grassGradient, 1.5));
-    float occlusionFactor = clamp(baseOcclusion * (0.7 + 0.3 * aoNoise), 0.32, 1.0);
-
-    // Effet de lumière pulsante très léger
-    float pulse = 0.93 + 0.07 * sin(GameTime * 1.2 + worldPos.x * 0.13 + worldPos.z * 0.13);
-    grassColor *= pulse;
-
-    // Éclairage directionnel réaliste
     vec3 sunDir = normalize(vec3(0.2, 1.0, 0.3));
-    float diffuse = clamp(dot(normalize(normal), sunDir), 0.0, 1.0);
+    float diffuse = clamp(dot(n, sunDir), 0.0, 1.0);
     grassColor *= 0.7 + 0.3 * diffuse;
 
-    // Translucidité (backlight) : effet de lumière traversant les brins
-    float backlight = pow(clamp(dot(normalize(normal), -sunDir), 0.0, 1.0), 2.5) * 0.25;
+    float backlight = pow(clamp(dot(n, -sunDir), 0.0, 1.0), 2.5) * 0.25;
     grassColor += backlight * vec3(0.5, 0.7, 0.3);
 
-    // Brillance rosée du matin
     vec3 viewDir = normalize(-localPos);
     vec3 halfDir = normalize(viewDir + sunDir);
-    float spec = pow(max(dot(normalize(normal), halfDir), 0.0), 48.0) * 0.13;
+    float spec = pow(max(dot(n, halfDir), 0.0), 40.0) * 0.10;
     grassColor += spec;
 
     fragAlbedo = vec4(grassColor * occlusionFactor, 1.0);
-    fragNormal = vec4(worldToViewSpaceDirection(normal), 1.0);
+    fragNormal = vec4(worldToViewSpaceDirection(n), 1.0);
     fragMaterial = ivec4(15, 0, 0, 1);
     fragLightMap = vec4(1);
 }

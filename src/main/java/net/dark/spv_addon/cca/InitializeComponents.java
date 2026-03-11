@@ -37,6 +37,7 @@ public class InitializeComponents implements EntityComponentInitializer {
 
         registry.registerFor(BellWalkerEntity.class, BELL_WALKER, BellWalkerComponent::new);
         registry.registerFor(ServerPlayerEntity.class, DEATH_TELEPORT, DeathTeleportComponent::new);
+        registry.registerForPlayers(FLASHLIGHT_BATTERY, FlashlightBatteryComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
         registry.registerFor(PlayerEntity.class, THIRST, ThirstComponent::new);
         registry.registerFor(PlayerEntity.class, SANITY, SanityComponent::new);
         registry.registerForPlayers(RUN_TIMER, player -> new RunTimerComponent(), RespawnCopyStrategy.ALWAYS_COPY);

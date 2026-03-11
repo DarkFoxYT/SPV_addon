@@ -1,43 +1,50 @@
 package net.dark.spv_addon.world.events.misc;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
 public final class LevelRunSpawner {
-    private static final Identifier LEVEL_RUN_ID = new Identifier("spv_addon", "level_run"); // <-- change si besoin
+    private static final Identifier LEVEL_RUN_ID = new Identifier("spv_addon", "run");
     private static int cooldown = 0;
+
+    private LevelRunSpawner() {
+    }
 
     public static void init() {
         ServerTickEvents.START_WORLD_TICK.register(world -> {
-            if (!(world.getRegistryKey().getValue().equals(LEVEL_RUN_ID))) return;
-            if (cooldown > 0) { cooldown--; return; }
+            if (!world.getRegistryKey().getValue().equals(LEVEL_RUN_ID)) {
+                return;
+            }
+            if (cooldown > 0) {
+                cooldown--;
+                return;
+            }
 
             List<ServerPlayerEntity> players = world.getPlayers();
-            if (players.isEmpty()) return;
+            if (players.isEmpty()) {
+                return;
+            }
 
-            for (ServerPlayerEntity p : players) {
-                // Limite de densité : si déjà ≥ 6 entités "runner" à 48 blocs, on skip
+            for (ServerPlayerEntity player : players) {
                 int nearby = world.getEntitiesByType(
-                        /* Ton type d'entité */ EntityType.ZOMBIE, // <-- remplace par ModEntities.RUNNER
-                        p.getBoundingBox().expand(48.0),
-                        e -> true
+                        EntityType.ZOMBIE,
+                        player.getBoundingBox().expand(48.0),
+                        entity -> true
                 ).size();
-                if (nearby >= 6) continue;
+                if (nearby >= 6) {
+                    continue;
+                }
 
-                Entity spawned = EntityType.ZOMBIE.spawn(world, null, null);
+                Entity spawned = EntityType.ZOMBIE.create(world);
                 if (spawned != null) {
-                    cooldown = 20; // 1s global entre spawns (tune à volonté)
+                    spawned.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                    world.spawnEntity(spawned);
+                    cooldown = 40;
                     break;
                 }
             }

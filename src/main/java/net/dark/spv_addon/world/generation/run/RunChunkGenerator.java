@@ -3,16 +3,13 @@ package net.dark.spv_addon.world.generation.run;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sp.SPBRevampedClient;
 import com.sp.compat.modmenu.ConfigStuff;
-import com.sp.world.generation.chunk_generator.BackroomsChunkGenerator;
 import net.dark.spv_addon.Spv_addon;
+import net.dark.spv_addon.world.generation.framework.StructurePlacementHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
-import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
@@ -43,13 +40,11 @@ public final class RunChunkGenerator extends ChunkGenerator {
     );
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
-    private final Random random = Random.create();
     private final int corridorLength;
 
 
     public RunChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
-        SPBRevampedClient.setInBackrooms(true);
         this.settings = settings;
         this.corridorLength = ConfigStuff.exitSpawnRadius;
     }
@@ -59,8 +54,8 @@ public final class RunChunkGenerator extends ChunkGenerator {
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
+        Random random = StructurePlacementHelper.chunkRandom(cx, cz, 0x52_55_4EL);
         if (cz != 0) {
-            SPBRevampedClient.setInBackrooms(false);
             return;
         }
         int exitChunk = (corridorLength - 1) / 16;
@@ -76,10 +71,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
             return;
         }
 
-        MinecraftServer server = world.getServer();
-        if (server == null) return;
-        StructureTemplateManager mgr = server.getStructureTemplateManager();
-        Optional<StructureTemplate> optTpl = mgr.getTemplate(roomId);
+        Optional<StructureTemplate> optTpl = StructurePlacementHelper.template(world, roomId);
         if (optTpl.isEmpty()) return;
 
         int bx = chunk.getPos().getStartX();
@@ -103,7 +95,7 @@ public final class RunChunkGenerator extends ChunkGenerator {
         if (!template.place(world, basePos, basePos, placeData, random, 2)) return;
 
         Identifier roofId = new Identifier(Spv_addon.MOD_ID, "run/run_roof1");
-        Optional<StructureTemplate> roofTpl = mgr.getTemplate(roofId);
+        Optional<StructureTemplate> roofTpl = StructurePlacementHelper.template(world, roofId);
         if (roofTpl.isEmpty()) return;
 
         StructurePlacementData roofData = new StructurePlacementData()

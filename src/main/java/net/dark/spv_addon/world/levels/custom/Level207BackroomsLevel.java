@@ -8,6 +8,7 @@ import foundry.veil.api.client.render.deferred.light.DirectionalLight;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.world.generation.level207.Level207ChunkGenerator;
 import net.dark.spv_addon.world.levels.custom.events.HaHvavCustomEvent;
+import net.dark.spv_addon.world.transitions.SpbTransitionDirector;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,28 +37,13 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     }
 
     private BackroomsLevel.LevelTransition getPoolRoomsTransition(PlayerComponent playerComponent) {
-        return new BackroomsLevel.LevelTransition(110, (teleport, tick) -> {
-            World world = teleport.playerComponent().player.getWorld();
-            if (!world.isClient()) {
-                if (tick == 20) {
-                    teleport.playerComponent().setShouldNoClip(true);
-                    teleport.playerComponent().sync();
-                }
-
-                if (tick == 14) {
-                    SPBRevamped.sendBlackScreenPacket((ServerPlayerEntity)teleport.playerComponent().player, 20, true, false);
-                }
-
-                if (tick == 1) {
-                    teleport.playerComponent().setShouldNoClip(false);
-                    teleport.playerComponent().sync();
-                }
-
-            }
-        }, new BackroomsLevel.CrossDimensionTeleport(playerComponent, com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL.getSpawnPos(), this, com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL), (teleport, tick) -> {
-            teleport.playerComponent().setShouldNoClip(false);
-            teleport.playerComponent().sync();
-        });
+        return SpbTransitionDirector.createTransition(
+                playerComponent,
+                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL.getSpawnPos(),
+                this,
+                com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL,
+                SpbTransitionDirector.TransitionProfile.unstableGlitch()
+        );
     }
 
 

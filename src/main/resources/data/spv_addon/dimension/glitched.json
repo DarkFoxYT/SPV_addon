@@ -1,0 +1,12 @@
+{
+  "type": "spv_addon:glitched",
+  "generator": {
+    "type": "spv_addon:glitched_chunk_generator",
+    "settings": "spb-revamped:level0",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "spv_addon:glitched_biome"
+    }
+  }
+}
+

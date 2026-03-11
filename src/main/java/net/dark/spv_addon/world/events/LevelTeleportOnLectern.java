@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.world.World;
+import net.dark.spv_addon.util.ServerTickScheduler;
 
 public final class LevelTeleportOnLectern {
     private static final Identifier SOURCE_DIM_ID = new Identifier("spv_addon", "level188");
@@ -35,8 +36,13 @@ public final class LevelTeleportOnLectern {
             ServerWorld targetWorld = spe.getServer().getWorld(RegistryKey.of(RegistryKeys.WORLD, TARGET_DIM_ID));
             if (targetWorld == null) return ActionResult.PASS;
 
-            spe.teleport(targetWorld, TARGET_X, TARGET_Y, TARGET_Z, TARGET_YAW, TARGET_PITCH);
-            spe.sendMessage(Text.literal("Transitioned."), true);
+            com.sp.SPBRevamped.sendBlackScreenPacket(spe, 24, true, true);
+            ServerTickScheduler.schedule(20, () -> {
+                if (!spe.isRemoved()) {
+                    spe.teleport(targetWorld, TARGET_X, TARGET_Y, TARGET_Z, TARGET_YAW, TARGET_PITCH);
+                    spe.sendMessage(Text.literal("Transitioned."), true);
+                }
+            });
 
             return ActionResult.SUCCESS;
         });

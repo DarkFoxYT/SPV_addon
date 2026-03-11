@@ -34,7 +34,7 @@ public class ClientFlashlightRendererAddon {
             PlayerComponent comp = InitializeComponents.PLAYER.get(player);
             boolean isOn = comp.isFlashLightOn();
             int sanity = net.dark.spv_addon.cca.InitializeComponents.SANITY.get(player).getSanityLevel();
-            int battery = BatteryManager.getBattery(uuid);
+            int battery = BatteryManager.getBattery(player);
             if (battery <= 0) {
                 if (isOn) comp.setFlashLightOn(false);
                 forceOff(player);

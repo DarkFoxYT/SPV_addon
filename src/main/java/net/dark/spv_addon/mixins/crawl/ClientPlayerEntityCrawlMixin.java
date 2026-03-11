@@ -23,6 +23,8 @@ public abstract class ClientPlayerEntityCrawlMixin extends AbstractClientPlayerE
     
     @Shadow public Input input;
     @Shadow protected int ticksLeftToDoubleTapSprint;
+    private boolean lastSentCrawlRequest = false;
+    private int crawlPacketCooldown = 0;
     
     public ClientPlayerEntityCrawlMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
@@ -30,6 +32,7 @@ public abstract class ClientPlayerEntityCrawlMixin extends AbstractClientPlayerE
     
     @Inject(method = "tickMovement", at = @At("HEAD"))
     public void beforeTickMovement(CallbackInfo ci) {
+        if (MinecraftClient.getInstance().player == null) return;
         if (SpvAddonConfig.enableCrawling && MinecraftClient.getInstance().player.getPose() == CrawlSystem.Shared.CRAWLING) {
             this.input.sneaking = false;
             this.ticksLeftToDoubleTapSprint = 0;
@@ -44,12 +47,17 @@ public abstract class ClientPlayerEntityCrawlMixin extends AbstractClientPlayerE
         if (!SpvAddonConfig.enableCrawling) return;
 
         boolean wantsToCrawl = CrawlClient.crawlKey.isPressed();
+        if (crawlPacketCooldown > 0) {
+            crawlPacketCooldown--;
+        }
 
-        if (wantsToCrawl != getDataTracker().get(CrawlSystem.Shared.CRAWL_REQUEST)) {
+        if (wantsToCrawl != lastSentCrawlRequest && crawlPacketCooldown <= 0) {
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeBoolean(wantsToCrawl);
             ClientPlayNetworking.send(CrawlSystem.CRAWL_IDENTIFIER, buf);
             getDataTracker().set(CrawlSystem.Shared.CRAWL_REQUEST, wantsToCrawl);
+            lastSentCrawlRequest = wantsToCrawl;
+            crawlPacketCooldown = 2;
         }
 
         if (getPose() == CrawlSystem.Shared.CRAWLING) {
