@@ -1,6 +1,7 @@
 package net.dark.spv_addon.init.crawl;
 
 import net.dark.spv_addon.init.config.ServerConfig;
+import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -34,7 +35,12 @@ public final class CrawlStateController {
             return EntityPose.SWIMMING;
         }
 
-        boolean canStand = player.wouldPoseNotCollide(EntityPose.STANDING);
+        boolean canStand = Dismounting.canPlaceEntityAt(
+                player.getWorld(),
+                player.getPos(),
+                player,
+                EntityPose.STANDING
+        );
         if (crawlRequested) {
             return CrawlSystem.Shared.CRAWLING;
         }
