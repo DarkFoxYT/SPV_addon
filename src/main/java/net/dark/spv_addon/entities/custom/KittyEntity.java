@@ -38,7 +38,7 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
 
     public KittyEntity(EntityType<? extends KittyEntity> type, World world) {
         super(type, world);
-        if (!world.isClient && world.getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+        if (!world.isClient && world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
             this.refreshPositionAndAngles(15.0, 2.0, 15.0, this.getYaw(), this.getPitch());
         }
     }
@@ -148,8 +148,6 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
             float targetPitch = (float) (Math.atan2(dy, dist) * (180F / Math.PI));
             this.headYaw += MathHelper.wrapDegrees(targetYaw - this.headYaw) * 0.2F;
             this.headPitch += (targetPitch - this.headPitch) * 0.2F;
-            this.headYaw += MathHelper.wrapDegrees(targetYaw + this.headYaw) * 0.2F;
-            this.headPitch += (targetPitch + this.headPitch) * 0.2F;
         }
 
         // Check for disconnected players every 5 seconds (100 ticks)
@@ -164,15 +162,13 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
      * Check if all players have disconnected and remove kitty if so
      */
     private void checkForDisconnectedPlayers() {
-        if (!this.getWorld().isClient && this.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+        if (!this.getWorld().isClient && this.getWorld().getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
             // Check if there are any players in the Kitty level
             boolean hasPlayers = !this.getWorld().getPlayers().isEmpty();
 
             if (!hasPlayers) {
                 // No players in the level, remove the kitty
                 this.discard();
-                // Reset the spawn flag so a new kitty can spawn when players return
-                net.dark.spv_addon.world.levels.custom.LevelKittyBackroomsLevel.kittySpawned = false;
             }
         }
     }
@@ -242,7 +238,7 @@ public class KittyEntity extends PathAwareEntity implements GeoAnimatable {
 
         if (!player.getWorld().isClient && player instanceof ServerPlayerEntity serverPlayer) {
             // Only work in the Kitty level
-            if (serverPlayer.getWorld().getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+            if (serverPlayer.getWorld().getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
                 var level = (LevelKittyBackroomsLevel) net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_BACKROOMS_LEVEL;
                 var pc = InitializeComponents.PLAYER.get(serverPlayer);
 

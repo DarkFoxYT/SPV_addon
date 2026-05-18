@@ -56,6 +56,8 @@ public final class GlitchedLevelRenderController {
 
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
+            RenderSystem.disableDepthTest();
+            RenderSystem.depthMask(false);
             shader.setFloat("uTime", time);
             shader.setFloat("uChaos", SpvAddonConfig.getGlitchChaos());
             shader.setFloat("uDistortionStrength", SpvAddonConfig.getGlitchDistortion());
@@ -70,6 +72,8 @@ public final class GlitchedLevelRenderController {
             VertexBuffer.unbind();
 
             ShaderProgram.unbind();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
             RenderSystem.disableBlend();
         });
     }

@@ -9,12 +9,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CollisionShapeHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CollisionShapeHelper.class);
+    private static final Map<String, Map<Direction, VoxelShape>> DIRECTIONAL_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, VoxelShape> UNROTATED_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Loads collision shapes grouped by direction prefix with numbered suffixes in the JSON model.
@@ -23,6 +29,12 @@ public class CollisionShapeHelper {
      * If no collisions found for a direction, returns empty shape.
      */
     public static Map<Direction, VoxelShape> loadDirectionalCollisionsFromModelJson(String namespace, String path) {
+        String cacheKey = namespace + ":" + path;
+        Map<Direction, VoxelShape> cached = DIRECTIONAL_CACHE.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+
         Map<Direction, List<VoxelShape>> shapeMap = new EnumMap<>(Direction.class);
         for (Direction dir : List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)) {
             shapeMap.put(dir, new ArrayList<>());
@@ -68,11 +80,12 @@ public class CollisionShapeHelper {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("Unable to load directional collision model {}:{}", namespace, path, e);
             Map<Direction, VoxelShape> fallback = new EnumMap<>(Direction.class);
             for (Direction d : List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)) {
                 fallback.put(d, VoxelShapes.empty());
             }
+            DIRECTIONAL_CACHE.put(cacheKey, fallback);
             return fallback;
         }
 
@@ -90,6 +103,7 @@ public class CollisionShapeHelper {
             }
         }
 
+        DIRECTIONAL_CACHE.put(cacheKey, combinedMap);
         return combinedMap;
     }
 
@@ -98,6 +112,12 @@ public class CollisionShapeHelper {
      * Ignores direction, doesn't rotate anything.
      */
     public static VoxelShape loadUnrotatedCollisionFromModelJson(String namespace, String path) {
+        String cacheKey = namespace + ":" + path;
+        VoxelShape cached = UNROTATED_CACHE.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+
         List<VoxelShape> shapes = new ArrayList<>();
 
         try {
@@ -130,16 +150,21 @@ public class CollisionShapeHelper {
                 shapes.add(shape);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("Unable to load collision model {}:{}", namespace, path, e);
+            UNROTATED_CACHE.put(cacheKey, VoxelShapes.empty());
             return VoxelShapes.empty();
         }
 
-        if (shapes.isEmpty()) return VoxelShapes.empty();
+        if (shapes.isEmpty()) {
+            UNROTATED_CACHE.put(cacheKey, VoxelShapes.empty());
+            return VoxelShapes.empty();
+        }
         VoxelShape combined = shapes.get(0);
         for (int i = 1; i < shapes.size(); i++) {
             combined = VoxelShapes.union(combined, shapes.get(i));
         }
 
+        UNROTATED_CACHE.put(cacheKey, combined);
         return combined;
     }
 

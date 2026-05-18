@@ -21,6 +21,7 @@ import java.util.List;
 
 public class Level188BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
+    private boolean registered = false;
 
     public Level188BackroomsLevel() {
         super("level188", Level188ChunkGenerator.CODEC, new Vec3d(16, 60, 16), BackroomsLevels.LEVEL188_WORLD_KEY, "spv_addon");
@@ -33,7 +34,7 @@ public class Level188BackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof PoolroomsBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY) {
+            if (from instanceof PoolroomsBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey().equals(com.sp.init.BackroomsLevels.POOLROOMS_WORLD_KEY)) {
                 playerList.add(this.getLevel105Transition(playerComponent));
             }
 
@@ -48,7 +49,7 @@ public class Level188BackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof Level188BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL188_WORLD_KEY) {
+            if (from instanceof Level188BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey().equals(BackroomsLevels.LEVEL188_WORLD_KEY)) {
                 playerList.add(this.getInfiniteFieldsTransition(playerComponent));
             }
 
@@ -63,7 +64,7 @@ public class Level188BackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.INFINITE_FIELD_WORLD_KEY) {
+            if (Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey().equals(com.sp.init.BackroomsLevels.INFINITE_FIELD_WORLD_KEY)) {
                 playerList.add(this.getLevel105FromInfiniteFieldsTransition(playerComponent));
             }
 
@@ -109,6 +110,10 @@ public class Level188BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
+        if (registered) {
+            return;
+        }
+        registered = true;
     }
 
     @Override
@@ -133,8 +138,4 @@ public class Level188BackroomsLevel extends BackroomsLevel {
         teleport.playerComponent().loadPlayerSavedInventory();
     }
 
-    @Override
-    public int getTransitionDuration() {
-        return 110;
-    }
 }

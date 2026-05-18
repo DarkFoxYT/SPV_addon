@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelKittyBackroomsLevel extends BackroomsLevel {
-    public static boolean kittySpawned = false;
     private final Random random = Random.create();
+    private boolean registered = false;
 
     public LevelKittyBackroomsLevel() {
         super("kitty", KittyChunkGenerator.CODEC, new Vec3d(21, 2, 13), BackroomsLevels.LEVEL_KITTY_WORLD_KEY, "spv_addon");
@@ -42,7 +42,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY) {
+            if (from instanceof Level2BackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey().equals(com.sp.init.BackroomsLevels.LEVEL2_WORLD_KEY)) {
                 playerList.add(this.getKittyTransition(playerComponent));
             }
 
@@ -57,7 +57,7 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
                 exitRadius = ((NewServerProperties)((MinecraftDedicatedServer)world.getServer()).getProperties()).getExitSpawnRadius();
             }
 
-            if (from instanceof LevelKittyBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL_KITTY_WORLD_KEY) {
+            if (from instanceof LevelKittyBackroomsLevel && Math.abs(playerComponent.player.getPos().getZ()) >= (double)exitRadius && playerComponent.player.getWorld().getRegistryKey().equals(BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
                 playerList.add(this.getPoolRoomsTransition(playerComponent));
             }
 
@@ -86,7 +86,12 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
     }
 
     public static void ensureSingleKitty(ServerWorld world) {
-        if (kittySpawned) return;
+        boolean existingKitty = !world.getEntitiesByType(
+                ModEntities.KITTY,
+                new net.minecraft.util.math.Box(-64.0, -16.0, -64.0, 96.0, 48.0, 96.0),
+                kitty -> kitty.isAlive() && !kitty.isRemoved()
+        ).isEmpty();
+        if (existingKitty) return;
 
         BlockPos spawnPos = new BlockPos(15, 2, 18);
         if (!world.isChunkLoaded(spawnPos)) return;
@@ -94,17 +99,19 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         KittyEntity kitty = new KittyEntity(ModEntities.KITTY, world);
         kitty.refreshPositionAndAngles(spawnPos, 0.0F, 0.0F);
         world.spawnEntity(kitty);
-        kittySpawned = true;
-
-        System.out.println("Spawned kitty at " + spawnPos);
     }
 
     @Override
     public void register() {
+        if (registered) {
+            return;
+        }
+        registered = true;
+
         // Register enhanced kitty events
-        this.registerEvents("kitty_drops", KittyMeowEvent::new);
-        this.registerEvents("phantom_kitty", net.dark.spv_addon.world.events.levelkitty.PhantomKittyEvent::new);
-        this.registerEvents("empty", HaHvavCustomEvent::new);
+        this.registerEvent("kitty_drops", KittyMeowEvent::new);
+        this.registerEvent("phantom_kitty", net.dark.spv_addon.world.events.levelkitty.PhantomKittyEvent::new);
+        this.registerEvent("empty", HaHvavCustomEvent::new);
 
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             if (world.getRegistryKey().equals(BackroomsLevels.LEVEL_KITTY_WORLD_KEY)) {
@@ -141,36 +148,21 @@ public class LevelKittyBackroomsLevel extends BackroomsLevel {
         teleport.playerComponent().loadPlayerSavedInventory();
     }
 
-    @Override
-    public int getTransitionDuration() {
-        return 110;
-    }
-
     /**
      * Execute a transition manually (used by KittyEntity)
      */
     public void executeTransition(BackroomsLevel.LevelTransition transition) {
-        if (transition != null && transition.teleport() != null) {
-            var teleport = transition.teleport();
-            var player = teleport.playerComponent().player;
-
-            if (player instanceof ServerPlayerEntity serverPlayer) {
-                var server = serverPlayer.getWorld().getServer();
-                if (server != null) {
-                    // Teleport to the destination level
-                    var destinationWorld = server.getWorld(teleport.to().getWorldKey());
-                    if (destinationWorld != null) {
-                        var spawnPos = teleport.to().getSpawnPos();
-                        serverPlayer.teleport(destinationWorld,
-                            spawnPos.x, spawnPos.y, spawnPos.z,
-                            serverPlayer.getYaw(), serverPlayer.getPitch());
-
-                        // Call transition methods
-                        this.transitionOut(teleport);
-                        teleport.to().transitionIn(teleport);
-                    }
-                }
-            }
+        if (transition == null || transition.teleport() == null) {
+            return;
         }
+
+        var playerComponent = transition.teleport().playerComponent();
+        if (!(playerComponent.player instanceof ServerPlayerEntity) || playerComponent.currentTransition != null) {
+            return;
+        }
+
+        playerComponent.currentTransition = transition;
+        playerComponent.setTeleportingTimer(-1);
+        playerComponent.sync();
     }
 }

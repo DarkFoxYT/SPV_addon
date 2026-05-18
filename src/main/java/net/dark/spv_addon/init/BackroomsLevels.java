@@ -35,23 +35,27 @@ public class BackroomsLevels {
     public static final BackroomsLevel LEVEL207_BACKROOMS_LEVEL = new Level207BackroomsLevel();
     public static final BackroomsLevel GLITCHED_BACKROOMS_LEVEL = new GlitchedBackroomsLevel();
 
+    private static boolean initialized = false;
 
     public static void init() {
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL188_BACKROOMS_LEVEL);
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVELRUN_BACKROOMS_LEVEL);
-        //com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_IKEA_BACKROOMS_LEVEL);
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL_KITTY_BACKROOMS_LEVEL);
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(LEVEL207_BACKROOMS_LEVEL);
-        com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(GLITCHED_BACKROOMS_LEVEL);
+        if (initialized) {
+            return;
+        }
+        initialized = true;
 
+        addAndRegister(LEVEL188_BACKROOMS_LEVEL);
+        addAndRegister(LEVELRUN_BACKROOMS_LEVEL);
+        //addAndRegister(LEVEL_IKEA_BACKROOMS_LEVEL);
+        addAndRegister(LEVEL_KITTY_BACKROOMS_LEVEL);
+        addAndRegister(LEVEL207_BACKROOMS_LEVEL);
+        addAndRegister(GLITCHED_BACKROOMS_LEVEL);
+    }
 
-        LEVEL188_BACKROOMS_LEVEL.register();
-        LEVELRUN_BACKROOMS_LEVEL.register();
-        //LEVEL_IKEA_BACKROOMS_LEVEL.register();
-        LEVEL_KITTY_BACKROOMS_LEVEL.register();
-        LEVEL207_BACKROOMS_LEVEL.register();
-        GLITCHED_BACKROOMS_LEVEL.register();
+    private static void addAndRegister(BackroomsLevel level) {
+        if (!com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.contains(level)) {
+            com.sp.init.BackroomsLevels.BACKROOMS_LEVELS.add(level);
+        }
 
-
+        level.register();
     }
 }

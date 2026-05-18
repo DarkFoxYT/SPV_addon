@@ -277,6 +277,18 @@ public class SpvAddonConfig extends MidnightConfig {
     @Entry(category = "performance")
     public static boolean reduceParticles = false;
 
+    @Entry(category = "performance")
+    public static boolean enableBackroomsShadows = true;
+
+    @Entry(category = "performance")
+    public static int shadowUpdateInterval = 2;
+
+    @Entry(category = "performance")
+    public static boolean enableLevel207Grass = true;
+
+    @Entry(category = "performance")
+    public static int maxGrassInstances = 12000;
+
     /**
      * Check if we're in singleplayer mode
      */

@@ -14,10 +14,6 @@ import net.dark.spv_addon.Additions.sanity.SanityEffectsManager;
 import net.dark.spv_addon.entities.client.renderer.BellWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.IKEAWalkerRenderer;
 import net.dark.spv_addon.entities.client.renderer.KittyRenderer;
-import net.dark.spv_addon.entities.custom.BellWalkerEntity;
-import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
-import net.dark.spv_addon.entities.custom.KittyEntity;
-import net.dark.spv_addon.entities.custom.StalkerEntity;
 import net.dark.spv_addon.init.BackroomsLevels;
 import net.dark.spv_addon.init.ModBlockEntities;
 import net.dark.spv_addon.init.ModBlocks;
@@ -30,7 +26,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
@@ -54,6 +49,7 @@ public class Spv_addonClient implements ClientModInitializer {
 
     private final ClientFlashlightRendererAddon flashlightRenderer = new ClientFlashlightRendererAddon();
     private GrassRenderer grassRenderer;
+    private int shadowRenderFrame;
     public static Camera camera;
 
     @Override
@@ -81,13 +77,9 @@ public class Spv_addonClient implements ClientModInitializer {
             SanityEffectsManager.getInstance().updateEffects(client.getTickDelta());
         });
 
-        FabricDefaultAttributeRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.SIX_LEG_ENTITY, BellWalkerRenderer::new);
-        FabricDefaultAttributeRegistry.register(ModEntities.KITTY, KittyEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.KITTY, KittyRenderer::new);
-        FabricDefaultAttributeRegistry.register(ModEntities.IKEA_WALKER, IkeaWalkerEntity.createAttributes());
         EntityRendererRegistry.register(ModEntities.IKEA_WALKER, IKEAWalkerRenderer::new);
-        FabricDefaultAttributeRegistry.register(ModEntities.STALKER_ENTITY, StalkerEntity.createAttributes());
 
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
@@ -118,14 +110,11 @@ public class Spv_addonClient implements ClientModInitializer {
             World clientWorld = client.world;
             if (clientWorld != null) {
 
-                if (SHADOW_MAP_LEVELS.contains(clientWorld.getRegistryKey())
-                        && stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY
-                        && camera != null) {
-                    ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
-                }
+                renderBackroomsShadows(stage, camera, partialTicks, clientWorld);
 
 
-                if (clientWorld.getRegistryKey() != net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY) {
+                if (!clientWorld.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL207_WORLD_KEY)
+                        || !SpvAddonConfig.enableLevel207Grass) {
                     if (this.grassRenderer != null) {
                         this.grassRenderer.close();
                         this.grassRenderer = null;
@@ -144,5 +133,20 @@ public class Spv_addonClient implements ClientModInitializer {
 
     }
 
+    private void renderBackroomsShadows(VeilRenderLevelStageEvent.Stage stage, Camera camera, float partialTicks, World clientWorld) {
+        if (!SpvAddonConfig.enableBackroomsShadows
+                || stage != VeilRenderLevelStageEvent.Stage.AFTER_SKY
+                || camera == null
+                || !SHADOW_MAP_LEVELS.contains(clientWorld.getRegistryKey())) {
+            return;
+        }
+
+        int updateInterval = SpvAddonConfig.optimizeRendering ? Math.max(1, SpvAddonConfig.shadowUpdateInterval) : 1;
+        if (shadowRenderFrame++ % updateInterval != 0) {
+            return;
+        }
+
+        ShadowMapRenderer.renderShadowMap(camera, partialTicks, clientWorld);
+    }
 
 }

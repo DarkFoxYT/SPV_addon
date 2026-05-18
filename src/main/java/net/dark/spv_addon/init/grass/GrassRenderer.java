@@ -10,6 +10,7 @@ import foundry.veil.api.client.render.VeilRenderer;
 import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import foundry.veil.api.client.render.framebuffer.VeilFramebuffers;
 import foundry.veil.api.client.render.shader.program.ShaderProgram;
+import net.dark.spv_addon.init.config.SpvAddonConfig;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gl.VertexBuffer.Usage;
 import net.minecraft.client.render.BufferBuilder;
@@ -20,6 +21,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.joml.Vector4fc;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15C;
 import org.lwjgl.opengl.GL42C;
 import org.lwjgl.opengl.GL43C;
@@ -44,7 +46,7 @@ public class GrassRenderer {
     VertexBuffer vertexBuffer;
     private int lastGrassCount;
     private int lastMeshResolution;
-    private ByteBuffer cmd;
+    private final ByteBuffer indirectCommand = BufferUtils.createByteBuffer(20);
 
     public GrassRenderer() {
         this.vertexBuffer = new VertexBuffer(Usage.STATIC);
@@ -66,10 +68,14 @@ public class GrassRenderer {
     }
 
     public void render() {
+        if (getGrassCount() <= 0) {
+            return;
+        }
+
         AdvancedFbo fbo = VeilRenderSystem.renderer().getFramebufferManager().getFramebuffer(VeilFramebuffers.OPAQUE);
         if (fbo != null) {
             fbo.bind(false);
-            if (ConfigStuff.grassQuality.getCount() != this.lastGrassCount || ConfigStuff.grassQuality.getResolution() != this.lastMeshResolution) {
+            if (getGrassCount() != this.lastGrassCount || ConfigStuff.grassQuality.getResolution() != this.lastMeshResolution) {
                 if (this.vertexBuffer != null) {
                     this.vertexBuffer.close();
                 }
@@ -89,7 +95,7 @@ public class GrassRenderer {
             ShaderProgram shader = VeilRenderSystem.setShader(shaderPath);
             if (shader != null) {
                 shader.setFloat("GameTime", RenderSystem.getShaderGameTime());
-                shader.setInt("NumOfInstances", MathHelper.floor(MathHelper.sqrt((float) ConfigStuff.grassQuality.getCount())));
+                shader.setInt("NumOfInstances", MathHelper.floor(MathHelper.sqrt((float) getGrassCount())));
                 shader.setFloat("grassHeight", this.getGrassHeight());
                 shader.setFloat("density", ConfigStuff.grassQuality.getDensity());
                 RenderSystem.setShaderTexture(0, windTexture);
@@ -111,7 +117,7 @@ public class GrassRenderer {
     }
 
     private void updateBuffers(boolean init) {
-        int currentGrassCount = ConfigStuff.grassQuality.getCount();
+        int currentGrassCount = getGrassCount();
         int currentMeshResolution = ConfigStuff.grassQuality.getResolution();
         boolean countChange = currentGrassCount != this.lastGrassCount;
         boolean resolutionChange = currentMeshResolution != this.lastMeshResolution;
@@ -122,19 +128,14 @@ public class GrassRenderer {
         }
 
         GL15C.glBindBuffer(36671, this.indirectVbo);
-        GL42C.glBufferData(36671, 20L, 35044);
-        this.cmd = GL42C.glMapBufferRange(36671, 0L, 20L, 42);
-        if (this.cmd != null) {
-            this.cmd.clear();
-            this.cmd.putInt(VeilRenderSystem.getIndexCount(this.vertexBuffer));
-            this.cmd.putInt(0);
-            this.cmd.putInt(0);
-            this.cmd.putInt(0);
-            this.cmd.putInt(0);
-            this.cmd.flip();
-        }
-
-        GL42C.glUnmapBuffer(36671);
+        this.indirectCommand.clear();
+        this.indirectCommand.putInt(VeilRenderSystem.getIndexCount(this.vertexBuffer));
+        this.indirectCommand.putInt(0);
+        this.indirectCommand.putInt(0);
+        this.indirectCommand.putInt(0);
+        this.indirectCommand.putInt(0);
+        this.indirectCommand.flip();
+        GL15C.glBufferData(36671, this.indirectCommand, 35048);
         GL15C.glBindBuffer(36671, 0);
         if (countChange) {
             this.lastGrassCount = currentGrassCount;
@@ -152,7 +153,10 @@ public class GrassRenderer {
             if (shader.isCompute()) {
                 GL42C.glBindBufferBase(37074, 0, this.positionsVbo);
                 GL42C.glBindBufferBase(37074, 1, this.indirectVbo);
-                int numOfInst = MathHelper.floor(MathHelper.sqrt((float) ConfigStuff.grassQuality.getCount()));
+                int numOfInst = MathHelper.floor(MathHelper.sqrt((float) getGrassCount()));
+                if (numOfInst <= 0) {
+                    return;
+                }
                 shader.setInt("NumOfInstances", numOfInst);
                 shader.setFloat("density", ConfigStuff.grassQuality.getDensity());
                 float maxDist = (float) numOfInst / (ConfigStuff.grassQuality.getDensity() * 1.85F);
@@ -208,9 +212,12 @@ public class GrassRenderer {
         }
         GL42C.glDeleteBuffers(this.positionsVbo);
         GL42C.glDeleteBuffers(this.indirectVbo);
-        if (this.cmd != null) {
-            this.cmd.clear();
-            this.cmd = null;
-        }
+        this.indirectCommand.clear();
+    }
+
+    private static int getGrassCount() {
+        int configuredCount = Math.max(0, ConfigStuff.grassQuality.getCount());
+        int cap = Math.max(0, SpvAddonConfig.maxGrassInstances);
+        return Math.min(configuredCount, cap);
     }
 }

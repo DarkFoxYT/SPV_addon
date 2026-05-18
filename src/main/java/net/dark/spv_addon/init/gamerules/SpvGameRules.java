@@ -44,6 +44,14 @@ public class SpvGameRules {
     public static final GameRules.Key<GameRules.BooleanRule> SANITY_EFFECTS_ENABLED =
             GameRuleRegistry.register("spvSanityEffects", GameRules.Category.MISC, 
                     GameRuleFactory.createBooleanRule(true));
+
+    public static final GameRules.Key<GameRules.BooleanRule> LEVEL_RUN_RANDOM_TRANSITIONS =
+            GameRuleRegistry.register("spvLevelRunRandomTransitions", GameRules.Category.MISC,
+                    GameRuleFactory.createBooleanRule(true));
+
+    public static final GameRules.Key<GameRules.IntRule> LEVEL_RUN_CHANCE =
+            GameRuleRegistry.register("spvLevelRunChance", GameRules.Category.MISC,
+                    GameRuleFactory.createIntRule(50000, 100, 1000000));
     
     /**
      * Initialize game rules
@@ -106,5 +114,13 @@ public class SpvGameRules {
      */
     public static boolean areSanityEffectsEnabled(GameRules gameRules) {
         return gameRules.getBoolean(SANITY_EFFECTS_ENABLED);
+    }
+
+    public static boolean areLevelRunRandomTransitionsEnabled(GameRules gameRules) {
+        return gameRules.getBoolean(LEVEL_RUN_RANDOM_TRANSITIONS);
+    }
+
+    public static int getLevelRunChance(GameRules gameRules) {
+        return gameRules.getInt(LEVEL_RUN_CHANCE);
     }
 }

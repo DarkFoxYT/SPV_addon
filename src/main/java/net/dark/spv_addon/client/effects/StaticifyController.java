@@ -52,6 +52,8 @@ public final class StaticifyController {
 
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
+            RenderSystem.disableDepthTest();
+            RenderSystem.depthMask(false);
 
             shader.setFloat("uEnable", 1.0f);
             shader.setFloat("uTime", time);
@@ -64,6 +66,8 @@ public final class StaticifyController {
             VertexBuffer.unbind();
 
             ShaderProgram.unbind();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
             RenderSystem.disableBlend();
         });
     }

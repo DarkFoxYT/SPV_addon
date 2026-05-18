@@ -180,6 +180,8 @@
   "spv_addon.midnightconfig.updateFrequency": "Update Frequency",
   "spv_addon.midnightconfig.optimizeRendering": "Optimize Rendering",
   "spv_addon.midnightconfig.reduceParticles": "Reduce Particles",
+  "spv_addon.midnightconfig.enableBackroomsShadows": "Backrooms Shadows",
+  "spv_addon.midnightconfig.shadowUpdateInterval": "Shadow Update Interval",
   "spv_addon.midnightconfig.enum.ColorPreset.RED": "Red Theme",
   "spv_addon.midnightconfig.enum.ColorPreset.GREEN": "Green Theme",
   "spv_addon.midnightconfig.enum.ColorPreset.BLUE": "Blue Theme",

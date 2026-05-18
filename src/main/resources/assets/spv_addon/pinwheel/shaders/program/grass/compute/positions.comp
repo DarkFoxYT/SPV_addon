@@ -50,6 +50,9 @@ void main() {
     uint idy = gl_GlobalInvocationID.y;
     int increment = 0;
 
+    if (idx >= uint(NumOfInstances) || idy >= uint(NumOfInstances)) {
+        return;
+    }
 
     vec3 cameraPos = VeilCamera.CameraPosition;
     vec3 player = vec3(floor(cameraPos.x), 0, floor(cameraPos.z));
@@ -57,11 +60,11 @@ void main() {
     float cameraZ = mod(cameraPos.z, 1);
     cameraPos.xz = vec2(cameraX, cameraZ);
 
-    uint instanceID = idx + (idy*NumOfInstances);
+    uint instanceID = idx + idy * uint(NumOfInstances);
 
-    float halfInstances = NumOfInstances / 2 - 0.5;
-    float x = (mod(instanceID, NumOfInstances) - halfInstances);
-    float z = (floor(instanceID / NumOfInstances) - halfInstances);
+    float halfInstances = float(NumOfInstances) * 0.5 - 0.5;
+    float x = float(instanceID % uint(NumOfInstances)) - halfInstances;
+    float z = floor(float(instanceID) / float(NumOfInstances)) - halfInstances;
 
     vec3 offset = vec3(x/density, 21, z/density);
 
@@ -69,7 +72,7 @@ void main() {
     vec3 WorldPos = offset - cameraPos;
 
 
-    if (length(WorldPos.xz - cameraPos.xz) < 90){
+    if (length(WorldPos.xz - cameraPos.xz) < maxDist) {
         if (testSphere(WorldPos.x, WorldPos.y, WorldPos.z, 1.0)) {
             uint compactIndex = atomicAdd(indirectBuffer.primCount, 1);
             myBuffer.position[compactIndex] = offset;

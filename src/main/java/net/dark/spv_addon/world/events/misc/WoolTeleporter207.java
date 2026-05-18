@@ -9,6 +9,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.dark.spv_addon.util.ServerTickScheduler;
+import net.dark.spv_addon.world.transitions.SpbTransitionDirector;
 
 public class WoolTeleporter207 {
 
@@ -50,10 +51,14 @@ public class WoolTeleporter207 {
         ServerWorld targetWorld = server.getWorld(TARGET_WORLD);
         if (targetWorld == null) return;
 
-        com.sp.SPBRevamped.sendBlackScreenPacket(player, 28, true, true);
-        ServerTickScheduler.schedule(24, () -> {
+        int teleportDelay = SpbTransitionDirector.beginDirectTransition(
+                player,
+                SpbTransitionDirector.TransitionProfile.quickCut()
+        );
+        ServerTickScheduler.schedule(teleportDelay, () -> {
             if (!player.isRemoved()) {
                 player.teleport(targetWorld, 15, 90, 15, player.getYaw(), -90);
+                SpbTransitionDirector.completeDirectTransition(player);
             }
         });
     }

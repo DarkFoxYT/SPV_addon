@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelIKEA extends BackroomsLevel {
+    private boolean registered = false;
+
     public LevelIKEA() {
         super("level_ikea", LevelIKEAChunkGenerator.CODEC, new Vec3d(16, 2, 16), BackroomsLevels.LEVEL_IKEA_WORLD_KEY, "spv_addon");
 
@@ -51,8 +53,12 @@ public class LevelIKEA extends BackroomsLevel {
 
     @Override
     public void register() {
+        if (registered) {
+            return;
+        }
+        registered = true;
 
-        this.registerEvents("empty_ikea", HaHvavCustomEvent::new);
+        this.registerEvent("empty_ikea", HaHvavCustomEvent::new);
 
     }
 

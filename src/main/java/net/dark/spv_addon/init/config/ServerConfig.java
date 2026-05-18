@@ -81,6 +81,16 @@ public class ServerConfig {
         GameRules gameRules = server.getGameRules();
         return SpvGameRules.areSanityEffectsEnabled(gameRules);
     }
+
+    public static boolean areLevelRunRandomTransitionsEnabled(MinecraftServer server) {
+        if (server == null) return true;
+        return SpvGameRules.areLevelRunRandomTransitionsEnabled(server.getGameRules());
+    }
+
+    public static int getLevelRunChance(MinecraftServer server) {
+        if (server == null) return 50000;
+        return SpvGameRules.getLevelRunChance(server.getGameRules());
+    }
     
     /**
      * Check if crawling is enabled on the server

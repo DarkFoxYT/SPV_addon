@@ -49,7 +49,7 @@ public class KittyLightBlockEntity extends BlockEntity {
             ++this.ticks;
             this.currentState = state;
             if (!world.isClient) {
-                if (world.getRegistryKey() == net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY && world.getBlockState(pos.down()) != Blocks.AIR.getDefaultState()) {
+                if (world.getRegistryKey().equals(net.dark.spv_addon.init.BackroomsLevels.LEVEL_KITTY_WORLD_KEY) && world.getBlockState(pos.down()) != Blocks.AIR.getDefaultState()) {
                     world.removeBlockEntity(pos);
                     world.getWorldChunk(pos);
                     world.setBlockState(pos, ModBlocks.KITTY_ROOF.getDefaultState());

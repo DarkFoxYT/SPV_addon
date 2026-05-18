@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "spv_addon",
-  "version": "1.0.1 - BETA 4",
+  "version": "${version}",
   "name": "The Volatile Addon",
   "description": "Adds a bunch of stuff to space potatoes found footage mod",
   "icon": "Volatileicon.png",
@@ -41,10 +41,10 @@
     "spv_addon.mixins.json"
   ],
   "depends": {
-    "fabricloader": "*",
+    "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "cardinal-components-base": "*",
-    "spb-revamped": "*",
+    "spb-revamped": ">=1.2.0",
     "midnightlib": ">=1.4.1"
   },
   "suggests": {

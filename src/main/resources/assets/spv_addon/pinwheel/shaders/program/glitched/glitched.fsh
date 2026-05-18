@@ -1,6 +1,4 @@
 #version 150
-uniform sampler2D uColor;
-uniform sampler2D uDepth;
 uniform float uTime;
 uniform float uChaos;
 uniform float uDistortionStrength;
@@ -29,23 +27,19 @@ float noise(vec2 p) {
 }
 
 void main() {
-    float depth = texture(uDepth, vUV).r;
-    float geoMask = step(0.999, 1.0 - depth);
-
     vec2 uv = vUV;
     float line = sin((uv.y * uScreenSize.y * 0.05) + uTime * 11.0);
     float offset = line * uDistortionStrength;
     uv.x += offset;
     uv.y += (noise(uv * 28.0 + uTime) - 0.5) * uDistortionStrength * 0.75;
 
-    vec3 base = texture(uColor, uv).rgb;
-
     float chroma = (noise(uv * 64.0 + uTime * 0.9) - 0.5) * uChromaStrength;
-    float r = texture(uColor, uv + vec2(chroma, 0.0)).r;
-    float g = texture(uColor, uv).g;
-    float b = texture(uColor, uv - vec2(chroma, 0.0)).b;
+    vec3 glitched = vec3(
+        0.45 + 0.55 * noise((uv + vec2(chroma, 0.0)) * uNoiseScale + uTime * 9.0),
+        0.35 + 0.45 * noise(uv * (uNoiseScale * 0.75) - uTime * 6.0),
+        0.55 + 0.40 * noise((uv - vec2(chroma, 0.0)) * (uNoiseScale * 1.15) + uTime * 3.0)
+    );
 
-    vec3 glitched = vec3(r, g, b);
     float scan = 1.0 - uFlashStrength + uFlashStrength * sin((uv.y + uTime * 0.2) * uScreenSize.y * 0.6);
     float speckle = (noise(uv * uNoiseScale + uTime * 7.0) - 0.5) * (0.08 + uChaos * 0.22);
     vec3 colorWarp = vec3(
@@ -54,7 +48,8 @@ void main() {
         0.90 + 0.20 * sin(uTime * 2.0 + (uv.x + uv.y) * 15.0)
     );
 
-    float blend = geoMask * clamp(uChaos * 1.2, 0.0, 1.0);
-    vec3 finalColor = mix(base, glitched * colorWarp * scan + speckle, blend);
-    fragColor = vec4(finalColor, 1.0);
+    float band = smoothstep(0.62, 0.96, noise(vec2(floor(uv.y * 90.0), floor(uTime * 24.0))));
+    float alpha = clamp(0.035 + uChaos * 0.18 + band * uChaos * 0.10, 0.0, 0.32);
+    vec3 finalColor = glitched * colorWarp * scan + speckle;
+    fragColor = vec4(finalColor, alpha);
 }

@@ -4,6 +4,7 @@ import com.sp.cca_stuff.InitializeComponents;
 import com.sp.cca_stuff.PlayerComponent;
 import net.dark.spv_addon.cca.LevelRunComponent;
 import net.dark.spv_addon.init.BackroomsLevels;
+import net.dark.spv_addon.world.transitions.SpbTransitionDirector;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -34,8 +35,13 @@ public class LevelRunManager {
     
     private static final Random RANDOM = new Random();
     private static final Set<UUID> playersInTransition = new HashSet<>();
+    private static boolean initialized = false;
     
     public static void initialize() {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
         ServerTickEvents.END_SERVER_TICK.register(LevelRunManager::onServerTick);
         LOGGER.info("Level RUN Manager initialized");
     }
@@ -112,11 +118,12 @@ public class LevelRunManager {
         
         // Completion messages removed as requested
         
-        // Apply black screen effect
-        com.sp.SPBRevamped.sendBlackScreenPacket(player, 60, true, false);
+        int teleportDelay = SpbTransitionDirector.beginDirectTransition(
+                player,
+                SpbTransitionDirector.TransitionProfile.runEscape()
+        );
 
-        // Schedule teleportation after transition build-up.
-        ServerTickScheduler.schedule(42, () -> {
+        ServerTickScheduler.schedule(teleportDelay, () -> {
             try {
                 TransitionDestination destination = selectRandomDestination(player.getServer());
                 teleportPlayerToDestination(player, destination);
@@ -124,6 +131,7 @@ public class LevelRunManager {
                 // Clean up
                 LevelRunComponent runComponent = net.dark.spv_addon.cca.InitializeComponents.LEVEL_RUN.get(player);
                 runComponent.exitLevelRun();
+                SpbTransitionDirector.completeDirectTransition(player);
                 
                 playersInTransition.remove(player.getUuid());
                 
@@ -133,6 +141,7 @@ public class LevelRunManager {
             } catch (Exception e) {
                 LOGGER.error("Error transitioning player {} out of Level RUN: {}",
                     player.getName().getString(), e.getMessage());
+                SpbTransitionDirector.completeDirectTransition(player);
                 playersInTransition.remove(player.getUuid());
             }
         });

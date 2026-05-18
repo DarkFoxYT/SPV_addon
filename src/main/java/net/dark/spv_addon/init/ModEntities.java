@@ -5,9 +5,11 @@ import net.dark.spv_addon.entities.custom.BellWalkerEntity;
 import net.dark.spv_addon.entities.custom.IkeaWalkerEntity;
 import net.dark.spv_addon.entities.custom.KittyEntity;
 import net.dark.spv_addon.entities.custom.StalkerEntity;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -46,5 +48,22 @@ public class ModEntities {
             );
 
 
+    public static void registerEntities() {
+        Spv_addon.LOGGER.info("Registered SPV entity types");
+    }
+
+    public static void registerAttributes() {
+        registerAttribute(SIX_LEG_ENTITY, BellWalkerEntity.createAttributes());
+        registerAttribute(KITTY, KittyEntity.createAttributes());
+        registerAttribute(IKEA_WALKER, IkeaWalkerEntity.createAttributes());
+        registerAttribute(STALKER_ENTITY, StalkerEntity.createAttributes());
+    }
+
+    private static <T extends net.minecraft.entity.LivingEntity> void registerAttribute(
+            EntityType<T> entityType,
+            DefaultAttributeContainer.Builder builder
+    ) {
+        FabricDefaultAttributeRegistry.register(entityType, builder);
+    }
 }
 

@@ -9,6 +9,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -34,9 +36,10 @@ public class KittyRenderer extends DynamicGeoEntityRenderer<KittyEntity> {
         poseStack.push();
         if (bone instanceof MowzieGeoBone mowzieGeoBone && mowzieGeoBone.isForceMatrixTransform() && animatable != null) {
             MatrixStack.Entry last = poseStack.peek();
-            double d0 = animatable.getX();
-            double d1 = animatable.getY();
-            double d2 = animatable.getZ();
+            Vec3d position = getInterpolatedPosition(animatable, partialTick);
+            double d0 = position.x;
+            double d1 = position.y;
+            double d2 = position.z;
             Matrix4f matrix4f = new Matrix4f();
             matrix4f = matrix4f.translate(0, -0.01f, 0);
             matrix4f = matrix4f.translate((float) -d0, (float) -d1, (float) -d2);
@@ -83,8 +86,8 @@ public class KittyRenderer extends DynamicGeoEntityRenderer<KittyEntity> {
                 Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations);
 
                 bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
-                bone.setLocalSpaceMatrix(RenderUtils.translateMatrix(localMatrix, getPositionOffset(this.animatable, 1).toVector3f()));
-                bone.setWorldSpaceMatrix(RenderUtils.translateMatrix(new Matrix4f(localMatrix), this.animatable.getPos().toVector3f()));
+                bone.setLocalSpaceMatrix(RenderUtils.translateMatrix(localMatrix, getPositionOffset(this.animatable, partialTick).toVector3f()));
+                bone.setWorldSpaceMatrix(RenderUtils.translateMatrix(new Matrix4f(localMatrix), getInterpolatedPosition(this.animatable, partialTick).toVector3f()));
             }
 
             RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
@@ -108,5 +111,13 @@ public class KittyRenderer extends DynamicGeoEntityRenderer<KittyEntity> {
         renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
         poseStack.pop();
+    }
+
+    private Vec3d getInterpolatedPosition(KittyEntity entity, float partialTick) {
+        return new Vec3d(
+                MathHelper.lerp(partialTick, entity.prevX, entity.getX()),
+                MathHelper.lerp(partialTick, entity.prevY, entity.getY()),
+                MathHelper.lerp(partialTick, entity.prevZ, entity.getZ())
+        );
     }
 }

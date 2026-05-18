@@ -23,17 +23,11 @@ public class Level207BackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
     DirectionalLight light;
     float brightness;
+    private boolean registered = false;
 
 
     public Level207BackroomsLevel() {
         super("level207", Level207ChunkGenerator.CODEC, new Vec3d(7, 22, 7), BackroomsLevels.LEVEL207_WORLD_KEY, "spv_addon");
-
-        this.registerTransition((world, playerComponent, from) -> {
-            List<BackroomsLevel.LevelTransition> playerList = new ArrayList();
-
-
-            return playerList;
-        }, "level207 -> manual exit only");
     }
 
     private BackroomsLevel.LevelTransition getPoolRoomsTransition(PlayerComponent playerComponent) {
@@ -49,8 +43,13 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        this.registerEvents("bellwalker_spawn", net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent::new);
-        this.registerEvents("empty", HaHvavCustomEvent::new);
+        if (registered) {
+            return;
+        }
+        registered = true;
+
+        this.registerEvent("bellwalker_spawn", net.dark.spv_addon.world.events.level207.Level207BellWalkerEvent::new);
+        this.registerEvent("empty", HaHvavCustomEvent::new);
 
 
     }
@@ -86,11 +85,6 @@ public class Level207BackroomsLevel extends BackroomsLevel {
 
     @Override
     public void transitionIn(BackroomsLevel.CrossDimensionTeleport crossDimensionTeleport) {
-    }
-
-    @Override
-    public int getTransitionDuration() {
-        return 30;
     }
 
 }

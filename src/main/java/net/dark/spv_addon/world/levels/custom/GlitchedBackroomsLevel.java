@@ -18,6 +18,7 @@ import java.util.List;
 
 public class GlitchedBackroomsLevel extends BackroomsLevel {
     private final Random random = Random.create();
+    private boolean registered = false;
 
     public GlitchedBackroomsLevel() {
         super("glitched", GlitchedChunkGenerator.CODEC, new Vec3d(8, 30, 8), BackroomsLevels.GLITCHED_WORLD_KEY, "spv_addon");
@@ -32,7 +33,7 @@ public class GlitchedBackroomsLevel extends BackroomsLevel {
 
             if (from instanceof Level207BackroomsLevel
                     && Math.abs(playerComponent.player.getPos().getX()) >= (double) exitRadius
-                    && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.LEVEL207_WORLD_KEY) {
+                    && playerComponent.player.getWorld().getRegistryKey().equals(BackroomsLevels.LEVEL207_WORLD_KEY)) {
                 transitions.add(SpbTransitionDirector.createTransition(
                         playerComponent,
                         this.getSpawnPos(),
@@ -54,7 +55,7 @@ public class GlitchedBackroomsLevel extends BackroomsLevel {
 
             if (from instanceof GlitchedBackroomsLevel
                     && Math.abs(playerComponent.player.getPos().getZ()) >= (double) exitRadius
-                    && playerComponent.player.getWorld().getRegistryKey() == BackroomsLevels.GLITCHED_WORLD_KEY) {
+                    && playerComponent.player.getWorld().getRegistryKey().equals(BackroomsLevels.GLITCHED_WORLD_KEY)) {
                 transitions.add(SpbTransitionDirector.createTransition(
                         playerComponent,
                         com.sp.init.BackroomsLevels.POOLROOMS_BACKROOMS_LEVEL.getSpawnPos(),
@@ -74,7 +75,12 @@ public class GlitchedBackroomsLevel extends BackroomsLevel {
 
     @Override
     public void register() {
-        this.registerEvents("glitched_static", HaHvavCustomEvent::new);
+        if (registered) {
+            return;
+        }
+        registered = true;
+
+        this.registerEvent("glitched_static", HaHvavCustomEvent::new);
     }
 
     @Override
@@ -104,9 +110,5 @@ public class GlitchedBackroomsLevel extends BackroomsLevel {
         teleport.playerComponent().loadPlayerSavedInventory();
     }
 
-    @Override
-    public int getTransitionDuration() {
-        return 130;
-    }
 }
 

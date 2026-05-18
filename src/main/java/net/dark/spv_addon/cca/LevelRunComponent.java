@@ -20,6 +20,7 @@ public class LevelRunComponent implements AutoSyncedComponent {
     private int damageTimer = 0;
     private static final int DAMAGE_INTERVAL = 60; // 3 seconds at 20 TPS
     private static final float DAMAGE_AMOUNT = 0.5f; // Half heart damage
+    private static final double MAX_COUNTED_DISTANCE_PER_TICK = 1.35;
     
     // Transition tracking
     private static final double TRANSITION_DISTANCE = 200.0; // 200 blocks
@@ -132,7 +133,13 @@ public class LevelRunComponent implements AutoSyncedComponent {
         }
         
         Vec3d currentPos = player.getPos();
-        double distanceThisTick = lastPosition.distanceTo(currentPos);
+        double dx = currentPos.x - lastPosition.x;
+        double dz = currentPos.z - lastPosition.z;
+        double distanceThisTick = Math.sqrt(dx * dx + dz * dz);
+        if (distanceThisTick > MAX_COUNTED_DISTANCE_PER_TICK) {
+            lastPosition = currentPos;
+            return;
+        }
         totalDistanceTraveled += distanceThisTick;
         lastPosition = currentPos;
     }

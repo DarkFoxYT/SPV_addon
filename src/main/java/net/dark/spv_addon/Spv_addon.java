@@ -40,6 +40,8 @@ public class Spv_addon implements ModInitializer {
         FlashlightBatteryEvents.register();
         Level207AmbianceHandler.register();
         ModChunkGenerators.register();
+        ModEntities.registerEntities();
+        ModEntities.registerAttributes();
         BackroomsLevels.init();
         ModItems.registerItems();
         ModBlocks.registerModBlocks();

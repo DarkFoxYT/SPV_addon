@@ -16,6 +16,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.item.Items;
 import net.minecraft.world.World;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -141,7 +142,8 @@ public class IkeaWalkerEntity extends PathAwareEntity
 
         // Friendly "bone lure" still exists, but now competes with threat/noise context.
         PlayerEntity boneTarget = this.getWorld().getPlayers().stream()
-                .filter(player -> player.getMainHandStack().getItem().toString().toLowerCase().contains("bone"))
+                .filter(player -> player.squaredDistanceTo(this) <= 18.0 * 18.0)
+                .filter(player -> player.getMainHandStack().isOf(Items.BONE) || player.getOffHandStack().isOf(Items.BONE))
                 .findFirst()
                 .orElse(null);
 
